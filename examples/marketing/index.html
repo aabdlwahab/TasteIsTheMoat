@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>shaderbg sections — marketing page demo</title>
+    <meta
+      name="description"
+      content="A complete marketing page built from the shaderbg React section library."
+    />
+    <meta property="og:image" content="/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!--
+      Drop the no-js class before first paint. Scroll-reveal hides content until
+      JS reveals it, so if JS never runs the hidden state must not apply. Doing
+      this inline (rather than in a module) avoids any flash.
+    -->
+    <script>
+      document.documentElement.classList.remove("no-js");
+    </script>
+  </head>
+  <body class="bg-ink-950 font-sans text-ink-100 antialiased">
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

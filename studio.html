@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shader studio — shaderbg</title>
+    <meta
+      name="description"
+      content="A library of animated WebGL shader backgrounds for landing pages, with a live viewer and editor."
+    />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="logo"></span>
+          <div>
+            <strong>shaderbg</strong>
+            <span class="tag">shader background studio</span>
+          </div>
+        </div>
+        <nav class="topbar-actions">
+          <button id="copy-usage" class="ghost">Copy usage</button>
+          <button id="copy-glsl" class="ghost">Copy GLSL</button>
+          <button id="export-html" class="primary">Export HTML</button>
+        </nav>
+      </header>
+
+      <main class="layout">
+        <aside class="gallery">
+          <div class="gallery-head">
+            <h2 class="section-title">Shaders <span id="shader-count"></span></h2>
+            <input
+              id="search"
+              class="search"
+              type="search"
+              placeholder="Search shaders…"
+              autocomplete="off"
+            />
+            <div id="filters" class="filters"></div>
+          </div>
+          <div id="gallery-list" class="gallery-list"></div>
+          <p id="no-results" class="muted no-results">No shaders match.</p>
+        </aside>
+
+        <section class="stage">
+          <div class="preview">
+            <canvas id="preview"></canvas>
+            <div id="interactive-hint" class="interactive-hint">
+              ✦ Move your cursor over the preview — click too
+            </div>
+            <div class="preview-toolbar">
+              <button id="play" title="Pause">❚❚</button>
+              <button id="restart" title="Restart">↻</button>
+              <span id="fps" class="fps">—</span>
+              <span class="spacer"></span>
+              <button id="fullscreen" title="Fullscreen">⛶</button>
+            </div>
+          </div>
+
+          <div class="stage-head">
+            <div>
+              <h1 id="shader-name">Shader</h1>
+              <p id="shader-desc" class="muted"></p>
+            </div>
+            <div class="stage-buttons">
+              <button id="randomize" class="ghost">Randomize colors</button>
+              <button id="reset" class="ghost">Reset</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2 class="section-title">Uniforms</h2>
+            <div id="uniforms" class="uniforms"></div>
+          </div>
+        </section>
+
+        <section class="code">
+          <h2 class="section-title">Fragment shader</h2>
+          <div id="editor" class="editor"></div>
+          <div id="error" class="error"></div>
+          <details class="reference">
+            <summary>Available in every shader</summary>
+            <div class="reference-body">
+              <p><strong>Uniforms:</strong> <code>u_time</code>,
+                <code>u_resolution</code>, <code>u_mouse</code>, plus your
+                declared uniforms.</p>
+              <p><strong>Helpers:</strong> <code>snoise(vec2|vec3)</code>,
+                <code>fbm(vec2|vec3)</code>,
+                <code>palette(t, a, b, c, d)</code>,
+                <code>hsv2rgb(vec3)</code>, <code>rot(float)</code>,
+                <code>grain(vec2)</code>, <code>hash21(vec2)</code>.</p>
+              <p class="muted">Define <code>void main()</code> and write to
+                <code>gl_FragColor</code>. Edits recompile live.</p>
+            </div>
+          </details>
+          <h2 class="section-title">Use it in your project</h2>
+          <pre id="usage" class="usage"></pre>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/app/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/**
+ * Brand tokens.
+ *
+ * These drive both the Tailwind utilities (via @theme) and the shader palettes
+ * (read in JS and mapped onto colour uniforms), so recolouring the brand
+ * recolours the sections and the shaders together.
+ */
+@theme {
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+
+  /* Neutral ramp tuned for dark marketing pages. */
+  --color-ink-0: #ffffff;
+  --color-ink-100: #e7e9f0;
+  --color-ink-300: #b7bccd;
+  --color-ink-400: #868da3;
+  --color-ink-600: #3a4056;
+  --color-ink-700: #242838;
+  --color-ink-800: #171a24;
+  --color-ink-850: #12141c;
+  --color-ink-900: #0a0b0f;
+  --color-ink-950: #07080c;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --radius-card: 14px;
+}
+
+/* The brand palette handed to shaders. Kept as plain hex so it can be read
+   with getComputedStyle and parsed without a colour library. */
+:root {
+  --brand-primary: #4f46e5;
+  --brand-secondary: #a855f7;
+  --brand-accent: #22d3ee;
+  --brand-background: #07080c;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Scroll-reveal: elements start hidden and are revealed by Reveal.tsx.
+   Reveal.tsx has three independent paths to reveal (observer, on-mount check,
+   safety timeout) so content cannot end up permanently invisible. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  [data-reveal] {
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Fallback reveals snap rather than animate. */
+  [data-reveal-snap] {
+    transition: none !important;
+  }
+}
+
+/* If JS never runs, the hidden state must not apply at all. */
+noscript {
+  display: contents;
+}
+html.no-js [data-reveal="pending"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* BorderBeam: a conic gradient rotated behind a 1px mask-excluded frame.
+   The angle is animated via a registered custom property, because plain
+   custom properties are not interpolatable. */
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes sbg-beam-spin {
+  to { --beam-angle: 360deg; }
+}
+.sbg-beam {
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0%,
+    var(--color-brand-300) 8%,
+    var(--color-accent-400) 16%,
+    transparent 28%,
+    transparent 100%
+  );
+  animation: sbg-beam-spin var(--beam-duration, 6s) linear infinite;
+  /* Clip the gradient to the padding frame, leaving the interior untouched. */
+  -webkit-mask: linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sbg-beam { animation: none; }
+}
+
+/* Marquee used by LogoCloud and Testimonials. */
+@keyframes sbg-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.sbg-marquee-track {
+  animation: sbg-marquee var(--marquee-duration, 30s) linear infinite;
+}
+.sbg-marquee:hover .sbg-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sbg-marquee-track { animation: none; }
+}
