@@ -39,21 +39,49 @@ import {
 } from "../../src/sections/index";
 import {
   AvatarStack,
+  AudioReactiveShader,
   BorderBeam,
   BrowserFrame,
+  CodeComparison,
   Container,
   CopyField,
+  DirectionAwareCard,
+  DraggableCardPile,
+  EncryptedText,
+  FlippingTextBoard,
   GradientText,
+  GooeyDropdown,
+  ImageTrailCursor,
+  InfiniteCanvas,
+  IsometricFeatureBoxes,
+  KineticTypeRibbon,
+  LensReveal,
+  LinkPreview,
+  MagneticButton,
+  Marquee3D,
+  MorphingDialog,
+  MorphingNotch,
   NoiseOverlay,
+  PathMorph,
+  PixelDitherReveal,
+  ProgressiveBlur,
   Rating,
+  ScrollCardStack,
+  ScrollScrubVideo,
+  SectionHeading,
   SegmentedControl,
   ShaderCard,
   ShaderDivider,
   ShaderOrb,
   ShaderText,
+  SquigglyText,
   SpotlightCard,
   SpotlightGrid,
   StatusBadge,
+  TypeMaskReveal,
+  VanishingInput,
+  WebcamPixelGrid,
+  WetPaintButton,
 } from "../../src/ui/index";
 import type { BrandPalette } from "../../src/core/theme";
 
@@ -595,6 +623,247 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
             options={[
               { label: "Monthly", value: "monthly" },
               { label: "Annual · save 20%", value: "annual" },
+            ]}
+          />
+        </div>
+      </div>
+    </Container>
+  ),
+  "experimental-controls": () => (
+    <Container className="py-24">
+      <SectionHeading
+        eyebrow="Experimental pack"
+        title="Controls that feel alive"
+        description="Magnetic, liquid, morphing, predictive, and comparison interactions."
+      />
+      <div className="mt-12 grid gap-6 lg:grid-cols-2">
+        <div className="min-h-72 rounded-3xl border border-ink-700 bg-ink-850 p-7">
+          <p className="text-xs uppercase tracking-[0.12em] text-ink-500">
+            Morphing notch
+          </p>
+          <div className="mt-8 flex justify-center">
+            <MorphingNotch
+              items={[
+                { label: "Search", content: <VanishingInput placeholders={["Search components…", "Find a hero…", "Try “kinetic text”"]} /> },
+                { label: "Theme", content: <SegmentedControl options={[{ label: "Midnight", value: "midnight" }, { label: "Electric", value: "electric" }]} /> },
+                { label: "Ship", content: <p className="text-sm text-white/70">The current collection is ready to export.</p> },
+              ]}
+            />
+          </div>
+        </div>
+        <div className="rounded-3xl border border-ink-700 bg-ink-850 p-7">
+          <p className="text-xs uppercase tracking-[0.12em] text-ink-500">
+            Pointer-aware buttons
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-5">
+            <MagneticButton>Magnetic CTA</MagneticButton>
+            <WetPaintButton>Wet paint</WetPaintButton>
+            <GooeyDropdown
+              label="Gooey menu"
+              options={[
+                { label: "Create", value: "create" },
+                { label: "Duplicate", value: "duplicate" },
+                { label: "Archive", value: "archive" },
+              ]}
+            />
+          </div>
+          <p className="mt-24 text-sm text-ink-400">
+            Hover this{" "}
+            <LinkPreview
+              href="#"
+              preview={<div className="aspect-[16/9] rounded-lg bg-[radial-gradient(circle_at_25%_25%,#4f46e5,transparent_38%),#11131b]" />}
+            >
+              project link
+            </LinkPreview>{" "}
+            for a live preview.
+          </p>
+        </div>
+        <div className="lg:col-span-2">
+          <CodeComparison
+            before={`const hero = new Shader();\nhero.mount(canvas);\nhero.resize();\nhero.play();\nwindow.addEventListener("resize", resize);`}
+            after={`<Hero\n  shader="aurora"\n  brand={brand}\n  headline="Ready to ship."\n/>`}
+          />
+        </div>
+      </div>
+    </Container>
+  ),
+  "experimental-cards": () => (
+    <Container className="py-24">
+      <SectionHeading
+        eyebrow="Experimental pack"
+        title="Cards with physical behaviour"
+        description="Reveal direction, focus, drag, stack, magnify, and expand."
+      />
+      <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <MorphingDialog
+          title="Project Meridian"
+          description="The compact card becomes the reading surface."
+          trigger={
+            <div className="p-6">
+              <div className="aspect-[16/10] rounded-xl bg-[radial-gradient(circle_at_70%_25%,#22d3ee,transparent_38%),#111827]" />
+              <h3 className="mt-5 font-semibold text-ink-0">Morphing case study</h3>
+              <p className="mt-2 text-sm text-ink-400">Open the project →</p>
+            </div>
+          }
+        >
+          <div className="aspect-[16/8] rounded-2xl bg-[radial-gradient(circle_at_25%_30%,#4f46e5,transparent_35%),radial-gradient(circle_at_75%_65%,#22d3ee,transparent_38%),#0d111b]" />
+          <p className="mt-6 leading-relaxed text-ink-300">
+            Morphing dialogs preserve context: the thing you clicked visibly becomes the place where you continue reading.
+          </p>
+        </MorphingDialog>
+        <DirectionAwareCard
+          className="min-h-80 border border-ink-700 bg-ink-850"
+          reveal={<div><p className="text-xs uppercase tracking-[0.12em] text-white/65">Direction aware</p><p className="mt-3 text-xl font-semibold">The overlay follows your arrival.</p></div>}
+        >
+          <div className="grid min-h-80 place-items-center bg-[radial-gradient(circle_at_center,#7c3aed,transparent_34%),#11131b]">
+            <span className="text-sm text-white/65">Enter from any edge</span>
+          </div>
+        </DirectionAwareCard>
+        <LensReveal
+          className="min-h-80"
+          base={<div className="min-h-80 bg-[linear-gradient(135deg,#171a24,#312e81)]" />}
+          detail={<div className="min-h-80 bg-[radial-gradient(circle_at_center,#fff 0_2px,#22d3ee 3px_5px,#4f46e5 6px_9px,#07080c 10px)] bg-[length:24px_24px]" />}
+        />
+        <DraggableCardPile
+          items={[
+            { id: "one", rotation: -6, content: <div className="aspect-[4/3] bg-gradient-to-br from-indigo-600 to-violet-500 p-5 font-semibold text-white">Strategy</div> },
+            { id: "two", rotation: 4, content: <div className="aspect-[4/3] bg-gradient-to-br from-cyan-600 to-blue-600 p-5 font-semibold text-white">Identity</div> },
+            { id: "three", rotation: -1, content: <div className="aspect-[4/3] bg-gradient-to-br from-orange-500 to-rose-600 p-5 font-semibold text-white">Launch</div> },
+          ]}
+        />
+        <div className="md:col-span-2">
+          <IsometricFeatureBoxes
+            items={[
+              { title: "Collect", description: "Pull every signal into one layer." },
+              { title: "Connect", description: "Map evidence to the decision." },
+              { title: "Ship", description: "Turn the plan into a release." },
+              { title: "Learn", description: "Measure the response." },
+              { title: "Repeat", description: "Keep the system alive." },
+            ]}
+          />
+        </div>
+      </div>
+    </Container>
+  ),
+  "experimental-type": () => (
+    <div className="py-24">
+      <Container>
+        <SectionHeading
+          eyebrow="Experimental pack"
+          title="Typography as an interaction"
+          description="Scramble, flip, squiggle, morph, mask, and respond to scroll."
+        />
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          <div className="rounded-3xl border border-ink-700 bg-ink-850 p-8">
+            <p className="text-xs uppercase tracking-[0.12em] text-ink-500">Encrypted</p>
+            <EncryptedText
+              text="CONFIDENTIAL SIGNAL"
+              className="mt-5 block text-2xl font-semibold text-emerald-300"
+            />
+          </div>
+          <div className="rounded-3xl border border-ink-700 bg-ink-850 p-8">
+            <p className="text-xs uppercase tracking-[0.12em] text-ink-500">Split flap</p>
+            <FlippingTextBoard
+              className="mt-5 text-xl"
+              words={["RIYADH", "LONDON", "TOKYO", "ONLINE"]}
+            />
+          </div>
+          <div className="rounded-3xl border border-ink-700 bg-ink-850 p-8">
+            <SquigglyText text="WOBBLE ON HOVER" className="text-2xl font-semibold text-ink-0" />
+            <p className="mt-8 text-3xl font-semibold">
+              <TypeMaskReveal>Light moving through type.</TypeMaskReveal>
+            </p>
+          </div>
+          <ProgressiveBlur edge="bottom" className="h-56 rounded-3xl border border-ink-700 bg-ink-850 p-8">
+            <p className="text-4xl font-semibold leading-tight text-ink-0">
+              Progressive blur makes content feel like it continues beyond the frame.
+            </p>
+          </ProgressiveBlur>
+          <div className="grid place-items-center rounded-3xl border border-ink-700 bg-ink-850 p-8">
+            <PathMorph
+              className="size-32 text-brand-400"
+              paths={[
+                "M10 10 L90 10 L90 90 L10 90 Z",
+                "M50 5 L95 50 L50 95 L5 50 Z",
+                "M20 5 L80 5 L95 80 L5 80 Z",
+              ]}
+            />
+          </div>
+          <div className="grid place-items-center rounded-3xl border border-ink-700 bg-ink-850 p-8 text-center">
+            <p className="text-sm text-ink-400">Scroll the page, then watch the ribbon below react to velocity.</p>
+          </div>
+        </div>
+      </Container>
+      <KineticTypeRibbon className="mt-16" text="KINETIC SYSTEM" />
+    </div>
+  ),
+  "experimental-spatial": () => (
+    <div className="py-24">
+      <Container>
+        <SectionHeading
+          eyebrow="Experimental pack"
+          title="Spatial galleries and movement"
+          description="Drag the world, trail the pointer, rotate the rail, and stack the story."
+        />
+        <ImageTrailCursor
+          className="mt-12 grid place-items-center border border-ink-700 bg-ink-850"
+          items={[
+            <div className="aspect-[4/3] bg-gradient-to-br from-indigo-600 to-violet-500" />,
+            <div className="aspect-[4/3] bg-gradient-to-br from-cyan-500 to-blue-700" />,
+            <div className="aspect-[4/3] bg-gradient-to-br from-orange-400 to-rose-600" />,
+          ]}
+        >
+          <p className="text-xl font-semibold text-ink-0">Move your cursor through the field</p>
+        </ImageTrailCursor>
+        <InfiniteCanvas
+          className="mt-8"
+          items={[
+            { id: "a", x: 120, y: 120, content: <div className="aspect-[4/3] bg-gradient-to-br from-violet-600 to-indigo-900 p-5 text-white">Research lab</div> },
+            { id: "b", x: 520, y: 260, content: <div className="aspect-[4/3] bg-gradient-to-br from-cyan-500 to-slate-900 p-5 text-white">Spatial portfolio</div> },
+            { id: "c", x: 940, y: 90, content: <div className="aspect-[4/3] bg-gradient-to-br from-orange-500 to-rose-900 p-5 text-white">Product launch</div> },
+            { id: "d", x: 350, y: 610, content: <div className="aspect-[4/3] bg-gradient-to-br from-emerald-500 to-teal-950 p-5 text-white">Data story</div> },
+          ]}
+        />
+        <Marquee3D
+          className="mt-10"
+          items={["Kinetic", "Spatial", "Reactive", "Generative"].map((item) => (
+            <div key={item} className="grid aspect-[4/3] place-items-center bg-gradient-to-br from-ink-800 to-brand-900 text-sm font-semibold text-ink-0">
+              {item}
+            </div>
+          ))}
+        />
+        <ScrollCardStack
+          className="mx-auto mt-12 max-w-3xl"
+          items={["Frame the idea", "Build the system", "Launch the story"].map((item, index) => (
+            <div key={item} className="grid min-h-64 place-items-center bg-[radial-gradient(circle_at_center,rgba(99,102,241,.26),transparent_42%),#12141c] p-8 text-3xl font-semibold text-ink-0">
+              <span className="text-brand-300">0{index + 1}</span> {item}
+            </div>
+          ))}
+        />
+      </Container>
+    </div>
+  ),
+  "experimental-media": () => (
+    <Container className="py-24">
+      <SectionHeading
+        eyebrow="Experimental pack"
+        title="Media that responds"
+        description="Pixel reveal, scroll-controlled frames, microphone energy, and an opt-in camera mosaic."
+      />
+      <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        <PixelDitherReveal>
+          <div className="aspect-[3/2] bg-[radial-gradient(circle_at_30%_30%,#a855f7,transparent_34%),radial-gradient(circle_at_70%_65%,#22d3ee,transparent_36%),#0b0c13]" />
+        </PixelDitherReveal>
+        <AudioReactiveShader />
+        <WebcamPixelGrid />
+        <div>
+          <ScrollScrubVideo
+            height={620}
+            frames={[
+              <div key="1" className="size-full bg-[radial-gradient(circle_at_20%_30%,#4f46e5,transparent_35%),#0b0c13]" />,
+              <div key="2" className="size-full bg-[radial-gradient(circle_at_45%_45%,#a855f7,transparent_38%),#0b0c13]" />,
+              <div key="3" className="size-full bg-[radial-gradient(circle_at_70%_55%,#22d3ee,transparent_35%),#0b0c13]" />,
+              <div key="4" className="size-full bg-[radial-gradient(circle_at_80%_70%,#f97316,transparent_38%),#0b0c13]" />,
             ]}
           />
         </div>

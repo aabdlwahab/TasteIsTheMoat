@@ -41,7 +41,7 @@ const collection = [
   },
   {
     title: "Marketing elements",
-    category: "25 elements",
+    category: "51 elements",
     result: "Browse elements",
     href: "/examples/marketing/sections.html?s=elements",
     description:
@@ -75,11 +75,11 @@ const collection = [
   },
   {
     title: "Complete webpages",
-    category: "4 templates",
+    category: "16 templates",
     result: "View templates",
     href: "/examples/templates/",
     description:
-      "Production-shaped starters for SaaS, AI, developer-tool, and agency landing pages.",
+      "Sixteen starters spanning SaaS, AI, culture, portfolios, data stories, product drops, music, and events.",
     visual: (
       <div className="relative size-full bg-[linear-gradient(135deg,#11131d,#24133a)] p-8">
         <div className="h-full rounded-t-xl border border-b-0 border-white/15 bg-ink-950/80 p-5">
@@ -98,7 +98,7 @@ function CollectionHome() {
     <>
       <AnnouncementBar dismissible={false} href="/examples/templates/">
         <StatusBadge tone="info">New</StatusBadge>
-        Four complete landing-page templates are now in the collection
+        Twelve experimental page templates just joined the collection
         <span aria-hidden="true">→</span>
       </AnnouncementBar>
       <Nav
@@ -120,7 +120,7 @@ function CollectionHome() {
         <Hero
           shader="holo-foil"
           brand={brand}
-          badge={{ label: "69 backgrounds · 26 sections · 4 webpages" }}
+          badge={{ label: "69 backgrounds · 51 elements · 26 sections · 16 webpages" }}
           headline={
             <>
               The building blocks for landing pages{" "}
@@ -154,9 +154,9 @@ function CollectionHome() {
         <Stats
           stats={[
             { value: 69, label: "Animated backgrounds" },
-            { value: 25, label: "Reusable elements" },
+            { value: 51, label: "Reusable elements" },
             { value: 26, label: "Marketing sections" },
-            { value: 4, label: "Complete webpages" },
+            { value: 16, label: "Complete webpages" },
           ]}
         />
         <Gallery
@@ -167,16 +167,16 @@ function CollectionHome() {
           items={collection}
         />
         <Features
-          eyebrow="What was added"
-          title="The missing pieces between a hero and a launch"
-          description="Patterns selected from current landing-page libraries, rebuilt to fit the existing shaderbg system."
+          eyebrow="Experimental collection"
+          title="The pieces that make a page feel authored"
+          description="Interaction-heavy patterns rebuilt for the existing shaderbg system, with reduced-motion and input fallbacks."
           features={[
-            { title: "Audience use cases", description: "Tabbed stories for founders, product teams, developers, and buyers." },
-            { title: "Product tour rows", description: "Alternating copy and visuals for products that need more explanation." },
-            { title: "Customer stories", description: "Outcome-led proof with quotes, teams, ratings, and compact metrics." },
-            { title: "Trust and security", description: "Compliance, uptime, controls, and enterprise readiness in one block." },
-            { title: "Lead capture", description: "Dedicated newsletter, waitlist, contact, and book-a-demo patterns." },
-            { title: "Portfolio and updates", description: "Case-study galleries and changelogs for launches that keep moving." },
+            { title: "Spatial canvases", description: "Infinite galleries, image trails, draggable piles, and perspective marquees." },
+            { title: "Kinetic typography", description: "Velocity ribbons, encrypted copy, split-flap words, and elastic headlines." },
+            { title: "Physical cards", description: "Morphing dialogs, directional reveals, lenses, and sticky scroll stacks." },
+            { title: "Reactive media", description: "Dither reveals, scroll-scrubbed video, audio energy, and opt-in camera mosaics." },
+            { title: "Living controls", description: "Morphing notches, gooey menus, magnetic CTAs, and vanishing prompt inputs." },
+            { title: "Niche webpages", description: "Twelve complete experimental directions for culture, product, data, and art." },
           ]}
         />
         <section className="border-y border-ink-700 bg-ink-900/50 py-20">

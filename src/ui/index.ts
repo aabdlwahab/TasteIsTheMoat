@@ -68,3 +68,6 @@ export type { BorderBeamProps } from "./BorderBeam";
 
 export { NoiseOverlay } from "./NoiseOverlay";
 export type { NoiseOverlayProps } from "./NoiseOverlay";
+
+// ---- experimental marketing components ------------------------------------
+export * from "./experimental/index";

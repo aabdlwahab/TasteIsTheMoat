@@ -15,6 +15,7 @@
     "./shaders": "./src/shaders/index.ts",
     "./react": "./src/react/index.ts",
     "./ui": "./src/ui/index.ts",
+    "./experimental": "./src/ui/experimental/index.ts",
     "./sections": "./src/sections/index.ts",
     "./theme.css": "./src/ui/theme.css",
     "./shaders/*": "./src/shaders/*.ts"

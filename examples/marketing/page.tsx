@@ -79,7 +79,7 @@ export function Page() {
     <>
       <AnnouncementBar href="#features" storageKey="sbg-v02">
         <strong className="font-semibold">v0.2 is out</strong>
-        <span className="opacity-85">— 69 shaders, 26 sections, 4 page templates</span>
+        <span className="opacity-85">— 69 shaders, 51 elements, 16 page templates</span>
         <span aria-hidden="true">→</span>
       </AnnouncementBar>
 

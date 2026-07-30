@@ -29,6 +29,10 @@ import {
   StatusBadge,
 } from "../../src/ui/index";
 import type { BrandPalette } from "../../src/core/theme";
+import {
+  EXPERIMENTAL_TEMPLATE_CARDS,
+  EXPERIMENTAL_TEMPLATES,
+} from "./experimental-pages";
 
 const palettes = {
   saas: {
@@ -429,7 +433,7 @@ function DeveloperPage() {
       <main>
         <Hero
           layout="split"
-          shader="neon-grid"
+          shader="synthwave-grid"
           brand={brand}
           headline="Find the failure before the thread finds you."
           subhead="Tracefield connects deploys, traces, logs, and ownership so the right engineer gets the full story in one link."
@@ -639,6 +643,7 @@ export const TEMPLATES: Record<string, () => React.ReactNode> = {
   ai: AiPage,
   developer: DeveloperPage,
   agency: AgencyPage,
+  ...EXPERIMENTAL_TEMPLATES,
 };
 
 const templateCards = [
@@ -670,6 +675,7 @@ const templateCards = [
     palette: "from-orange-800 via-orange-500 to-yellow-300",
     sections: "8 sections",
   },
+  ...EXPERIMENTAL_TEMPLATE_CARDS,
 ];
 
 export function TemplateCatalog() {
@@ -677,17 +683,17 @@ export function TemplateCatalog() {
     <main>
       <section className="border-b border-ink-700 bg-ink-950 py-20 sm:py-28">
         <Container>
-          <StatusBadge tone="info">4 complete pages</StatusBadge>
+          <StatusBadge tone="info">16 complete pages</StatusBadge>
           <h1 className="mt-6 max-w-4xl text-balance text-4xl font-semibold tracking-tight text-ink-0 sm:text-6xl">
             Start with a page, then make it yours.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-300">
-            Full landing-page starters composed from the same reusable sections,
-            elements, shaders, and moving gradients in the collection.
+            Sixteen full landing-page starters composed from the same reusable
+            sections, experimental elements, shaders, and moving gradients.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href="../marketing/sections.html">Browse sections</Button>
-            <Button href="../../" variant="secondary">Open shader studio</Button>
+            <Button href="../../studio.html" variant="secondary">Open shader studio</Button>
           </div>
         </Container>
       </section>

@@ -3,8 +3,8 @@
 Animated backgrounds, marketing elements, React sections, and complete landing
 pages — plus a studio to browse, tweak, and edit every shader live.
 
-**69 shaders**, **25 reusable elements**, **26 page sections**, and **4 complete
-landing-page templates** for SaaS, AI, developer tools, and creative agencies.
+**69 shaders**, **51 reusable elements**, **26 page sections**, and **16 complete
+landing-page templates** spanning conventional marketing and experimental work.
 The shader runtime remains dependency-free and exports a self-contained HTML
 file you can drop into any project.
 
@@ -76,6 +76,15 @@ Primitives: `Button`, `Badge`, `Card`, `Container`, `Section`, `SectionHeading`,
 `ShaderSection`, `AvatarStack`, `Rating`, `CopyField`, `SegmentedControl`, and
 `StatusBadge`.
 
+Experimental elements: `MorphingNotch`, `GooeyDropdown`, `MorphingDialog`,
+`MagneticButton`, `WetPaintButton`, `DirectionAwareCard`, `LensReveal`,
+`ImageTrailCursor`, `DraggableCardPile`, `InfiniteCanvas`, `ScrollCardStack`,
+`PixelDitherReveal`, `KineticTypeRibbon`, `EncryptedText`,
+`FlippingTextBoard`, `SquigglyText`, `PathMorph`, `ProgressiveBlur`,
+`LinkPreview`, `Marquee3D`, `IsometricFeatureBoxes`, `CodeComparison`,
+`VanishingInput`, `ScrollScrubVideo`, `AudioReactiveShader`, and
+`WebcamPixelGrid`.
+
 ### Complete page templates
 
 Open `/examples/templates/` to preview each page:
@@ -86,13 +95,30 @@ Open `/examples/templates/` to preview each page:
 | **AI platform** | product tour, auditable use cases, security, newsletter |
 | **Developer tool** | install command, product tabs, changelog, usage pricing |
 | **Creative agency** | project gallery, outcomes, process, story, inquiry form |
+| **Infinite canvas portfolio** | draggable project world, image trails, spatial work |
+| **Kinetic editorial** | velocity typography, split-flap headlines, manifesto layout |
+| **AI laboratory** | evidence states, encrypted type, confidence visualisation |
+| **Interactive product story** | scroll-controlled product chapters and proof |
+| **Generative art studio** | dithered artwork, live seeds, floating controls |
+| **Luxury product drop** | material lens, numbered release, restrained motion |
+| **Festival** | draggable lineup, venue ribbons, poster-driven system |
+| **Open-source launch** | executable hero, code comparison, documentation search |
+| **Interactive case study** | morphing cover, pinned outcomes, process artifacts |
+| **Spatial agency** | image trails, direction-aware work, spatial navigation |
+| **Data story** | layered methodology, scroll metrics, evidence chapters |
+| **Music release** | audio-reactive art, pixel portrait, living credits |
 
 The collection expansion was informed by recurring patterns in
 [Tailwind UI marketing blocks](https://tailwindcss.com/plus/ui-blocks),
 [Tailwind landing-page examples](https://tailwindcss.com/plus/ui-blocks/marketing/page-examples/landing-pages),
 [Page UI](https://pageui.shipixen.com/), [Oxbow UI](https://oxbowui.com/),
 [React SaaS](https://react-saas.com/), [UIStash](https://uistash.vercel.app/),
-and [Destack](https://www.getdestack.com/). The implementations here are
+and [Destack](https://www.getdestack.com/). The experimental expansion also
+draws from patterns catalogued by [Aceternity UI](https://ui.aceternity.com/explore),
+[Magic UI](https://magicui.design/docs/components),
+[Motion Primitives](https://motion-primitives.com/docs),
+[React Bits](https://www.reactbits.dev/), and
+[Codrops](https://tympanus.net/codrops/hub/). The implementations here are
 original and use the existing shaderbg component APIs and visual system.
 
 ### Shader-native components
