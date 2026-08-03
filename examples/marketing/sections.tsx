@@ -9,6 +9,7 @@
  */
 import { createRoot } from "react-dom/client";
 import "../../src/ui/theme.css";
+import { sitePath } from "../../src/core/sitePath";
 import {
   AnnouncementBar,
   BlogGrid,
@@ -160,6 +161,160 @@ const FAQ_ITEMS = [
   { question: "Can I use my own brand colours?", answer: "Yes — that's what the brand palette does." },
   { question: "Does it work with Next.js or Astro?", answer: "Yes. Mark the shader section as a client component or island." },
 ];
+
+type ElementCategory =
+  | "Foundation"
+  | "Shader-native"
+  | "Controls"
+  | "Physical cards"
+  | "Kinetic type"
+  | "Spatial"
+  | "Reactive media";
+
+interface ElementCatalogItem {
+  name: string;
+  category: ElementCategory;
+  description: string;
+  demo: string;
+}
+
+const ELEMENT_CATEGORIES: ElementCategory[] = [
+  "Foundation",
+  "Shader-native",
+  "Controls",
+  "Physical cards",
+  "Kinetic type",
+  "Spatial",
+  "Reactive media",
+];
+
+const ELEMENTS: ElementCatalogItem[] = [
+  { name: "Button", category: "Foundation", description: "Primary, secondary, and ghost actions with accessible focus states.", demo: "elements-foundations" },
+  { name: "Badge", category: "Foundation", description: "Compact labels for announcements, releases, and metadata.", demo: "elements-foundations" },
+  { name: "Card", category: "Foundation", description: "A consistent bordered surface for content and controls.", demo: "elements-foundations" },
+  { name: "Container", category: "Foundation", description: "Responsive page width and horizontal rhythm.", demo: "elements-foundations" },
+  { name: "Section", category: "Foundation", description: "Shader-free vertical spacing for page composition.", demo: "elements-foundations" },
+  { name: "SectionHeading", category: "Foundation", description: "Eyebrow, title, and supporting copy with stable hierarchy.", demo: "elements-foundations" },
+  { name: "GradientText", category: "Foundation", description: "Brand-gradient display type with a readable fallback.", demo: "elements-foundations" },
+  { name: "Reveal", category: "Foundation", description: "Scroll entrance that respects reduced motion and fails open.", demo: "elements-foundations" },
+  { name: "Marquee", category: "Foundation", description: "Reusable continuous rail for logos, proof, and messages.", demo: "logos-marquee" },
+  { name: "Accordion", category: "Foundation", description: "Keyboard-accessible disclosure for FAQs and details.", demo: "faq" },
+  { name: "Counter", category: "Foundation", description: "Viewport-triggered numeric count-up with truthful fallbacks.", demo: "stats" },
+  { name: "BrowserFrame", category: "Foundation", description: "Product screenshot and live-demo framing with browser chrome.", demo: "showcase" },
+  { name: "AvatarStack", category: "Foundation", description: "Compact people proof with initials and overflow count.", demo: "elements-foundations" },
+  { name: "Rating", category: "Foundation", description: "Accessible rating and review proof.", demo: "elements-foundations" },
+  { name: "CopyField", category: "Foundation", description: "One-click copy for commands, keys, and snippets.", demo: "elements-foundations" },
+  { name: "SegmentedControl", category: "Foundation", description: "Small mutually exclusive option switcher.", demo: "elements-foundations" },
+  { name: "StatusBadge", category: "Foundation", description: "Operational, informational, warning, and neutral states.", demo: "elements-foundations" },
+
+  { name: "ShaderText", category: "Shader-native", description: "A living shader clipped directly into headline glyphs.", demo: "shader-text" },
+  { name: "ShaderCard", category: "Shader-native", description: "A shader-backed card that wakes on interaction.", demo: "shader-cards" },
+  { name: "ShaderOrb", category: "Shader-native", description: "Circle, blob, and squircle shader accents.", demo: "orb" },
+  { name: "ShaderDivider", category: "Shader-native", description: "A feathered ribbon of motion between sections.", demo: "divider" },
+  { name: "SpotlightGrid", category: "Shader-native", description: "One pointer-follow spotlight shared across a card grid.", demo: "spotlight" },
+  { name: "SpotlightCard", category: "Shader-native", description: "A grid-aware card illuminated by the shared spotlight.", demo: "spotlight" },
+  { name: "BorderBeam", category: "Shader-native", description: "A pure-CSS light circuit travelling around a border.", demo: "border-beam" },
+  { name: "NoiseOverlay", category: "Shader-native", description: "Subtle grain that unifies flat and animated surfaces.", demo: "noise" },
+
+  { name: "MagneticButton", category: "Controls", description: "A CTA that leans toward the pointer.", demo: "experimental-controls" },
+  { name: "WetPaintButton", category: "Controls", description: "Liquid colour rises through the button on interaction.", demo: "experimental-controls" },
+  { name: "GooeyDropdown", category: "Controls", description: "A compact menu with connected, elastic options.", demo: "experimental-controls" },
+  { name: "VanishingInput", category: "Controls", description: "Rotating prompts dissolve as the visitor begins typing.", demo: "experimental-controls" },
+  { name: "CodeComparison", category: "Controls", description: "A draggable before-and-after code reveal.", demo: "experimental-controls" },
+  { name: "LinkPreview", category: "Controls", description: "Hover and focus previews for contextual links.", demo: "experimental-controls" },
+
+  { name: "MorphingDialog", category: "Physical cards", description: "A compact card expands into a focused reading surface.", demo: "experimental-cards" },
+  { name: "DirectionAwareCard", category: "Physical cards", description: "Its overlay enters from the same edge as the pointer.", demo: "experimental-cards" },
+  { name: "LensReveal", category: "Physical cards", description: "A movable lens exposes the detail layer beneath.", demo: "experimental-cards" },
+  { name: "DraggableCardPile", category: "Physical cards", description: "Overlapping cards that can be picked up and rearranged.", demo: "experimental-cards" },
+  { name: "ScrollCardStack", category: "Physical cards", description: "Narrative cards pin and accumulate through the scroll.", demo: "experimental-spatial" },
+  { name: "IsometricFeatureBoxes", category: "Physical cards", description: "Feature blocks arranged as a dimensional system.", demo: "experimental-cards" },
+
+  { name: "KineticTypeRibbon", category: "Kinetic type", description: "Oversized type responds to scroll direction and velocity.", demo: "experimental-type" },
+  { name: "EncryptedText", category: "Kinetic type", description: "Copy resolves from randomized encrypted characters.", demo: "experimental-type" },
+  { name: "FlippingTextBoard", category: "Kinetic type", description: "A mechanical split-flap word rotator.", demo: "experimental-type" },
+  { name: "SquigglyText", category: "Kinetic type", description: "Per-character elastic type for hover and focus.", demo: "experimental-type" },
+  { name: "PathMorph", category: "Kinetic type", description: "Caller-provided shapes transition through an SVG path loop.", demo: "experimental-type" },
+
+  { name: "MorphingNotch", category: "Spatial", description: "A compact command surface that reshapes around its content.", demo: "experimental-controls" },
+  { name: "ImageTrailCursor", category: "Spatial", description: "Pointer movement leaves a fading trail of visual cards.", demo: "experimental-spatial" },
+  { name: "InfiniteCanvas", category: "Spatial", description: "A draggable world for portfolios and visual archives.", demo: "experimental-spatial" },
+  { name: "Marquee3D", category: "Spatial", description: "A perspective rail that turns flat tiles into a spatial wall.", demo: "experimental-spatial" },
+  { name: "ProgressiveBlur", category: "Spatial", description: "Layered blur suggests content continuing beyond a frame.", demo: "experimental-type" },
+
+  { name: "PixelDitherReveal", category: "Reactive media", description: "A dithered cover clears to reveal media beneath.", demo: "experimental-media" },
+  { name: "ScrollScrubVideo", category: "Reactive media", description: "Scroll position controls a video or supplied frame sequence.", demo: "experimental-media" },
+  { name: "AudioReactiveShader", category: "Reactive media", description: "An opt-in microphone visual driven by live audio energy.", demo: "experimental-media" },
+  { name: "WebcamPixelGrid", category: "Reactive media", description: "An opt-in camera feed transformed into a graphic mosaic.", demo: "experimental-media" },
+];
+
+function ElementsCatalog() {
+  return (
+    <main className="min-h-screen bg-ink-950 py-20">
+      <Container>
+        <a
+          href={sitePath("/")}
+          className="text-sm text-ink-400 transition-colors hover:text-ink-0"
+        >
+          ← Back to the collection
+        </a>
+        <div className="mt-10 grid gap-8 border-b border-ink-700 pb-12 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-300">
+              Tactile elements
+            </p>
+            <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.055em] text-ink-0 sm:text-7xl">
+              Every component, not just the highlights.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">
+              Foundations, shader-native surfaces, living controls, physical cards,
+              kinetic type, spatial interactions, and reactive media. Each item
+              below links to a working showcase.
+            </p>
+          </div>
+          <div className="rounded-full border border-brand-400/30 bg-brand-500/10 px-5 py-3 font-mono text-sm text-brand-200">
+            {ELEMENTS.length} / 51 listed
+          </div>
+        </div>
+
+        {ELEMENT_CATEGORIES.map((category) => {
+          const items = ELEMENTS.filter((item) => item.category === category);
+          return (
+            <section key={category} className="border-b border-ink-800 py-12 last:border-0">
+              <div className="mb-7 flex items-baseline justify-between gap-4">
+                <h2 className="font-serif text-3xl tracking-tight text-ink-0">{category}</h2>
+                <span className="font-mono text-xs text-ink-500">{items.length} components</span>
+              </div>
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((item, index) => (
+                  <li key={item.name}>
+                    <a
+                      href={`?s=${item.demo}`}
+                      className="group flex h-full min-h-44 flex-col rounded-2xl border border-ink-700 bg-ink-850 p-5 transition-[border-color,transform,background-color] hover:-translate-y-1 hover:border-brand-400/70 hover:bg-ink-800"
+                    >
+                      <span className="font-mono text-[10px] text-ink-500">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="mt-5 text-lg font-semibold tracking-tight text-ink-0">
+                        {item.name}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-ink-400">
+                        {item.description}
+                      </p>
+                      <span className="mt-auto pt-5 text-xs font-semibold text-brand-300 transition-transform group-hover:translate-x-1">
+                        Open demo →
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
+      </Container>
+    </main>
+  );
+}
 
 const SECTIONS: Record<string, () => React.ReactNode> = {
   nav: () => (
@@ -581,7 +736,8 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
       action={{ label: "Browse all templates", href: "../templates/" }}
     />
   ),
-  elements: () => (
+  elements: () => <ElementsCatalog />,
+  "elements-foundations": () => (
     <Container className="py-24">
       <h1 className="text-3xl font-semibold tracking-tight text-ink-0">
         Marketing elements
