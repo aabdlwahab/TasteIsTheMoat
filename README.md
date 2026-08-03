@@ -32,6 +32,10 @@ Actions deployment workflow. The Pages build uses the project URL base
 
 `https://aabdlwahab.github.io/TasteIsTheMoat/`
 
+Before the first deployment, open **Settings → Pages** in GitHub and set
+**Source** to **GitHub Actions**. This is a one-time repository setting;
+GitHub's default workflow token cannot enable a Pages site on its own.
+
 Regenerate the directory locally with:
 
 ```bash
