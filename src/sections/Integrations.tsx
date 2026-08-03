@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Container, Section, SectionHeading } from "../ui/primitives";
 import { Reveal } from "../ui/Reveal";
 import { cn } from "../ui/cn";
@@ -86,7 +87,7 @@ export function Integrations({
             return (
               <Reveal as="li" key={i} delay={i * 40}>
                 {it.href ? (
-                  <a href={it.href} className={shell}>
+                  <a href={sitePath(it.href)} className={shell}>
                     {inner}
                   </a>
                 ) : (

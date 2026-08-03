@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Button, Container } from "../ui/primitives";
 import { cn } from "../ui/cn";
 
@@ -107,7 +108,7 @@ export function Footer({
                     {col.links.map((l, i) => (
                       <li key={i}>
                         <a
-                          href={l.href}
+                          href={sitePath(l.href)}
                           className="text-[15px] text-ink-300 transition-colors hover:text-ink-0"
                         >
                           {l.label}
@@ -130,7 +131,7 @@ export function Footer({
               {social.map((s, i) => (
                 <li key={i}>
                   <a
-                    href={s.href}
+                    href={sitePath(s.href)}
                     aria-label={s.label}
                     className="grid size-9 place-items-center rounded-lg text-ink-400 transition-colors hover:bg-white/8 hover:text-ink-0"
                   >

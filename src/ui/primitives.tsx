@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { cn } from "./cn";
 
 /* ---- Container ---------------------------------------------------------- */
@@ -120,7 +121,7 @@ export function Button({
   );
   if (href) {
     return (
-      <a href={href} className={classes}>
+      <a href={sitePath(href)} className={classes}>
         {children}
       </a>
     );
@@ -150,7 +151,7 @@ export function Badge({
     className,
   );
   return href ? (
-    <a href={href} className={classes}>
+    <a href={sitePath(href)} className={classes}>
       {children}
     </a>
   ) : (

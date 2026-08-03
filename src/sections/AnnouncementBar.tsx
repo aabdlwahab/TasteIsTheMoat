@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { cn } from "../ui/cn";
 
 export interface AnnouncementBarProps {
@@ -79,7 +80,7 @@ export function AnnouncementBar({
     >
       <div className="mx-auto flex max-w-6xl items-center justify-center gap-3 px-10 py-2.5">
         {href ? (
-          <a href={href} className="underline-offset-4 hover:underline">
+          <a href={sitePath(href)} className="underline-offset-4 hover:underline">
             {inner}
           </a>
         ) : (

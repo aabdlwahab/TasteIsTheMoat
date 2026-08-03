@@ -6,6 +6,7 @@ import {
   type PointerEvent,
   type ReactNode,
 } from "react";
+import { sitePath } from "../../core/sitePath";
 import { cn } from "../cn";
 
 export interface MagneticButtonProps {
@@ -294,7 +295,7 @@ export function LinkPreview({
       onPointerLeave={() => setOpen(false)}
     >
       <a
-        href={href}
+        href={sitePath(href)}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         className="font-medium text-brand-200 underline decoration-brand-400/50 underline-offset-4"

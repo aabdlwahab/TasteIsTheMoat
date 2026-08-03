@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Reveal } from "../ui/Reveal";
 import {
   Badge,
@@ -93,7 +94,7 @@ export function Gallery({
               <Reveal key={index} delay={(index % columns) * 70}>
                 {item.href ? (
                   <a
-                    href={item.href}
+                    href={sitePath(item.href)}
                     className="group block overflow-hidden rounded-2xl border border-ink-700 bg-ink-850 transition-transform hover:-translate-y-1"
                   >
                     {content}

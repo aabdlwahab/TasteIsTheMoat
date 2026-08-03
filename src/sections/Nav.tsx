@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Button } from "../ui/primitives";
 import { cn } from "../ui/cn";
 
@@ -96,7 +97,7 @@ export function Nav({
           {links.map((l, i) => (
             <li key={i}>
               <a
-                href={l.href}
+                href={sitePath(l.href)}
                 className="text-sm text-ink-300 transition-colors hover:text-ink-0"
               >
                 {l.label}
@@ -155,7 +156,7 @@ export function Nav({
             {links.map((l, i) => (
               <li key={i}>
                 <a
-                  href={l.href}
+                  href={sitePath(l.href)}
                   onClick={() => setMenuOpen(false)}
                   className="block rounded-lg px-2 py-3 text-[15px] text-ink-100 hover:bg-white/8"
                 >

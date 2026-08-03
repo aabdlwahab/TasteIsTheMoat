@@ -24,6 +24,20 @@ npm run dev
 - Contact sheet (every shader at once): `/examples/contact-sheet.html`
 - Landing page demo (vanilla): `/examples/landing.html`
 
+### GitHub Pages
+
+The repository includes a tracked `pages/` production build and a GitHub
+Actions deployment workflow. The Pages build uses the project URL base
+`/TasteIsTheMoat/`, so assets and internal links work at:
+
+`https://aabdlwahab.github.io/TasteIsTheMoat/`
+
+Regenerate the directory locally with:
+
+```bash
+npm run build:pages
+```
+
 ---
 
 ## Sections (React + Tailwind)

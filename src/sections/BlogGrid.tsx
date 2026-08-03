@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Button, Container, Section, SectionHeading } from "../ui/primitives";
 import { Reveal } from "../ui/Reveal";
 import { cn } from "../ui/cn";
@@ -57,7 +58,7 @@ export function BlogGrid({
 }: BlogGridProps) {
   const card = (p: Post, featured: boolean) => (
     <a
-      href={p.href}
+      href={sitePath(p.href)}
       className={cn(
         "group flex h-full flex-col overflow-hidden rounded-card border border-ink-700 bg-ink-850/60",
         "transition-colors hover:border-ink-600",

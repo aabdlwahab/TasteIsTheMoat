@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { StatusBadge } from "../ui/StatusBadge";
 import { Container, Section, SectionHeading } from "../ui/primitives";
 import { cn } from "../ui/cn";
@@ -64,7 +65,7 @@ export function Changelog({
               </div>
               <h3 className="mt-4 text-xl font-semibold text-ink-0">
                 {release.href ? (
-                  <a href={release.href} className="hover:text-brand-200">
+                  <a href={sitePath(release.href)} className="hover:text-brand-200">
                     {release.title}
                   </a>
                 ) : (

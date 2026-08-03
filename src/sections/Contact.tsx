@@ -1,4 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Button, Container, Section, SectionHeading } from "../ui/primitives";
 import { cn } from "../ui/cn";
 
@@ -77,7 +78,7 @@ export function Contact({
                     <dd className="mt-1 text-[15px] text-ink-200">
                       {method.href ? (
                         <a
-                          href={method.href}
+                          href={sitePath(method.href)}
                           className="transition-colors hover:text-brand-200"
                         >
                           {method.value}

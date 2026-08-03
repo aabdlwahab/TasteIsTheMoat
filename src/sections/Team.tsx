@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sitePath } from "../core/sitePath";
 import { Container, Section, SectionHeading } from "../ui/primitives";
 import { Reveal } from "../ui/Reveal";
 import { cn } from "../ui/cn";
@@ -109,7 +110,7 @@ export function Team({
                         {m.links.map((l, j) => (
                           <li key={j}>
                             <a
-                              href={l.href}
+                              href={sitePath(l.href)}
                               aria-label={`${m.name} on ${l.label}`}
                               className="grid size-8 place-items-center rounded-lg text-ink-400 transition-colors hover:bg-white/8 hover:text-ink-0"
                             >
