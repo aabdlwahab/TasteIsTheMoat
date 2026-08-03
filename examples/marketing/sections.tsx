@@ -39,12 +39,17 @@ import {
   Waitlist,
 } from "../../src/sections/index";
 import {
+  Accordion,
   AvatarStack,
   AudioReactiveShader,
+  Badge,
   BorderBeam,
   BrowserFrame,
+  Button,
+  Card,
   CodeComparison,
   Container,
+  Counter,
   CopyField,
   DirectionAwareCard,
   DraggableCardPile,
@@ -59,6 +64,7 @@ import {
   LensReveal,
   LinkPreview,
   MagneticButton,
+  Marquee,
   Marquee3D,
   MorphingDialog,
   MorphingNotch,
@@ -67,8 +73,10 @@ import {
   PixelDitherReveal,
   ProgressiveBlur,
   Rating,
+  Reveal,
   ScrollCardStack,
   ScrollScrubVideo,
+  Section,
   SectionHeading,
   SegmentedControl,
   ShaderCard,
@@ -189,23 +197,23 @@ const ELEMENT_CATEGORIES: ElementCategory[] = [
 ];
 
 const ELEMENTS: ElementCatalogItem[] = [
-  { name: "Button", category: "Foundation", description: "Primary, secondary, and ghost actions with accessible focus states.", demo: "elements-foundations" },
-  { name: "Badge", category: "Foundation", description: "Compact labels for announcements, releases, and metadata.", demo: "elements-foundations" },
-  { name: "Card", category: "Foundation", description: "A consistent bordered surface for content and controls.", demo: "elements-foundations" },
-  { name: "Container", category: "Foundation", description: "Responsive page width and horizontal rhythm.", demo: "elements-foundations" },
-  { name: "Section", category: "Foundation", description: "Shader-free vertical spacing for page composition.", demo: "elements-foundations" },
-  { name: "SectionHeading", category: "Foundation", description: "Eyebrow, title, and supporting copy with stable hierarchy.", demo: "elements-foundations" },
-  { name: "GradientText", category: "Foundation", description: "Brand-gradient display type with a readable fallback.", demo: "elements-foundations" },
-  { name: "Reveal", category: "Foundation", description: "Scroll entrance that respects reduced motion and fails open.", demo: "elements-foundations" },
-  { name: "Marquee", category: "Foundation", description: "Reusable continuous rail for logos, proof, and messages.", demo: "logos-marquee" },
-  { name: "Accordion", category: "Foundation", description: "Keyboard-accessible disclosure for FAQs and details.", demo: "faq" },
-  { name: "Counter", category: "Foundation", description: "Viewport-triggered numeric count-up with truthful fallbacks.", demo: "stats" },
-  { name: "BrowserFrame", category: "Foundation", description: "Product screenshot and live-demo framing with browser chrome.", demo: "showcase" },
-  { name: "AvatarStack", category: "Foundation", description: "Compact people proof with initials and overflow count.", demo: "elements-foundations" },
-  { name: "Rating", category: "Foundation", description: "Accessible rating and review proof.", demo: "elements-foundations" },
-  { name: "CopyField", category: "Foundation", description: "One-click copy for commands, keys, and snippets.", demo: "elements-foundations" },
-  { name: "SegmentedControl", category: "Foundation", description: "Small mutually exclusive option switcher.", demo: "elements-foundations" },
-  { name: "StatusBadge", category: "Foundation", description: "Operational, informational, warning, and neutral states.", demo: "elements-foundations" },
+  { name: "Button", category: "Foundation", description: "Primary, secondary, and ghost actions with accessible focus states.", demo: "foundation-button" },
+  { name: "Badge", category: "Foundation", description: "Compact labels for announcements, releases, and metadata.", demo: "foundation-badge" },
+  { name: "Card", category: "Foundation", description: "A consistent bordered surface for content and controls.", demo: "foundation-card" },
+  { name: "Container", category: "Foundation", description: "Responsive page width and horizontal rhythm.", demo: "foundation-container" },
+  { name: "Section", category: "Foundation", description: "Shader-free vertical spacing for page composition.", demo: "foundation-section" },
+  { name: "SectionHeading", category: "Foundation", description: "Eyebrow, title, and supporting copy with stable hierarchy.", demo: "foundation-section-heading" },
+  { name: "GradientText", category: "Foundation", description: "Brand-gradient display type with a readable fallback.", demo: "foundation-gradient-text" },
+  { name: "Reveal", category: "Foundation", description: "Scroll entrance that respects reduced motion and fails open.", demo: "foundation-reveal" },
+  { name: "Marquee", category: "Foundation", description: "Reusable continuous rail for logos, proof, and messages.", demo: "foundation-marquee" },
+  { name: "Accordion", category: "Foundation", description: "Keyboard-accessible disclosure for FAQs and details.", demo: "foundation-accordion" },
+  { name: "Counter", category: "Foundation", description: "Viewport-triggered numeric count-up with truthful fallbacks.", demo: "foundation-counter" },
+  { name: "BrowserFrame", category: "Foundation", description: "Product screenshot and live-demo framing with browser chrome.", demo: "foundation-browser-frame" },
+  { name: "AvatarStack", category: "Foundation", description: "Compact people proof with initials and overflow count.", demo: "foundation-avatar-stack" },
+  { name: "Rating", category: "Foundation", description: "Accessible rating and review proof.", demo: "foundation-rating" },
+  { name: "CopyField", category: "Foundation", description: "One-click copy for commands, keys, and snippets.", demo: "foundation-copy-field" },
+  { name: "SegmentedControl", category: "Foundation", description: "Small mutually exclusive option switcher.", demo: "foundation-segmented-control" },
+  { name: "StatusBadge", category: "Foundation", description: "Operational, informational, warning, and neutral states.", demo: "foundation-status-badge" },
 
   { name: "ShaderText", category: "Shader-native", description: "A living shader clipped directly into headline glyphs.", demo: "shader-text" },
   { name: "ShaderCard", category: "Shader-native", description: "A shader-backed card that wakes on interaction.", demo: "shader-cards" },
@@ -311,6 +319,43 @@ function ElementsCatalog() {
             </section>
           );
         })}
+      </Container>
+    </main>
+  );
+}
+
+function FoundationDemo({
+  name,
+  description,
+  children,
+}: {
+  name: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <main className="min-h-screen bg-ink-950 py-16 sm:py-20">
+      <Container>
+        <a
+          href="?s=elements"
+          className="text-sm text-ink-400 transition-colors hover:text-ink-0"
+        >
+          ← All tactile elements
+        </a>
+        <div className="mt-10 max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-300">
+            Foundation component
+          </p>
+          <h1 className="mt-3 font-serif text-5xl tracking-[-0.045em] text-ink-0 sm:text-6xl">
+            {name}
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-300">
+            {description}
+          </p>
+        </div>
+        <div className="mt-12 overflow-hidden rounded-3xl border border-ink-700 bg-ink-850/70 p-6 sm:p-10">
+          {children}
+        </div>
       </Container>
     </main>
   );
@@ -737,53 +782,265 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
     />
   ),
   elements: () => <ElementsCatalog />,
-  "elements-foundations": () => (
-    <Container className="py-24">
-      <h1 className="text-3xl font-semibold tracking-tight text-ink-0">
-        Marketing elements
-      </h1>
-      <p className="mt-3 max-w-xl text-ink-400">
-        Small social-proof, status, command, and selection primitives for the spaces between sections.
-      </p>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2">
-        <div className="rounded-2xl border border-ink-700 bg-ink-850 p-6">
-          <p className="text-xs uppercase tracking-[0.12em] text-ink-500">Avatar stack</p>
-          <AvatarStack
-            className="mt-5"
-            size="lg"
-            items={[
-              { name: "Ada Okonkwo" },
-              { name: "Tomas Reyes" },
-              { name: "Priya Raman" },
-              { name: "Sven Aalto" },
-              { name: "Mei Chen" },
-              { name: "Jonah Blake" },
-            ]}
-          />
-          <Rating className="mt-4" label="Loved by 2,400 builders" />
-        </div>
-        <div className="rounded-2xl border border-ink-700 bg-ink-850 p-6">
-          <p className="text-xs uppercase tracking-[0.12em] text-ink-500">Status badges</p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <StatusBadge pulse>Operational</StatusBadge>
-            <StatusBadge tone="info">New</StatusBadge>
-            <StatusBadge tone="warning">Beta</StatusBadge>
-            <StatusBadge tone="neutral">Draft</StatusBadge>
-          </div>
-        </div>
-        <div className="rounded-2xl border border-ink-700 bg-ink-850 p-6 sm:col-span-2">
-          <CopyField label="Install" value="npm install taste-is-the-moat" />
-          <SegmentedControl
-            className="mt-6"
-            label="Billing period"
-            options={[
-              { label: "Monthly", value: "monthly" },
-              { label: "Annual · save 20%", value: "annual" },
-            ]}
-          />
-        </div>
+  "foundation-button": () => (
+    <FoundationDemo
+      name="Button"
+      description="Primary, secondary, and ghost actions with accessible focus states and three practical sizes."
+    >
+      <div className="flex min-h-56 flex-wrap items-center justify-center gap-4">
+        <Button size="lg">Primary action</Button>
+        <Button variant="secondary">Secondary action</Button>
+        <Button variant="ghost" size="sm">Ghost action</Button>
+        <Button disabled>Disabled</Button>
       </div>
-    </Container>
+    </FoundationDemo>
+  ),
+  "foundation-badge": () => (
+    <FoundationDemo
+      name="Badge"
+      description="Compact labels for announcements, releases, categories, and lightweight metadata."
+    >
+      <div className="flex min-h-56 flex-wrap items-center justify-center gap-3">
+        <Badge>New release</Badge>
+        <Badge className="bg-brand-500/15 text-brand-200 ring-brand-400/25">Editor’s pick</Badge>
+        <Badge className="bg-emerald-400/10 text-emerald-200 ring-emerald-300/20">Available</Badge>
+        <Badge href="#">Read the notes →</Badge>
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-card": () => (
+    <FoundationDemo
+      name="Card"
+      description="A consistent bordered surface for grouping copy, controls, metrics, and visual details."
+    >
+      <div className="grid gap-5 md:grid-cols-3">
+        {[
+          ["Signal", "42%", "More qualified demo requests"],
+          ["Speed", "18h", "From brief to launch"],
+          ["Quality", "96", "Lighthouse performance"],
+        ].map(([label, value, detail]) => (
+          <Card key={label}>
+            <p className="text-xs uppercase tracking-[0.12em] text-ink-500">{label}</p>
+            <p className="mt-6 font-serif text-5xl text-ink-0">{value}</p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-400">{detail}</p>
+          </Card>
+        ))}
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-container": () => (
+    <FoundationDemo
+      name="Container"
+      description="A responsive max-width wrapper that keeps page edges and horizontal rhythm consistent."
+    >
+      <div className="-mx-6 border-y border-dashed border-brand-400/40 bg-brand-500/5 py-10 sm:-mx-10">
+        <Container>
+          <div className="rounded-2xl border border-brand-400/30 bg-brand-500/10 p-6 text-center text-sm text-brand-100">
+            Content stays centered, readable, and safely padded at every viewport width.
+          </div>
+        </Container>
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-section": () => (
+    <FoundationDemo
+      name="Section"
+      description="Shader-free vertical spacing for composing calm, repeatable page chapters."
+    >
+      <div className="overflow-hidden rounded-2xl border border-ink-700 bg-ink-950">
+        <Section className="bg-[radial-gradient(circle_at_70%_20%,rgba(249,115,22,0.18),transparent_35%)]">
+          <Container>
+            <p className="text-xs uppercase tracking-[0.14em] text-brand-300">A complete chapter</p>
+            <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-ink-0">
+              Consistent spacing without layout guesswork.
+            </h2>
+          </Container>
+        </Section>
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-section-heading": () => (
+    <FoundationDemo
+      name="SectionHeading"
+      description="Eyebrow, title, and supporting copy arranged into a stable, reusable hierarchy."
+    >
+      <SectionHeading
+        eyebrow="Built with intent"
+        title="A heading that gives every section a clear point of view."
+        description="Use the centered treatment for broad introductions, or align it left inside editorial layouts."
+      />
+    </FoundationDemo>
+  ),
+  "foundation-gradient-text": () => (
+    <FoundationDemo
+      name="GradientText"
+      description="Brand-gradient display type with a readable text-colour fallback."
+    >
+      <div className="grid min-h-56 place-items-center text-center">
+        <p className="max-w-4xl font-serif text-5xl leading-[0.95] tracking-[-0.05em] text-ink-0 sm:text-7xl">
+          Taste is the <GradientText>moat.</GradientText>
+        </p>
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-reveal": () => (
+    <FoundationDemo
+      name="Reveal"
+      description="A scroll entrance that respects reduced-motion preferences and always fails open."
+    >
+      <div className="grid gap-4 sm:grid-cols-3">
+        {["Notice", "Understand", "Remember"].map((label, index) => (
+          <Reveal key={label} delay={index * 140}>
+            <Card className="min-h-44">
+              <span className="font-mono text-xs text-brand-300">0{index + 1}</span>
+              <h3 className="mt-12 text-xl font-semibold text-ink-0">{label}</h3>
+            </Card>
+          </Reveal>
+        ))}
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-marquee": () => (
+    <FoundationDemo
+      name="Marquee"
+      description="A seamless, pause-on-hover rail for logos, proof points, categories, and messages."
+    >
+      <div className="py-16">
+        <Marquee duration={18}>
+          {["NORTHWIND", "ACME", "VERTEX", "LUMEN", "COBALT", "FATHOM"].map((logo) => (
+            <span key={logo} className="mx-8 font-mono text-lg tracking-[0.15em] text-ink-200">
+              {logo}
+            </span>
+          ))}
+        </Marquee>
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-accordion": () => (
+    <FoundationDemo
+      name="Accordion"
+      description="Keyboard-accessible disclosure for FAQs, product details, and progressive explanation."
+    >
+      <Accordion
+        className="mx-auto max-w-3xl"
+        items={[
+          { question: "Can every item open independently?", answer: "Yes. Each catalog card now has its own focused component demo." },
+          { question: "Does it work with a keyboard?", answer: "The controls are real buttons with expanded and controlled-state semantics." },
+          { question: "Can several answers stay open?", answer: "Enable the multiple option when the content benefits from comparison." },
+        ]}
+      />
+    </FoundationDemo>
+  ),
+  "foundation-counter": () => (
+    <FoundationDemo
+      name="Counter"
+      description="Viewport-triggered number animation with reduced-motion handling and truthful final values."
+    >
+      <div className="grid gap-5 text-center sm:grid-cols-3">
+        {[
+          { value: 69, suffix: "+", label: "backgrounds" },
+          { value: 51, suffix: "", label: "components" },
+          { value: 96, suffix: "%", label: "performance" },
+        ].map((stat) => (
+          <Card key={stat.label}>
+            <Counter className="font-serif text-6xl text-ink-0" value={stat.value} suffix={stat.suffix} />
+            <p className="mt-3 text-sm uppercase tracking-[0.12em] text-ink-400">{stat.label}</p>
+          </Card>
+        ))}
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-browser-frame": () => (
+    <FoundationDemo
+      name="BrowserFrame"
+      description="Product screenshots and live previews framed with restrained browser chrome and an optional glow."
+    >
+      <BrowserFrame url="tasteisthemoat.dev/studio" className="mx-auto max-w-4xl">
+        <div className="aspect-[16/8] bg-[radial-gradient(circle_at_25%_30%,#f97316,transparent_35%),radial-gradient(circle_at_75%_70%,#a855f7,transparent_36%),#11131b]" />
+      </BrowserFrame>
+    </FoundationDemo>
+  ),
+  "foundation-avatar-stack": () => (
+    <FoundationDemo
+      name="AvatarStack"
+      description="Compact people proof with readable initials, overflow handling, and an accessible text alternative."
+    >
+      <div className="grid min-h-56 place-items-center">
+        <AvatarStack
+          size="lg"
+          max={5}
+          items={[
+            { name: "Ada Okonkwo" },
+            { name: "Tomas Reyes" },
+            { name: "Priya Raman" },
+            { name: "Sven Aalto" },
+            { name: "Mei Chen" },
+            { name: "Jonah Blake" },
+            { name: "Inez Park" },
+          ]}
+        />
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-rating": () => (
+    <FoundationDemo
+      name="Rating"
+      description="Accessible, read-only review proof for product summaries and customer stories."
+    >
+      <div className="flex min-h-56 flex-col items-center justify-center gap-5">
+        <Rating value={5} label="Loved by 2,400 builders" />
+        <Rating value={4} label="4.0 from 860 reviews" />
+        <Rating value={3} size="sm" label="Early access feedback" />
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-copy-field": () => (
+    <FoundationDemo
+      name="CopyField"
+      description="One-click copy for install commands, API keys, links, and short code snippets."
+    >
+      <div className="mx-auto flex min-h-56 max-w-3xl items-center">
+        <CopyField label="Install the collection" value="npm install taste-is-the-moat" />
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-segmented-control": () => (
+    <FoundationDemo
+      name="SegmentedControl"
+      description="A compact radio-style selector for mutually exclusive options."
+    >
+      <div className="flex min-h-56 flex-col items-center justify-center gap-5">
+        <SegmentedControl
+          label="Billing period"
+          options={[
+            { label: "Monthly", value: "monthly" },
+            { label: "Annual · save 20%", value: "annual" },
+          ]}
+        />
+        <SegmentedControl
+          label="Preview size"
+          defaultValue="desktop"
+          options={[
+            { label: "Mobile", value: "mobile" },
+            { label: "Tablet", value: "tablet" },
+            { label: "Desktop", value: "desktop" },
+          ]}
+        />
+      </div>
+    </FoundationDemo>
+  ),
+  "foundation-status-badge": () => (
+    <FoundationDemo
+      name="StatusBadge"
+      description="Operational, informational, warning, and neutral states with an optional live pulse."
+    >
+      <div className="flex min-h-56 flex-wrap items-center justify-center gap-3">
+        <StatusBadge pulse>Operational</StatusBadge>
+        <StatusBadge tone="info">New</StatusBadge>
+        <StatusBadge tone="warning">Beta</StatusBadge>
+        <StatusBadge tone="neutral">Draft</StatusBadge>
+      </div>
+    </FoundationDemo>
   ),
   "experimental-controls": () => (
     <Container className="py-24">
