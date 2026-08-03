@@ -104,7 +104,7 @@ export class ThumbnailPool {
     const src = buildFragmentSource(def.uniforms, def.fragment);
     const result = linkProgram(gl, VERTEX_SRC, src);
     if (typeof result === "string") {
-      console.warn(`[shaderbg] thumbnail compile failed: ${def.id}`, result);
+      console.warn(`[Taste is the Moat] thumbnail compile failed: ${def.id}`, result);
       this.programs.set(def.id, null);
       return null;
     }

@@ -41,8 +41,10 @@ export function Footer({
             <div className="flex items-center gap-2.5 text-[15px] font-semibold text-ink-0">
               {logo ?? (
                 <>
-                  <span className="size-7 rounded-lg bg-[conic-gradient(from_210deg,var(--color-brand-500),var(--color-brand-300),var(--color-accent-400),var(--color-brand-500))]" />
-                  shaderbg
+                  <span className="grid size-7 place-items-center rounded-full border border-brand-300/50 bg-brand-500/15 font-serif text-[10px] font-bold tracking-tight text-brand-200">
+                    TM
+                  </span>
+                  Taste is the Moat
                 </>
               )}
             </div>
@@ -121,7 +123,7 @@ export function Footer({
 
         <div className="mt-14 flex flex-col-reverse items-center justify-between gap-6 border-t border-ink-700 pt-8 sm:flex-row">
           <p className="text-[13px] text-ink-400">
-            {legal ?? `© ${new Date().getFullYear()} shaderbg. All rights reserved.`}
+            {legal ?? `© ${new Date().getFullYear()} Taste is the Moat. All rights reserved.`}
           </p>
           {social.length > 0 && (
             <ul className="flex items-center gap-2">

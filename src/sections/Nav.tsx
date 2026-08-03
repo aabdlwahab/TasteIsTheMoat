@@ -84,8 +84,10 @@ export function Nav({
         >
           {logo ?? (
             <>
-              <span className="size-7 rounded-lg bg-[conic-gradient(from_210deg,var(--color-brand-500),var(--color-brand-300),var(--color-accent-400),var(--color-brand-500))]" />
-              shaderbg
+              <span className="grid size-7 place-items-center rounded-full border border-brand-300/50 bg-brand-500/15 font-serif text-[10px] font-bold tracking-tight text-brand-200">
+                TM
+              </span>
+              Taste is the Moat
             </>
           )}
         </a>

@@ -198,7 +198,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
       primaryAction={{ label: "Get started", href: "#" }}
       secondaryAction={{ label: "Docs", href: "#" }}
       visual={
-        <BrowserFrame url="shaderbg.dev/studio">
+        <BrowserFrame url="tasteisthemoat.dev/studio">
           <div className="aspect-[16/10] bg-[radial-gradient(ellipse_at_30%_25%,#4f46e5_0%,transparent_55%),radial-gradient(ellipse_at_70%_75%,#a855f7_0%,transparent_55%)]" />
         </BrowserFrame>
       }
@@ -222,7 +222,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
   ),
   features: () => (
     <Features
-      eyebrow="Why shaderbg"
+      eyebrow="Why Taste is the Moat"
       title="Everything a marketing page needs"
       description="Sections that already know how to host a shader."
       features={FEATURES}
@@ -230,7 +230,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
   ),
   "features-bento": () => (
     <Features
-      eyebrow="Why shaderbg"
+      eyebrow="Why Taste is the Moat"
       title="Built for marketing pages"
       variant="bento"
       features={FEATURES.map((f, i) => ({ ...f, wide: i === 0 }))}
@@ -307,9 +307,9 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
   showcase: () => (
     <ProductShowcase
       tabs={[
-        { label: "Studio", url: "shaderbg.dev/studio", content: <div className="aspect-[16/9] bg-[radial-gradient(ellipse_at_30%_25%,#4f46e5_0%,transparent_55%),radial-gradient(ellipse_at_70%_75%,#a855f7_0%,transparent_55%)]" />, description: "Tune uniforms and edit GLSL with live recompile." },
-        { label: "Sections", url: "shaderbg.dev/sections", content: <div className="aspect-[16/9] bg-[radial-gradient(ellipse_at_70%_30%,#06b6d4_0%,transparent_55%),radial-gradient(ellipse_at_25%_70%,#4f46e5_0%,transparent_55%)]" />, description: "Twenty-six reusable sections for marketing and landing pages." },
-        { label: "Export", url: "shaderbg.dev/export", content: <div className="aspect-[16/9] bg-[radial-gradient(ellipse_at_50%_50%,#a855f7_0%,transparent_60%)]" />, description: "One self-contained HTML file." },
+        { label: "Studio", url: "tasteisthemoat.dev/studio", content: <div className="aspect-[16/9] bg-[radial-gradient(ellipse_at_30%_25%,#4f46e5_0%,transparent_55%),radial-gradient(ellipse_at_70%_75%,#a855f7_0%,transparent_55%)]" />, description: "Tune uniforms and edit GLSL with live recompile." },
+        { label: "Sections", url: "tasteisthemoat.dev/sections", content: <div className="aspect-[16/9] bg-[radial-gradient(ellipse_at_70%_30%,#06b6d4_0%,transparent_55%),radial-gradient(ellipse_at_25%_70%,#4f46e5_0%,transparent_55%)]" />, description: "Twenty-six reusable sections for marketing and landing pages." },
+        { label: "Export", url: "tasteisthemoat.dev/export", content: <div className="aspect-[16/9] bg-[radial-gradient(ellipse_at_50%_50%,#a855f7_0%,transparent_60%)]" />, description: "One self-contained HTML file." },
       ]}
     />
   ),
@@ -328,7 +328,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
     <Steps
       variant="timeline"
       steps={[
-        { title: "Install the package", description: "One dependency-free runtime plus the sections you copy in.", visual: <BorderBeam contentClassName="p-4"><code className="block font-mono text-[13px] text-ink-200">npm i shaderbg</code></BorderBeam> },
+        { title: "Install the package", description: "One dependency-free runtime plus the sections you copy in.", visual: <BorderBeam contentClassName="p-4"><code className="block font-mono text-[13px] text-ink-200">npm i taste-is-the-moat</code></BorderBeam> },
         { title: "Choose your background", description: "Sixty-nine shaders across six categories, fifteen cursor-interactive." },
         { title: "Brand it once", description: "Pass a palette; sections and shader uniforms recolour together." },
       ]}
@@ -344,7 +344,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
   ),
   comparison: () => (
     <Comparison
-      columns={["shaderbg", "Video bg", "CSS gradient"]}
+      columns={["Taste is the Moat", "Video bg", "CSS gradient"]}
       rows={[
         { group: "Visuals", feature: "Animated", values: [true, true, false] },
         { feature: "Cursor-interactive", values: [true, false, false] },
@@ -616,7 +616,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
           </div>
         </div>
         <div className="rounded-2xl border border-ink-700 bg-ink-850 p-6 sm:col-span-2">
-          <CopyField label="Install" value="npm install shaderbg" />
+          <CopyField label="Install" value="npm install taste-is-the-moat" />
           <SegmentedControl
             className="mt-6"
             label="Billing period"

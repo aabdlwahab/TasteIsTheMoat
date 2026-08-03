@@ -166,7 +166,7 @@ export function standaloneHTML(
 /** The npm/JS usage snippet shown in the editor for a given shader id. */
 export function usageSnippet(shaderId: string): string {
   const camel = shaderId.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
-  return `import { ShaderBackground, shaders } from "shaderbg";
+  return `import { ShaderBackground, shaders } from "taste-is-the-moat";
 
 const canvas = document.querySelector("#bg");
 const bg = new ShaderBackground(canvas, shaders.${camel}, {

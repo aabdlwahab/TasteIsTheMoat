@@ -1,9 +1,9 @@
 /**
- * shaderbg — animated WebGL shader backgrounds for landing pages.
+ * Taste is the Moat — animated WebGL backgrounds and authored web patterns.
  *
  * @example
  * ```ts
- * import { ShaderBackground, shaders } from "shaderbg";
+ * import { ShaderBackground, shaders } from "taste-is-the-moat";
  *
  * const canvas = document.querySelector("canvas")!;
  * const bg = new ShaderBackground(canvas, shaders.aurora);

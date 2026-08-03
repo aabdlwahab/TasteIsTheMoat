@@ -1,4 +1,4 @@
-# shaderbg
+# Taste is the Moat
 
 Animated backgrounds, marketing elements, React sections, and complete landing
 pages — plus a studio to browse, tweak, and edit every shader live.
@@ -29,7 +29,7 @@ Twenty-six copy-paste sections for landing and marketing pages, with shader
 integration built in where motion adds value.
 
 ```tsx
-import { Hero, Features, Pricing, FAQ, CTA, Footer, Nav } from "shaderbg/react";
+import { Hero, Features, Pricing, FAQ, CTA, Footer, Nav } from "taste-is-the-moat/react";
 
 const brand = { primary: "#4f46e5", secondary: "#a855f7", accent: "#22d3ee" };
 
@@ -119,7 +119,7 @@ draws from patterns catalogued by [Aceternity UI](https://ui.aceternity.com/expl
 [Motion Primitives](https://motion-primitives.com/docs),
 [React Bits](https://www.reactbits.dev/), and
 [Codrops](https://tympanus.net/codrops/hub/). The implementations here are
-original and use the existing shaderbg component APIs and visual system.
+original and use the existing Taste is the Moat component APIs and visual system.
 
 ### Shader-native components
 
@@ -239,7 +239,7 @@ in environments without WebGL. `<ShaderSection>` fills it two ways:
 ```
 
 ```ts
-import { capturePoster, fallbackGradient } from "shaderbg";
+import { capturePoster, fallbackGradient } from "taste-is-the-moat";
 
 await capturePoster(holoFoil, { brand, time: 4 });  // data URL, browser-only
 fallbackGradient(holoFoil, { brand });              // CSS string, works in SSR
@@ -255,7 +255,7 @@ registry barrel, which pulls in every shader in the registry — tens of kB gzip
 only what you use, import the shader directly and pass the object:
 
 ```tsx
-import { holoFoil } from "shaderbg/shaders/holo-foil";
+import { holoFoil } from "taste-is-the-moat/shaders/holo-foil";
 <Hero shader={holoFoil} brand={brand} />
 ```
 
@@ -338,7 +338,7 @@ Every shader ships with tuned defaults and adjustable uniforms.
 ## Using a shader in your project
 
 ```ts
-import { ShaderBackground, shaders } from "shaderbg";
+import { ShaderBackground, shaders } from "taste-is-the-moat";
 
 const canvas = document.querySelector("#bg");
 const bg = new ShaderBackground(canvas, shaders.holoFoil, {
@@ -356,7 +356,7 @@ bg.play();
 Or let it create the canvas for you:
 
 ```ts
-import { mount } from "shaderbg";
+import { mount } from "taste-is-the-moat";
 
 const bg = mount("#hero", "liquid-ripple", { pauseWhenHidden: true });
 ```
@@ -364,7 +364,7 @@ const bg = mount("#hero", "liquid-ripple", { pauseWhenHidden: true });
 Browse by category:
 
 ```ts
-import { byCategory, interactiveShaders, shaderList } from "shaderbg";
+import { byCategory, interactiveShaders, shaderList } from "taste-is-the-moat";
 
 byCategory("iridescent");   // includes holoFoil, oilSlick, prism, metallicPaint
 interactiveShaders();       // every shader that reads the pointer

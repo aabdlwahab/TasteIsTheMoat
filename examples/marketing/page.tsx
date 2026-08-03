@@ -113,7 +113,7 @@ export function Page() {
           secondaryAction={{ label: "Browse shaders", href: "/studio.html" }}
           note="MIT licensed · Copy-paste components"
           visual={
-            <BrowserFrame url="shaderbg.dev/studio">
+            <BrowserFrame url="tasteisthemoat.dev/studio">
               {MOCK("#4f46e5", "#a855f7")}
             </BrowserFrame>
           }
@@ -134,7 +134,7 @@ export function Page() {
 
         <Features
           id="features"
-          eyebrow="Why shaderbg"
+          eyebrow="Why Taste is the Moat"
           title="Everything a marketing page needs"
           description="Sections that already know how to host a shader — legibility, performance and motion preferences handled before you write a line."
           features={[
@@ -183,20 +183,20 @@ export function Page() {
           tabs={[
             {
               label: "Browse",
-              url: "shaderbg.dev/studio",
+              url: "tasteisthemoat.dev/studio",
               content: MOCK("#4f46e5", "#a855f7"),
               description: "69 shaders with live previews, filters and search.",
             },
             {
               label: "Edit",
-              url: "shaderbg.dev/studio#editor",
+              url: "tasteisthemoat.dev/studio#editor",
               content: MOCK("#06b6d4", "#4f46e5"),
               description:
                 "Edit GLSL with live recompile and errors mapped to your code.",
             },
             {
               label: "Export",
-              url: "shaderbg.dev/studio#export",
+              url: "tasteisthemoat.dev/studio#export",
               content: MOCK("#a855f7", "#22d3ee"),
               description:
                 "One self-contained HTML file, or copy the React snippet.",
@@ -303,7 +303,7 @@ export function Page() {
         />
 
         <Comparison
-          columns={["shaderbg", "Video background", "CSS gradient"]}
+          columns={["Taste is the Moat", "Video background", "CSS gradient"]}
           rows={[
             { group: "Visuals", feature: "Animated", values: [true, true, false] },
             { feature: "Cursor-interactive", values: [true, false, false] },

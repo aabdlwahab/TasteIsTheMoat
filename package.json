@@ -1,7 +1,7 @@
 {
-  "name": "shaderbg",
+  "name": "taste-is-the-moat",
   "version": "0.1.0",
-  "description": "Animated backgrounds, marketing elements, React sections, and complete landing-page templates.",
+  "description": "A curated collection of animated backgrounds, tactile components, marketing sections, and opinionated landing pages.",
   "type": "module",
   "license": "MIT",
   "scripts": {
