@@ -8,19 +8,19 @@
  * recolours the sections and the shaders together.
  */
 @theme {
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+  --color-brand-800: #9a3412;
+  --color-brand-900: #7c2d12;
 
-  --color-accent-400: #22d3ee;
-  --color-accent-500: #06b6d4;
+  --color-accent-400: #bef264;
+  --color-accent-500: #a3e635;
 
   /* Neutral ramp tuned for dark marketing pages. */
   --color-ink-0: #ffffff;
@@ -36,6 +36,8 @@
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+    serif;
 
   --radius-card: 14px;
 }
@@ -43,10 +45,10 @@
 /* The brand palette handed to shaders. Kept as plain hex so it can be read
    with getComputedStyle and parsed without a colour library. */
 :root {
-  --brand-primary: #4f46e5;
-  --brand-secondary: #a855f7;
-  --brand-accent: #22d3ee;
-  --brand-background: #07080c;
+  --brand-primary: #f97316;
+  --brand-secondary: #f43f5e;
+  --brand-accent: #bef264;
+  --brand-background: #080706;
 }
 
 html {

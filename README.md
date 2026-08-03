@@ -1,12 +1,15 @@
 # Taste is the Moat
 
-Animated backgrounds, marketing elements, React sections, and complete landing
-pages — plus a studio to browse, tweak, and edit every shader live.
+Taste is the Moat is a curated collection for making the web feel authored:
+animated backgrounds, tactile components, React sections, and complete landing
+pages—plus a studio to browse, tune, and edit every shader live.
 
 **69 shaders**, **51 reusable elements**, **26 page sections**, and **16 complete
 landing-page templates** spanning conventional marketing and experimental work.
-The shader runtime remains dependency-free and exports a self-contained HTML
-file you can drop into any project.
+The premise is simple: capable design is abundant, so discernment is the real
+advantage. Every piece is opinionated, editable, reduced-motion ready, and
+selected to help a page escape the generic middle. The shader runtime remains
+dependency-free and exports a self-contained HTML file.
 
 ```bash
 npm install

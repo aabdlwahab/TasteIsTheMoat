@@ -36,10 +36,10 @@ import type { BrandPalette } from "../../src/core/theme";
 
 /** One palette drives both the sections and the shader colours. */
 const brand: BrandPalette = {
-  primary: "#4f46e5",
-  secondary: "#a855f7",
-  accent: "#22d3ee",
-  background: "#07080c",
+  primary: "#f97316",
+  secondary: "#f43f5e",
+  accent: "#bef264",
+  background: "#080706",
 };
 
 function Icon({ d }: { d: string }) {
@@ -114,7 +114,7 @@ export function Page() {
           note="MIT licensed · Copy-paste components"
           visual={
             <BrowserFrame url="tasteisthemoat.dev/studio">
-              {MOCK("#4f46e5", "#a855f7")}
+              {MOCK("#f97316", "#bef264")}
             </BrowserFrame>
           }
         />
@@ -184,20 +184,20 @@ export function Page() {
             {
               label: "Browse",
               url: "tasteisthemoat.dev/studio",
-              content: MOCK("#4f46e5", "#a855f7"),
+              content: MOCK("#f97316", "#f43f5e"),
               description: "69 shaders with live previews, filters and search.",
             },
             {
               label: "Edit",
               url: "tasteisthemoat.dev/studio#editor",
-              content: MOCK("#06b6d4", "#4f46e5"),
+              content: MOCK("#bef264", "#f97316"),
               description:
                 "Edit GLSL with live recompile and errors mapped to your code.",
             },
             {
               label: "Export",
               url: "tasteisthemoat.dev/studio#export",
-              content: MOCK("#a855f7", "#22d3ee"),
+              content: MOCK("#f43f5e", "#bef264"),
               description:
                 "One self-contained HTML file, or copy the React snippet.",
             },

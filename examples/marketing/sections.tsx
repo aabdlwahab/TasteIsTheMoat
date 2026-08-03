@@ -86,10 +86,10 @@ import {
 import type { BrandPalette } from "../../src/core/theme";
 
 const brand: BrandPalette = {
-  primary: "#4f46e5",
-  secondary: "#a855f7",
-  accent: "#22d3ee",
-  background: "#07080c",
+  primary: "#f97316",
+  secondary: "#f43f5e",
+  accent: "#bef264",
+  background: "#080706",
 };
 
 const FEATURES = [

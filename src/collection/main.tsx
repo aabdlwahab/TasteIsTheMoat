@@ -16,58 +16,73 @@ import {
   Container,
   CopyField,
   GradientText,
+  KineticTypeRibbon,
   StatusBadge,
 } from "../ui/index";
 import type { BrandPalette } from "../core/theme";
 
 const brand: BrandPalette = {
-  primary: "#4f46e5",
-  secondary: "#a855f7",
-  accent: "#22d3ee",
-  background: "#07080c",
+  primary: "#f97316",
+  secondary: "#f43f5e",
+  accent: "#bef264",
+  background: "#080706",
 };
+
+function BrandLockup() {
+  return (
+    <>
+      <span className="grid size-7 place-items-center rounded-full border border-brand-300/50 bg-brand-500/15 font-serif text-[10px] font-bold tracking-tight text-brand-200">
+        TM
+      </span>
+      <span>Taste is the Moat</span>
+    </>
+  );
+}
 
 const collection = [
   {
     title: "Animated backgrounds",
     category: "69 shaders",
-    result: "Open studio",
+    result: "Enter the studio",
     href: "/studio.html",
     description:
-      "WebGL shaders and moving CSS gradients with live controls, cursor interactions, and export.",
+      "Living WebGL surfaces and moving gradients—tuned to give a first viewport atmosphere, not decoration.",
     visual: (
-      <div className="size-full bg-[radial-gradient(circle_at_24%_28%,#4f46e5,transparent_36%),radial-gradient(circle_at_76%_68%,#22d3ee,transparent_38%),linear-gradient(145deg,#0a0c14,#1b1028)]" />
+      <div className="size-full bg-[radial-gradient(circle_at_20%_24%,#f97316,transparent_34%),radial-gradient(circle_at_78%_72%,#bef264,transparent_34%),linear-gradient(145deg,#0b0806,#321017)]" />
     ),
   },
   {
-    title: "Marketing elements",
-    category: "51 elements",
-    result: "Browse elements",
+    title: "Tactile elements",
+    category: "51 components",
+    result: "Touch the details",
     href: "/examples/marketing/sections.html?s=elements",
     description:
-      "Buttons, proof, status, copy controls, cards, shader text, border beams, marquees, and more.",
+      "Magnetic buttons, morphing cards, kinetic type, image trails, dither reveals, lenses, and stranger things.",
     visual: (
-      <div className="grid size-full grid-cols-2 gap-3 bg-ink-900 p-8">
-        <div className="rounded-xl border border-white/10 bg-white/5" />
-        <div className="rounded-xl bg-gradient-to-br from-brand-500 to-accent-400" />
-        <div className="col-span-2 rounded-full border border-white/10 bg-white/8" />
+      <div className="relative size-full overflow-hidden bg-[#100e0c] p-8">
+        <div className="absolute -right-8 -top-12 size-40 rounded-full border-[22px] border-brand-500/60" />
+        <div className="grid size-full grid-cols-2 gap-3">
+          <div className="rounded-full border border-white/15 bg-white/5" />
+          <div className="rounded-[45%_55%_34%_66%] bg-gradient-to-br from-brand-500 to-rose-500" />
+          <div className="col-span-2 rounded-xl border border-accent-400/30 bg-accent-400/10" />
+        </div>
       </div>
     ),
   },
   {
-    title: "Page sections",
-    category: "26 sections",
-    result: "Open catalog",
+    title: "Marketing sections",
+    category: "26 systems",
+    result: "Build the sequence",
     href: "/examples/marketing/sections.html",
     description:
-      "Heroes, features, pricing, use cases, trust, customer stories, contact, changelog, and conversion blocks.",
+      "Heroes, proof, pricing, stories, launches, and conversion moments designed to work as a deliberate whole.",
     visual: (
-      <div className="size-full bg-ink-900 p-8">
-        <div className="mx-auto h-4 w-2/3 rounded-full bg-white/80" />
-        <div className="mx-auto mt-3 h-2 w-1/2 rounded-full bg-white/20" />
-        <div className="mt-8 grid grid-cols-3 gap-3">
+      <div className="size-full bg-[#0d0b09] p-8">
+        <div className="font-serif text-4xl italic tracking-tight text-white">Point of view.</div>
+        <div className="mt-5 h-px bg-gradient-to-r from-brand-400 via-accent-400 to-transparent" />
+        <div className="mt-6 grid grid-cols-3 gap-3">
           <div className="h-20 rounded-xl border border-white/10 bg-white/5" />
-          <div className="h-20 rounded-xl border border-brand-300/30 bg-brand-400/10" />
+          <div className="h-20 rounded-xl bg-brand-500/80" />
           <div className="h-20 rounded-xl border border-white/10 bg-white/5" />
         </div>
       </div>
@@ -75,162 +90,223 @@ const collection = [
   },
   {
     title: "Complete webpages",
-    category: "16 templates",
-    result: "View templates",
+    category: "16 directions",
+    result: "Choose a world",
     href: "/examples/templates/",
     description:
-      "Sixteen starters spanning SaaS, AI, culture, portfolios, data stories, product drops, music, and events.",
+      "Opinionated starters for products, culture, portfolios, music, data, launches, luxury, and ideas without a category.",
     visual: (
-      <div className="relative size-full bg-[linear-gradient(135deg,#11131d,#24133a)] p-8">
-        <div className="h-full rounded-t-xl border border-b-0 border-white/15 bg-ink-950/80 p-5">
-          <div className="h-2 w-16 rounded-full bg-white/30" />
-          <div className="mt-9 h-5 w-3/4 rounded-full bg-white/85" />
-          <div className="mt-3 h-2 w-1/2 rounded-full bg-white/20" />
-          <div className="mt-8 h-16 rounded-xl bg-gradient-to-r from-brand-600/70 to-accent-500/50" />
+      <div className="relative size-full overflow-hidden bg-[#f3efe6] p-7 text-[#17130f]">
+        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em]">
+          <span>Issue 16</span>
+          <span>Selected pages</span>
         </div>
+        <div className="mt-8 max-w-[12rem] font-serif text-4xl leading-[0.9] tracking-[-0.06em]">
+          Made to be remembered.
+        </div>
+        <div className="absolute bottom-0 right-0 size-32 rounded-tl-full bg-brand-500" />
       </div>
     ),
+  },
+];
+
+const principles = [
+  {
+    number: "01",
+    title: "Edit before you add",
+    description:
+      "A smaller set of excellent choices beats a warehouse of plausible ones. Every piece earns its place.",
+  },
+  {
+    number: "02",
+    title: "Motion needs a reason",
+    description:
+      "Movement should reveal hierarchy, reward curiosity, or create atmosphere. Otherwise it is only noise.",
+  },
+  {
+    number: "03",
+    title: "Make defaults opinionated",
+    description:
+      "The fastest route to memorable work is a strong starting position—not another blank, neutral canvas.",
   },
 ];
 
 function CollectionHome() {
   return (
     <>
-      <AnnouncementBar dismissible={false} href="/examples/templates/">
-        <StatusBadge tone="info">New</StatusBadge>
-        Twelve experimental page templates just joined the collection
+      <AnnouncementBar dismissible={false} href="#collection">
+        <StatusBadge tone="info">Curated</StatusBadge>
+        162 ways out of sameness
         <span aria-hidden="true">→</span>
       </AnnouncementBar>
       <Nav
-        logo={
-          <>
-            <span className="size-7 rounded-lg bg-[conic-gradient(from_210deg,var(--color-brand-500),var(--color-brand-300),var(--color-accent-400),var(--color-brand-500))]" />
-            shaderbg
-          </>
-        }
+        logo={<BrandLockup />}
         links={[
-          { label: "Collection", href: "#collection" },
-          { label: "Sections", href: "/examples/marketing/sections.html" },
-          { label: "Templates", href: "/examples/templates/" },
+          { label: "The collection", href: "#collection" },
+          { label: "Principles", href: "#principles" },
+          { label: "Complete pages", href: "/examples/templates/" },
         ]}
-        secondaryCta={{ label: "Open studio", href: "/studio.html" }}
-        cta={{ label: "View templates", href: "/examples/templates/" }}
+        secondaryCta={{ label: "Shader studio", href: "/studio.html" }}
+        cta={{ label: "Browse everything", href: "#collection" }}
       />
       <main>
         <Hero
           shader="holo-foil"
           brand={brand}
-          badge={{ label: "69 backgrounds · 51 elements · 26 sections · 16 webpages" }}
+          scrim="strong"
+          badge={{ label: "The anti-generic web collection" }}
           headline={
             <>
-              The building blocks for landing pages{" "}
-              <GradientText>people remember.</GradientText>
+              Your competitors can copy your features.{" "}
+              <GradientText>They can’t copy your eye.</GradientText>
             </>
           }
-          subhead="Browse animated backgrounds, reusable marketing elements, complete React sections, and opinionated page starters—all in one collection."
-          primaryAction={{ label: "Browse the collection", href: "#collection" }}
-          secondaryAction={{ label: "Open shader studio", href: "/studio.html" }}
-          note="React + Tailwind · Copy-paste friendly · Reduced-motion ready"
+          subhead="Taste is the Moat is a curated collection of animated backgrounds, tactile components, complete sections, and authored landing pages for teams that refuse to look interchangeable."
+          primaryAction={{ label: "Explore the collection", href: "#collection" }}
+          secondaryAction={{ label: "Read the thesis", href: "#principles" }}
+          note="69 backgrounds · 51 elements · 26 sections · 16 complete pages"
+          layout="split"
           visual={
-            <BrowserFrame url="shaderbg.dev/collection">
-              <div className="aspect-[16/10] bg-[radial-gradient(circle_at_22%_28%,#4f46e5,transparent_35%),radial-gradient(circle_at_75%_68%,#a855f7,transparent_38%),#0b0c13] p-6">
-                <div className="grid h-full grid-cols-2 gap-3">
-                  {["Shaders", "Elements", "Sections", "Pages"].map(
-                    (label, index) => (
-                      <div
-                        key={label}
-                        className="flex items-end rounded-xl border border-white/12 bg-black/20 p-4 text-sm font-semibold text-white/85 backdrop-blur"
-                      >
-                        <span className="mr-2 text-white/35">0{index + 1}</span>
-                        {label}
-                      </div>
-                    ),
-                  )}
+            <BrowserFrame url="tasteisthemoat.dev/collection">
+              <div className="relative aspect-[16/10] overflow-hidden bg-[#0b0908] p-5 sm:p-7">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-500 via-rose-500 to-accent-400" />
+                <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-[0.24em] text-white/45">
+                  <span>The taste test</span>
+                  <span>Vol. 01</span>
+                </div>
+                <div className="mt-8 font-serif text-[clamp(2.8rem,8vw,5.8rem)] leading-[0.72] tracking-[-0.08em] text-white">
+                  TASTE
+                </div>
+                <div className="ml-[26%] mt-4 flex items-center gap-4">
+                  <span className="text-4xl text-brand-400">&gt;</span>
+                  <span className="font-serif text-[clamp(2.5rem,7vw,5rem)] italic leading-none tracking-[-0.07em] text-accent-400">
+                    trends
+                  </span>
+                </div>
+                <div className="absolute bottom-6 left-7 right-7 flex items-end justify-between border-t border-white/15 pt-4 text-[10px] uppercase tracking-[0.18em] text-white/50">
+                  <span>Curated<br />not generated</span>
+                  <span className="grid size-12 place-items-center rounded-full bg-brand-500 text-base font-black text-black">TM</span>
                 </div>
               </div>
             </BrowserFrame>
           }
         />
+
+        <KineticTypeRibbon
+          text="Distinctive by default"
+          repeat={6}
+          className="border-brand-400/20 bg-brand-500 text-black [&_.text-brand-400]:text-accent-400"
+        />
+
         <Stats
           stats={[
-            { value: 69, label: "Animated backgrounds" },
-            { value: 51, label: "Reusable elements" },
-            { value: 26, label: "Marketing sections" },
-            { value: 16, label: "Complete webpages" },
+            { value: 69, label: "Atmospheric backgrounds" },
+            { value: 51, label: "Tactile elements" },
+            { value: 26, label: "Narrative sections" },
+            { value: 16, label: "Complete worlds" },
           ]}
         />
+
         <Gallery
           id="collection"
           eyebrow="The collection"
-          title="Start at any scale"
-          description="Take one small element, assemble a section, or begin with a complete conversion-focused page."
+          title="Four doors into better work"
+          description="Start with a moment, assemble a story, or borrow an entire visual world. Every path stays editable."
           items={collection}
         />
+
+        <section id="principles" className="border-y border-ink-700 bg-[#f3efe6] py-24 text-[#17130f] sm:py-32">
+          <Container>
+            <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#8c3b18]">
+                  The thesis
+                </p>
+                <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.92] tracking-[-0.055em] sm:text-6xl">
+                  Design is abundant. Discernment is scarce.
+                </h2>
+              </div>
+              <div>
+                <p className="max-w-2xl text-xl leading-relaxed text-[#4c433a] sm:text-2xl">
+                  Tools have made competent design cheap. That changes the advantage: the moat is no longer production—it is knowing what to make, what to remove, and when to stop.
+                </p>
+                <div className="mt-12 divide-y divide-black/15 border-y border-black/15">
+                  {principles.map((principle) => (
+                    <article key={principle.number} className="grid gap-4 py-7 sm:grid-cols-[4rem_0.8fr_1.2fr] sm:items-start">
+                      <span className="font-mono text-xs text-[#8c3b18]">{principle.number}</span>
+                      <h3 className="font-serif text-xl font-semibold">{principle.title}</h3>
+                      <p className="leading-relaxed text-[#64584d]">{principle.description}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
+
         <Features
-          eyebrow="Experimental collection"
+          eyebrow="The selection"
           title="The pieces that make a page feel authored"
-          description="Interaction-heavy patterns rebuilt for the existing shaderbg system, with reduced-motion and input fallbacks."
+          description="Experimental interactions, disciplined systems, and complete page directions—selected for memorability and rebuilt for real use."
           features={[
             { title: "Spatial canvases", description: "Infinite galleries, image trails, draggable piles, and perspective marquees." },
             { title: "Kinetic typography", description: "Velocity ribbons, encrypted copy, split-flap words, and elastic headlines." },
             { title: "Physical cards", description: "Morphing dialogs, directional reveals, lenses, and sticky scroll stacks." },
             { title: "Reactive media", description: "Dither reveals, scroll-scrubbed video, audio energy, and opt-in camera mosaics." },
             { title: "Living controls", description: "Morphing notches, gooey menus, magnetic CTAs, and vanishing prompt inputs." },
-            { title: "Niche webpages", description: "Twelve complete experimental directions for culture, product, data, and art." },
+            { title: "Opinionated pages", description: "Complete directions for culture, product, data, art, music, launches, and luxury." },
           ]}
         />
+
         <section className="border-y border-ink-700 bg-ink-900/50 py-20">
           <Container>
             <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-300">
-                  Developer friendly
+                  Keep the source
                 </p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-ink-0">
-                  Copy the piece. Keep the code.
+                <h2 className="mt-3 font-serif text-4xl tracking-tight text-ink-0">
+                  Take the code, not the sameness.
                 </h2>
                 <p className="mt-4 max-w-xl leading-relaxed text-ink-300">
-                  Components are plain TypeScript and Tailwind, with accessible
-                  states and shader fallbacks built into the public APIs.
+                  Everything is plain TypeScript and Tailwind with accessible states, reduced-motion behavior, and graceful shader fallbacks already considered.
                 </p>
-                <Button
-                  href="/examples/marketing/"
-                  variant="secondary"
-                  className="mt-7"
-                >
-                  View the assembled demo
+                <Button href="/examples/marketing/" variant="secondary" className="mt-7">
+                  See an assembled page
                 </Button>
               </div>
-              <CopyField value="npm install shaderbg" label="Install the collection" />
+              <CopyField value="npm install taste-is-the-moat" label="Install the collection" />
             </div>
           </Container>
         </section>
+
         <CTA
           shader="liquid-ripple"
           brand={brand}
-          title="Pick a page. Change the story. Ship."
-          description="The complete starters are deliberately opinionated—and every section is still yours to replace."
-          primaryAction={{ label: "Browse page templates", href: "/examples/templates/" }}
-          secondaryAction={{ label: "Browse sections", href: "/examples/marketing/sections.html" }}
+          title="Make the first scroll impossible to forget."
+          description="Choose a strong starting point. Break what needs breaking. Ship something with a point of view."
+          primaryAction={{ label: "Browse complete pages", href: "/examples/templates/" }}
+          secondaryAction={{ label: "Open the shader studio", href: "/studio.html" }}
         />
       </main>
       <Footer
-        tagline="Animated backgrounds, marketing elements, React sections, and complete landing pages."
+        logo={<BrandLockup />}
+        tagline="A curated collection for the part of the web that still wants to be remembered."
         columns={[
           {
             heading: "Collection",
             links: [
-              { label: "Shaders", href: "/studio.html" },
+              { label: "Backgrounds", href: "/studio.html" },
               { label: "Elements", href: "/examples/marketing/sections.html?s=elements" },
               { label: "Sections", href: "/examples/marketing/sections.html" },
             ],
           },
           {
-            heading: "Pages",
+            heading: "Complete pages",
             links: [
-              { label: "SaaS", href: "/examples/templates/?template=saas" },
-              { label: "AI", href: "/examples/templates/?template=ai" },
-              { label: "Developer tool", href: "/examples/templates/?template=developer" },
+              { label: "Infinite portfolio", href: "/examples/templates/?template=infinite-portfolio" },
+              { label: "Kinetic editorial", href: "/examples/templates/?template=kinetic-editorial" },
+              { label: "Generative studio", href: "/examples/templates/?template=generative-studio" },
             ],
           },
           {
@@ -238,7 +314,7 @@ function CollectionHome() {
             links: [
               { label: "Marketing demo", href: "/examples/marketing/" },
               { label: "Contact sheet", href: "/examples/contact-sheet.html" },
-              { label: "Agency page", href: "/examples/templates/?template=agency" },
+              { label: "Spatial agency", href: "/examples/templates/?template=spatial-agency" },
             ],
           },
         ]}
