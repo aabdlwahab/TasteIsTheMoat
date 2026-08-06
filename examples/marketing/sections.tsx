@@ -92,6 +92,12 @@ import {
   WebcamPixelGrid,
   WetPaintButton,
 } from "../../src/ui/index";
+import {
+  MOTION_CATEGORIES,
+  MOTION_DEMOS,
+  MOTION_ELEMENTS,
+} from "./motionDemos";
+import type { MotionCategory } from "./motionDemos";
 import type { BrandPalette } from "../../src/core/theme";
 
 const brand: BrandPalette = {
@@ -177,7 +183,8 @@ type ElementCategory =
   | "Physical cards"
   | "Kinetic type"
   | "Spatial"
-  | "Reactive media";
+  | "Reactive media"
+  | MotionCategory;
 
 interface ElementCatalogItem {
   name: string;
@@ -194,6 +201,7 @@ const ELEMENT_CATEGORIES: ElementCategory[] = [
   "Kinetic type",
   "Spatial",
   "Reactive media",
+  ...MOTION_CATEGORIES,
 ];
 
 const ELEMENTS: ElementCatalogItem[] = [
@@ -254,6 +262,8 @@ const ELEMENTS: ElementCatalogItem[] = [
   { name: "ScrollScrubVideo", category: "Reactive media", description: "Scroll position controls a video or supplied frame sequence.", demo: "experimental-media" },
   { name: "AudioReactiveShader", category: "Reactive media", description: "An opt-in microphone visual driven by live audio energy.", demo: "experimental-media" },
   { name: "WebcamPixelGrid", category: "Reactive media", description: "An opt-in camera feed transformed into a graphic mosaic.", demo: "experimental-media" },
+
+  ...MOTION_ELEMENTS,
 ];
 
 function ElementsCatalog() {
@@ -276,12 +286,12 @@ function ElementsCatalog() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">
               Foundations, shader-native surfaces, living controls, physical cards,
-              kinetic type, spatial interactions, and reactive media. Each item
-              below links to a working showcase.
+              kinetic type, spatial interactions, reactive media, and the motion
+              collection. Each item below links to a working showcase.
             </p>
           </div>
           <div className="rounded-full border border-brand-400/30 bg-brand-500/10 px-5 py-3 font-mono text-sm text-brand-200">
-            {ELEMENTS.length} / 51 listed
+            {ELEMENTS.length} components
           </div>
         </div>
 
@@ -782,6 +792,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
     />
   ),
   elements: () => <ElementsCatalog />,
+  ...MOTION_DEMOS,
   "foundation-button": () => (
     <FoundationDemo
       name="Button"

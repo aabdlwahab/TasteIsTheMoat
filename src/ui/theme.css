@@ -273,3 +273,212 @@ html.no-js [data-reveal="pending"] {
     animation: none;
   }
 }
+
+/* Motion collection ---------------------------------------------------------
+   Keyframes for src/ui/motion. Every animation here is applied by a component
+   that already gates on prefers-reduced-motion in JS; the media query at the
+   end of this block is the belt-and-braces for anything that renders before
+   the hook has read the preference. */
+
+/* AnimatedGroup presets. Each child gets an animation-delay by index. */
+@keyframes sbg-mp-group-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sbg-mp-group-slide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sbg-mp-group-scale {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes sbg-mp-group-blur {
+  from { opacity: 0; filter: blur(6px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes sbg-mp-group-blur-slide {
+  from { opacity: 0; filter: blur(6px); transform: translateY(20px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+.sbg-mp-group-fade { animation: sbg-mp-group-fade 0.5s ease-out both; }
+.sbg-mp-group-slide { animation: sbg-mp-group-slide 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.sbg-mp-group-scale { animation: sbg-mp-group-scale 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.sbg-mp-group-blur { animation: sbg-mp-group-blur 0.5s ease-out both; }
+.sbg-mp-group-blur-slide { animation: sbg-mp-group-blur-slide 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* TextEffect presets, per word/char/line segment. */
+@keyframes sbg-mp-te-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sbg-mp-te-blur {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes sbg-mp-te-fade-blur {
+  from { opacity: 0; filter: blur(10px); transform: translateY(6px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+@keyframes sbg-mp-te-scale {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes sbg-mp-te-slide {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sbg-mp-te-fade { animation: sbg-mp-te-fade 0.5s ease-out both; }
+.sbg-mp-te-blur { animation: sbg-mp-te-blur 0.5s ease-out both; }
+.sbg-mp-te-fade-blur { animation: sbg-mp-te-fade-blur 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.sbg-mp-te-scale { animation: sbg-mp-te-scale 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.sbg-mp-te-slide { animation: sbg-mp-te-slide 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* TextMorph: characters are keyed by value, so React only animates the ones
+   that actually entered. */
+@keyframes sbg-mp-morph-char {
+  from { opacity: 0; transform: scale(0.7); filter: blur(3px); }
+  to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+.sbg-mp-morph-char {
+  animation: sbg-mp-morph-char 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* TextShimmer: the background is a moving highlight clipped to the glyphs. */
+@keyframes sbg-mp-shimmer {
+  from { background-position: 100% center; }
+  to { background-position: 0% center; }
+}
+.sbg-mp-shimmer {
+  background-repeat: no-repeat, padding-box;
+  background-size: 250% 100%;
+  animation: sbg-mp-shimmer 2s linear infinite;
+}
+
+/* TextShimmerWave: distances arrive as custom properties so one keyframe set
+   serves every configuration. */
+@keyframes sbg-mp-shimmer-wave {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotateY(0);
+    color: var(--base-color);
+  }
+  50% {
+    transform: translate3d(var(--sbg-mp-x, 2px), var(--sbg-mp-y, -2px), var(--sbg-mp-z, 10px))
+      scale(var(--sbg-mp-scale, 1.1)) rotateY(var(--sbg-mp-rotate, 10deg));
+    color: var(--highlight-color);
+  }
+}
+.sbg-mp-shimmer-wave {
+  animation: sbg-mp-shimmer-wave 1s ease-in-out infinite;
+}
+
+/* BorderTrail: four keyframes walk the perimeter. `offset-path` would be
+   tidier but is not dependable across the browsers this project targets. */
+@keyframes sbg-mp-border-trail {
+  0%   { top: 0;    left: 0; }
+  25%  { top: 0;    left: 100%; }
+  50%  { top: 100%; left: 100%; }
+  75%  { top: 100%; left: 0; }
+  100% { top: 0;    left: 0; }
+}
+.sbg-mp-border-trail {
+  animation: sbg-mp-border-trail 5s linear infinite;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+}
+
+/* InfiniteSlider: the track holds two copies, so -50% is exactly one loop.
+   The gap is subtracted so the seam lands on a real gap, not inside one. */
+@keyframes sbg-mp-slide-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - var(--sbg-mp-slide-gap, 0px) / 2)); }
+}
+@keyframes sbg-mp-slide-y {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-50% - var(--sbg-mp-slide-gap, 0px) / 2)); }
+}
+.sbg-mp-slide-x { animation: sbg-mp-slide-x 20s linear infinite; }
+.sbg-mp-slide-y { animation: sbg-mp-slide-y 20s linear infinite; }
+
+/* SpinningText */
+@keyframes sbg-mp-spin {
+  to { transform: rotate(360deg); }
+}
+.sbg-mp-spin { animation: sbg-mp-spin 10s linear infinite; }
+
+/* GlowEffect modes. */
+@keyframes sbg-mp-glow-rotate {
+  to { transform: rotate(360deg); }
+}
+@keyframes sbg-mp-glow-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+@keyframes sbg-mp-glow-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+@keyframes sbg-mp-glow-shift {
+  to { filter: hue-rotate(360deg) blur(var(--sbg-mp-glow-blur, 12px)); }
+}
+@keyframes sbg-mp-glow-flow {
+  to { background-position: 200% center; }
+}
+.sbg-mp-glow-rotate { animation: sbg-mp-glow-rotate 5s linear infinite; }
+.sbg-mp-glow-pulse { animation: sbg-mp-glow-pulse 5s ease-in-out infinite; }
+.sbg-mp-glow-breathe { animation: sbg-mp-glow-breathe 5s ease-in-out infinite; }
+.sbg-mp-glow-shift { animation: sbg-mp-glow-shift 5s linear infinite; }
+.sbg-mp-glow-flow { animation: sbg-mp-glow-flow 5s linear infinite; }
+
+/* Overlay entrances. */
+@keyframes sbg-mp-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.sbg-mp-fade-in { animation: sbg-mp-fade-in 0.3s ease-out both; }
+
+@keyframes sbg-mp-dialog-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.sbg-mp-dialog-in {
+  animation: sbg-mp-dialog-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sbg-mp-pop-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.sbg-mp-pop-in {
+  animation: sbg-mp-pop-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sbg-mp-group-fade,
+  .sbg-mp-group-slide,
+  .sbg-mp-group-scale,
+  .sbg-mp-group-blur,
+  .sbg-mp-group-blur-slide,
+  .sbg-mp-te-fade,
+  .sbg-mp-te-blur,
+  .sbg-mp-te-fade-blur,
+  .sbg-mp-te-scale,
+  .sbg-mp-te-slide,
+  .sbg-mp-morph-char,
+  .sbg-mp-shimmer,
+  .sbg-mp-shimmer-wave,
+  .sbg-mp-border-trail,
+  .sbg-mp-slide-x,
+  .sbg-mp-slide-y,
+  .sbg-mp-spin,
+  .sbg-mp-glow-rotate,
+  .sbg-mp-glow-pulse,
+  .sbg-mp-glow-breathe,
+  .sbg-mp-glow-shift,
+  .sbg-mp-glow-flow,
+  .sbg-mp-fade-in,
+  .sbg-mp-dialog-in,
+  .sbg-mp-pop-in {
+    animation: none;
+  }
+}
