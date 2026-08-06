@@ -31,7 +31,9 @@ float height(vec2 p, float t) {
   h += snoise(p * 2.6 - vec2(t * 0.4, 0.0)) * 0.18;
 
   // Cursor wake — a bump that follows the pointer, stretched by its velocity.
-  vec2 m = mouseSmoothPos();
+  // Raw: the wake should sit under the cursor; the trailing look comes from
+  // the ring phase and the velocity term, not from a lagging centre.
+  vec2 m = mousePos();
   vec2 d = p - m;
   float dist = length(d);
   float falloff = exp(-dist * dist / (u_cursorRadius * u_cursorRadius));
@@ -87,7 +89,7 @@ void main() {
   col = mix(col, vec3(0.85, 0.93, 1.0), crest * 0.12);
 
   // Subtle glow following the pointer so it always feels alive.
-  float glow = exp(-length(p - mouseSmoothPos()) * 3.0) * u_mouseEnter;
+  float glow = exp(-length(p - mousePos()) * 3.0) * u_mouseEnter;
   col += u_shallow * glow * 0.12;
 
   gl_FragColor = vec4(col, 1.0);

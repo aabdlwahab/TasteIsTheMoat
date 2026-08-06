@@ -31,7 +31,8 @@ void main() {
   vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / u_resolution.y;
   float t = u_time * u_speed;
 
-  vec2 m = mouseSmoothPos();
+  // Raw, not smoothed: the torch is the cursor, so it must not trail it.
+  vec2 m = mousePos();
 
   // The concealed pattern: contour bands from a drifting noise field.
   float n = fbm(p * u_scale + vec2(t * 0.3, t * 0.15));

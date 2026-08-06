@@ -149,19 +149,19 @@ export const smokeGradient = shader({
 export const radarSweep = shader({
   id: "radar-sweep", name: "Radar Sweep", category: "interactive", interactive: true,
   description: "A scanning radial grid with cursor-positioned echoes.",
-  fragment: `void main(){vec2 p=(gl_FragCoord.xy*2.0-u_resolution.xy)/u_resolution.y;float t=u_time*u_speed;float r=length(p),a=atan(p.y,p.x);float circles=1.0-smoothstep(.02,.045,abs(fract(r*u_scale*2.0)-.5));float spokes=1.0-smoothstep(.015,.04,abs(sin(a*6.0)));float sweep=pow(max(0.0,cos(a-t*2.0)),22.0);float echo=exp(-length(p-mouseSmoothPos())*8.0)*u_mouseEnter;vec3 c=u_colorA+u_colorB*(circles+spokes)*.18;c+=u_accent*(sweep*(1.0-r)+echo)*u_intensity;gl_FragColor=vec4(c,1.0);}`,
+  fragment: `void main(){vec2 p=(gl_FragCoord.xy*2.0-u_resolution.xy)/u_resolution.y;float t=u_time*u_speed;float r=length(p),a=atan(p.y,p.x);float circles=1.0-smoothstep(.02,.045,abs(fract(r*u_scale*2.0)-.5));float spokes=1.0-smoothstep(.015,.04,abs(sin(a*6.0)));float sweep=pow(max(0.0,cos(a-t*2.0)),22.0);float echo=exp(-length(p-mousePos())*8.0)*u_mouseEnter;vec3 c=u_colorA+u_colorB*(circles+spokes)*.18;c+=u_accent*(sweep*(1.0-r)+echo)*u_intensity;gl_FragColor=vec4(c,1.0);}`,
 });
 
 export const pixelTrail = shader({
   id: "pixel-trail", name: "Pixel Trail", category: "interactive", interactive: true,
   description: "A pixelated glow trail that follows movement and clicks.",
-  fragment: `void main(){vec2 p=(gl_FragCoord.xy*2.0-u_resolution.xy)/u_resolution.y;vec2 cell=floor(p*u_scale*18.0)/(u_scale*18.0);float d=length(cell-mouseSmoothPos());float trail=exp(-d*7.0)*u_mouseEnter;trail+=abs(rippleField(cell,1.0,18.0,1.2));float flick=hash21(cell*31.0+floor(u_time*8.0));float v=smoothstep(.1,.9,trail*(.6+.7*flick));vec3 c=mix(u_colorA,u_colorB,v);c+=u_accent*v*u_intensity;gl_FragColor=vec4(c,1.0);}`,
+  fragment: `void main(){vec2 p=(gl_FragCoord.xy*2.0-u_resolution.xy)/u_resolution.y;vec2 cell=floor(p*u_scale*18.0)/(u_scale*18.0);float d=length(cell-mousePos());float trail=exp(-d*7.0)*u_mouseEnter;trail+=abs(rippleField(cell,1.0,18.0,1.2));float flick=hash21(cell*31.0+floor(u_time*8.0));float v=smoothstep(.1,.9,trail*(.6+.7*flick));vec3 c=mix(u_colorA,u_colorB,v);c+=u_accent*v*u_intensity;gl_FragColor=vec4(c,1.0);}`,
 });
 
 export const antigravityField = shader({
   id: "antigravity-field", name: "Antigravity Field", category: "interactive", interactive: true,
   description: "Floating particles pushed away by the pointer.",
-  fragment: `void main(){vec2 p=(gl_FragCoord.xy*2.0-u_resolution.xy)/u_resolution.y*u_scale;vec2 m=mouseSmoothPos()*u_scale;vec2 id=floor(p),gv=fract(p)-.5;float t=u_time*u_speed;float stars=0.0;for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 n=vec2(float(i),float(j));vec2 o=hash22(id+n)-.5;o+=sin(t+hash22(id+n)*TAU)*.22;vec2 wp=id+n+o;vec2 away=normalize(wp-m+vec2(.001))*exp(-length(wp-m)*.7)*u_mouseEnter;float d=length(n+o+away*.65-gv);stars+=.012/(d*d+.008);}vec3 c=u_colorA+mix(u_colorB,u_accent,clamp(stars*.08,0.0,1.0))*stars*.08*u_intensity;gl_FragColor=vec4(c,1.0);}`,
+  fragment: `void main(){vec2 p=(gl_FragCoord.xy*2.0-u_resolution.xy)/u_resolution.y*u_scale;vec2 m=mousePos()*u_scale;vec2 id=floor(p),gv=fract(p)-.5;float t=u_time*u_speed;float stars=0.0;for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 n=vec2(float(i),float(j));vec2 o=hash22(id+n)-.5;o+=sin(t+hash22(id+n)*TAU)*.22;vec2 wp=id+n+o;vec2 away=normalize(wp-m+vec2(.001))*exp(-length(wp-m)*.7)*u_mouseEnter;float d=length(n+o+away*.65-gv);stars+=.012/(d*d+.008);}vec3 c=u_colorA+mix(u_colorB,u_accent,clamp(stars*.08,0.0,1.0))*stars*.08*u_intensity;gl_FragColor=vec4(c,1.0);}`,
 });
 
 export const metallicPaint = shader({

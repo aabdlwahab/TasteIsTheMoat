@@ -37,7 +37,9 @@ void main() {
   vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / u_resolution.y;
   float t = u_time * u_speed;
 
-  vec2 m = mouseSmoothPos();
+  // Raw: the swirl is centred on the pointer, so a lagging centre would make
+  // the flow orbit a point the cursor has already left.
+  vec2 m = mousePos();
   vec2 toM = p - m;
   float dist = length(toM);
 

@@ -26,7 +26,8 @@ export const magneticDots: ShaderDef = {
   fragment: /* glsl */ `
 void main() {
   vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / u_resolution.y;
-  vec2 m = mouseSmoothPos();
+  // Raw: the dots part around the pointer itself.
+  vec2 m = mousePos();
 
   vec2 gridUv = p * u_density;
   vec2 id = floor(gridUv);

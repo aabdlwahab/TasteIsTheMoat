@@ -444,8 +444,19 @@ export class ShaderBackground {
 
   /** Advance pointer smoothing, velocity and ripple ages by `dt` seconds. */
   private updatePointer(dt: number): void {
-    // Exponential smoothing that stays frame-rate independent.
-    const ease = 1 - Math.exp(-dt * 8);
+    /**
+     * Exponential smoothing that stays frame-rate independent.
+     *
+     * The rate is a time constant: at 8 the smoothed pointer settled over
+     * ~125ms, which put it as much as 130px behind the real cursor during an
+     * ordinary flick — enough that a highlight drawn at `u_mouseSmooth` visibly
+     * detached from the pointer. 22 keeps the jitter removal and the velocity
+     * signal while cutting that lag to roughly a frame's worth of travel.
+     *
+     * Shaders that mark *where the cursor is* should use `mousePos()` anyway;
+     * `u_mouseSmooth` is for follow and parallax, where trailing is the point.
+     */
+    const ease = 1 - Math.exp(-dt * 22);
     const prev: [number, number] = [this.mouseSmooth[0], this.mouseSmooth[1]];
     this.mouseSmooth = [
       this.mouseSmooth[0] + (this.mouse[0] - this.mouseSmooth[0]) * ease,

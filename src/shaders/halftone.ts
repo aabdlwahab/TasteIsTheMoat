@@ -31,8 +31,9 @@ void main() {
   // Continuous tone we are going to screen.
   float tone = fbm(vec3(p * u_scale, t * 0.4)) * 0.5 + 0.5;
 
-  // A soft lobe under the cursor pushes the local tone up.
-  float d = length(p - mouseSmoothPos());
+  // A soft lobe under the cursor pushes the local tone up. Raw, so "under the
+  // cursor" stays literally true while the pointer moves.
+  float d = length(p - mousePos());
   tone += exp(-d * d * 3.5) * u_cursor * u_mouseEnter;
   tone = clamp(tone, 0.0, 1.0);
 

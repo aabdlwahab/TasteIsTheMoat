@@ -235,13 +235,20 @@ uniform vec4  u_ripples[${MAX_RIPPLES}];
 varying vec2  v_uv;
 
 // Aspect-corrected pointer, matching the p convention used by the shaders
-// (centred, y in -1..1). Use this to measure distance to the cursor.
+// (centred, y in -1..1).
+//
+// Use mousePos() for anything that marks where the cursor *is* — a torch, a
+// reveal lobe, a repulsion field. It is the untouched pointer position, so the
+// effect sits exactly under the cursor.
 vec2 mousePos() {
   vec2 m = u_mouse * 2.0 - 1.0;
   m.x *= u_resolution.x / u_resolution.y;
   return m;
 }
 
+// The eased pointer. Deliberately trails the real one, so use it only where
+// the lag is the effect: follow, parallax, drift, chromatic offset. Drawing a
+// highlight here makes it visibly detach from the cursor while moving.
 vec2 mouseSmoothPos() {
   vec2 m = u_mouseSmooth * 2.0 - 1.0;
   m.x *= u_resolution.x / u_resolution.y;
