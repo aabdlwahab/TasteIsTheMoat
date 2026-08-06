@@ -6,7 +6,7 @@
  * catalog metadata.
  */
 import { useState } from "react";
-import { Container } from "../../src/ui/index";
+import { BrandMark, Container } from "../../src/ui/index";
 import {
   Accordion,
   AccordionContent,
@@ -776,8 +776,8 @@ function SpinningTextDemo() {
         >
           {"taste is the moat • curated not generated • "}
         </SpinningText>
-        <span className="absolute grid size-16 place-items-center rounded-full bg-brand-500 font-serif text-lg font-bold text-black">
-          TM
+        <span className="absolute grid size-16 place-items-center rounded-full bg-brand-500 text-black">
+          <BrandMark className="size-9" />
         </span>
       </div>
     </div>

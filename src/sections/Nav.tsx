@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { sitePath } from "../core/sitePath";
 import { Button } from "../ui/primitives";
 import { cn } from "../ui/cn";
+import { BrandMark } from "../ui/BrandMark";
 
 export interface NavLink {
   label: string;
@@ -85,9 +86,7 @@ export function Nav({
         >
           {logo ?? (
             <>
-              <span className="grid size-7 place-items-center rounded-full border border-brand-300/50 bg-brand-500/15 font-serif text-[10px] font-bold tracking-tight text-brand-200">
-                TM
-              </span>
+              <BrandMark className="size-7 text-brand-400" />
               Taste is the Moat
             </>
           )}

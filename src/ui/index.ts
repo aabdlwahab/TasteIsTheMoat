@@ -1,5 +1,8 @@
 export { cn } from "./cn";
 
+export { BrandMark } from "./BrandMark";
+export type { BrandMarkProps } from "./BrandMark";
+
 export { ShaderSection } from "./ShaderSection";
 export type { ShaderSectionProps, ScrimStrength } from "./ShaderSection";
 

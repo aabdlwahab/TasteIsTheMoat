@@ -11,6 +11,7 @@ import {
   Stats,
 } from "../sections/index";
 import {
+  BrandMark,
   BrowserFrame,
   Button,
   Container,
@@ -31,9 +32,7 @@ const brand: BrandPalette = {
 function BrandLockup() {
   return (
     <>
-      <span className="grid size-7 place-items-center rounded-full border border-brand-300/50 bg-brand-500/15 font-serif text-[10px] font-bold tracking-tight text-brand-200">
-        TM
-      </span>
+      <BrandMark className="size-7 text-brand-400" />
       <span>Taste is the Moat</span>
     </>
   );
@@ -185,7 +184,9 @@ function CollectionHome() {
                 </div>
                 <div className="absolute bottom-6 left-7 right-7 flex items-end justify-between border-t border-white/15 pt-4 text-[10px] uppercase tracking-[0.18em] text-white/50">
                   <span>Curated<br />not generated</span>
-                  <span className="grid size-12 place-items-center rounded-full bg-brand-500 text-base font-black text-black">TM</span>
+                  <span className="grid size-12 place-items-center rounded-full bg-brand-500 text-black">
+                    <BrandMark className="size-7" />
+                  </span>
                 </div>
               </div>
             </BrowserFrame>

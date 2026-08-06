@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Taste is the Moat">
+  <!--
+    The house mark, sized for a tab strip. Kept in step with <BrandMark> in
+    src/ui/BrandMark.tsx, with two differences that only matter at 16px: the
+    middle ring is dropped (three rings blur into a blob), and the strokes are
+    heavier so the shape survives downscaling.
+  -->
+  <rect width="32" height="32" rx="8" fill="#f97316"/>
+  <circle cx="16" cy="16" r="10.4" fill="none" stroke="#0a0b0f" stroke-width="2.7"/>
+  <circle cx="16" cy="16" r="4.1" fill="#0a0b0f"/>
+</svg>
