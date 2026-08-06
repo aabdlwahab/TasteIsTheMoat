@@ -26,15 +26,25 @@ export const liquidRipple: ShaderDef = {
   },
   fragment: /* glsl */ `
 // Combined wave height: ambient swell + cursor wake + click rings.
-float height(vec2 p, float t) {
-  float h = fbm(p * 1.4 + vec2(t * 0.25, t * 0.15)) * 0.5;
-  h += snoise(p * 2.6 - vec2(t * 0.4, 0.0)) * 0.18;
+//
+// q arrives already multiplied by u_scale — the ambient swell is authored in
+// that scaled space. The pointer terms are not: they have to be evaluated in
+// screen space, or they land at mousePos()/u_scale, which at the default scale
+// of 2.2 is 45% of the way to the cursor and drifts further the further the
+// pointer sits from the centre.
+float height(vec2 q, float t) {
+  float h = fbm(q * 1.4 + vec2(t * 0.25, t * 0.15)) * 0.5;
+  h += snoise(q * 2.6 - vec2(t * 0.4, 0.0)) * 0.18;
+
+  // Back to screen space. u_scale has a floor of 0.5, so this cannot divide
+  // by zero, and it keeps u_cursorRadius and the ring frequency below meaning
+  // what they say on screen rather than scaling with the pattern.
+  vec2 p = q / u_scale;
 
   // Cursor wake — a bump that follows the pointer, stretched by its velocity.
-  // Raw: the wake should sit under the cursor; the trailing look comes from
-  // the ring phase and the velocity term, not from a lagging centre.
-  vec2 m = mousePos();
-  vec2 d = p - m;
+  // Raw, not smoothed: the wake sits under the cursor; the trailing look comes
+  // from the ring phase and the velocity term, not from a lagging centre.
+  vec2 d = p - mousePos();
   float dist = length(d);
   float falloff = exp(-dist * dist / (u_cursorRadius * u_cursorRadius));
   // Concentric rings trailing the cursor, driven by how fast it is moving.
