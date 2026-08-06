@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import {
-  AnnouncementBar,
   CTA,
   Features,
   Footer,
@@ -19,7 +18,6 @@ import {
   GradientText,
   KineticTypeRibbon,
   ParticleText,
-  StatusBadge,
 } from "../ui/index";
 import type { BrandPalette } from "../core/theme";
 
@@ -134,11 +132,6 @@ const principles = [
 function CollectionHome() {
   return (
     <>
-      <AnnouncementBar dismissible={false} href="#collection">
-        <StatusBadge tone="info">Curated</StatusBadge>
-        162 ways out of sameness
-        <span aria-hidden="true">→</span>
-      </AnnouncementBar>
       <Nav
         logo={<BrandLockup />}
         links={[
@@ -181,8 +174,14 @@ function CollectionHome() {
                 <ParticleText
                   text="TASTE"
                   align="left"
-                  className="mt-2 h-[clamp(7rem,21vw,15rem)]"
-                  textClassName="font-serif text-[clamp(5.4rem,16vw,11.5rem)] font-normal leading-[0.8] tracking-[-0.08em] text-white"
+                  // Sized against the frame, not the viewport. The hero column
+                  // stops growing at max-w-6xl, so a vw height keeps climbing
+                  // after the frame has stopped — past ~1150px that pushed
+                  // "> trends" out through the frame's overflow-hidden. The
+                  // aspect-[16/10] parent has a definite height, so a
+                  // percentage tracks it at every width.
+                  className="mt-2 h-[44%]"
+                  textClassName="font-serif text-[clamp(2.6rem,5.5vw,4.6rem)] font-normal leading-[0.8] tracking-[-0.08em] text-white"
                   fontFamily='"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif'
                   fontWeight={400}
                   fill={0.94}
