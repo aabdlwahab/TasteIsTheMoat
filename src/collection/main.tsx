@@ -18,6 +18,7 @@ import {
   CopyField,
   GradientText,
   KineticTypeRibbon,
+  ParticleText,
   StatusBadge,
 } from "../ui/index";
 import type { BrandPalette } from "../core/theme";
@@ -173,9 +174,27 @@ function CollectionHome() {
                   <span>The taste test</span>
                   <span>Vol. 01</span>
                 </div>
-                <div className="mt-8 font-serif text-[clamp(2.8rem,8vw,5.8rem)] leading-[0.72] tracking-[-0.08em] text-white">
-                  TASTE
-                </div>
+                {/* The word the page is arguing for, made touchable. A stiff
+                    return spring keeps it legible as a headline — it should
+                    snap back, not linger scattered, because this sits inside a
+                    mock browser that has to keep reading as a page. */}
+                <ParticleText
+                  text="TASTE"
+                  align="left"
+                  className="mt-2 h-[clamp(7rem,21vw,15rem)]"
+                  textClassName="font-serif text-[clamp(5.4rem,16vw,11.5rem)] font-normal leading-[0.8] tracking-[-0.08em] text-white"
+                  fontFamily='"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif'
+                  fontWeight={400}
+                  fill={0.94}
+                  particles={34000}
+                  radius={200}
+                  force={5600}
+                  spring={110}
+                  // Matches the hero shader behind it; the default of 2 would
+                  // put a third megapixel-scale canvas on the first viewport.
+                  maxDpr={1.5}
+                  colors={{ rest: "#ffffff", mid: "#f97316", hot: "#bef264" }}
+                />
                 <div className="ml-[26%] mt-4 flex items-center gap-4">
                   <span className="text-4xl text-brand-400">&gt;</span>
                   <span className="font-serif text-[clamp(2.5rem,7vw,5rem)] italic leading-none tracking-[-0.07em] text-accent-400">
