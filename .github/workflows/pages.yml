@@ -10,15 +10,19 @@ permissions:
   pages: write
   id-token: write
 
+# One deployment at a time, but never cancel one that is already running.
+# Cancelling mid-flight is what leaves a half-finished artifact behind, and
+# deploy-pages then refuses the run with "Multiple artifacts named
+# github-pages were unexpectedly found".
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # Split from deploy on purpose. With the upload in its own job, re-running
+  # the deploy alone cannot upload a second artifact into the same run — which
+  # is the other way that duplicate-artifact error shows up.
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
@@ -37,13 +41,20 @@ jobs:
         run: npm run build:pages
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: pages
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
