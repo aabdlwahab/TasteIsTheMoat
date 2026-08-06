@@ -7,6 +7,7 @@
  *
  * Visit without a parameter for the index.
  */
+import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../../src/ui/theme.css";
 import { sitePath } from "../../src/core/sitePath";
@@ -69,6 +70,7 @@ import {
   MorphingDialog,
   MorphingNotch,
   NoiseOverlay,
+  ParticleText,
   PathMorph,
   PixelDitherReveal,
   ProgressiveBlur,
@@ -231,6 +233,7 @@ const ELEMENTS: ElementCatalogItem[] = [
   { name: "SpotlightCard", category: "Shader-native", description: "A grid-aware card illuminated by the shared spotlight.", demo: "spotlight" },
   { name: "BorderBeam", category: "Shader-native", description: "A pure-CSS light circuit travelling around a border.", demo: "border-beam" },
   { name: "NoiseOverlay", category: "Shader-native", description: "Subtle grain that unifies flat and animated surfaces.", demo: "noise" },
+  { name: "ParticleText", category: "Shader-native", description: "A word as a GPU particle field that scatters from the pointer.", demo: "particle-text" },
 
   { name: "MagneticButton", category: "Controls", description: "A CTA that leans toward the pointer.", demo: "experimental-controls" },
   { name: "WetPaintButton", category: "Controls", description: "Liquid colour rises through the button on interaction.", demo: "experimental-controls" },
@@ -368,6 +371,72 @@ function FoundationDemo({
         </div>
       </Container>
     </main>
+  );
+}
+
+/**
+ * ParticleText with the knobs exposed, so the trade-off between reach, force
+ * and spring can be felt rather than read off a prop table.
+ */
+function ParticleTextDemo() {
+  const [word, setWord] = useState("INTERFACE");
+  const [radius, setRadius] = useState(150);
+  const [force, setForce] = useState(2800);
+  const [spring, setSpring] = useState(45);
+
+  const sliders = [
+    { label: "Cursor reach", value: radius, set: setRadius, min: 40, max: 420, step: 5 },
+    { label: "Push force", value: force, set: setForce, min: 400, max: 9000, step: 100 },
+    { label: "Return spring", value: spring, set: setSpring, min: 6, max: 140, step: 1 },
+  ];
+
+  return (
+    <FoundationDemo
+      name="ParticleText"
+      description="A word rasterised into tens of thousands of particles, simulated on the GPU with WebGL2 transform feedback. The pointer pushes them out; a spring pulls them home. The real text stays in the DOM underneath, so the headline survives without WebGL2."
+    >
+      <ParticleText
+        text={word}
+        className="h-[26rem] overflow-hidden rounded-2xl bg-[#06070d]"
+        textClassName="text-[clamp(2.5rem,11vw,7rem)]"
+        radius={radius}
+        force={force}
+        spring={spring}
+        hint="Move the cursor across the letters · click to burst"
+      />
+
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="block">
+          <span className="mb-2 block text-[10px] uppercase tracking-[0.16em] text-ink-500">
+            Text
+          </span>
+          <input
+            value={word}
+            maxLength={24}
+            spellCheck={false}
+            onChange={(e) => setWord(e.target.value)}
+            className="w-full rounded-lg border border-ink-700 bg-ink-900 px-3 py-2 text-[15px] text-ink-0 outline-none focus:border-brand-400"
+          />
+        </label>
+        {sliders.map((s) => (
+          <label key={s.label} className="block">
+            <span className="mb-2 flex justify-between text-[10px] uppercase tracking-[0.16em] text-ink-500">
+              {s.label}
+              <span className="tabular-nums text-ink-200">{s.value}</span>
+            </span>
+            <input
+              type="range"
+              min={s.min}
+              max={s.max}
+              step={s.step}
+              value={s.value}
+              onChange={(e) => s.set(Number(e.target.value))}
+              className="w-full accent-brand-400"
+            />
+          </label>
+        ))}
+      </div>
+    </FoundationDemo>
   );
 }
 
@@ -792,6 +861,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
     />
   ),
   elements: () => <ElementsCatalog />,
+  "particle-text": () => <ParticleTextDemo />,
   ...MOTION_DEMOS,
   "foundation-button": () => (
     <FoundationDemo
