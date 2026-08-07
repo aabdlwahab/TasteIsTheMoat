@@ -51,7 +51,7 @@ const collection = [
   },
   {
     title: "Tactile elements",
-    category: "51 components",
+    category: "84 components",
     result: "Touch the details",
     href: "/examples/marketing/sections.html?s=elements",
     description:
@@ -63,6 +63,32 @@ const collection = [
           <div className="rounded-full border border-white/15 bg-white/5" />
           <div className="rounded-[45%_55%_34%_66%] bg-gradient-to-br from-brand-500 to-rose-500" />
           <div className="col-span-2 rounded-xl border border-accent-400/30 bg-accent-400/10" />
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "WebGL animated text",
+    category: "5 surfaces",
+    result: "Break a headline",
+    href: "/examples/marketing/sections.html?s=webgl-text",
+    description:
+      "A word rasterised and handed to the GPU—as a particle field, a character grid, a lens, a pile of shards, or dye in a fluid.",
+    visual: (
+      <div className="relative size-full overflow-hidden bg-[#06070d] p-8">
+        <div className="absolute inset-x-8 top-1/2 -translate-y-1/2">
+          <div className="font-serif text-[clamp(2rem,7vw,3.4rem)] leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_theme(colors.brand.400)]">
+            WORD
+          </div>
+          <div className="mt-2 flex gap-[3px]">
+            {Array.from({ length: 34 }, (_, i) => (
+              <span
+                key={i}
+                className="block w-[3px] rounded-full bg-accent-400/70"
+                style={{ height: `${6 + ((i * 37) % 22)}px`, opacity: 0.35 + ((i * 13) % 60) / 100 }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     ),
@@ -157,7 +183,7 @@ function CollectionHome() {
           subhead="Taste is the Moat is a curated collection of animated backgrounds, tactile components, complete sections, and authored landing pages for teams that refuse to look interchangeable."
           primaryAction={{ label: "Explore the collection", href: "#collection" }}
           secondaryAction={{ label: "Read the thesis", href: "#principles" }}
-          note="69 backgrounds · 51 elements · 26 sections · 16 complete pages"
+          note="69 backgrounds · 84 elements · 5 text surfaces · 26 sections · 16 complete pages"
           layout="split"
           visual={
             <BrowserFrame url="tasteisthemoat.dev/collection">
@@ -220,7 +246,8 @@ function CollectionHome() {
         <Stats
           stats={[
             { value: 69, label: "Atmospheric backgrounds" },
-            { value: 51, label: "Tactile elements" },
+            { value: 84, label: "Tactile elements" },
+            { value: 5, label: "WebGL text surfaces" },
             { value: 26, label: "Narrative sections" },
             { value: 16, label: "Complete worlds" },
           ]}
@@ -229,8 +256,8 @@ function CollectionHome() {
         <Gallery
           id="collection"
           eyebrow="The collection"
-          title="Four doors into better work"
-          description="Start with a moment, assemble a story, or borrow an entire visual world. Every path stays editable."
+          title="Five doors into better work"
+          description="Start with a moment, break a headline, assemble a story, or borrow an entire visual world. Every path stays editable."
           items={collection}
         />
 
@@ -317,6 +344,7 @@ function CollectionHome() {
             links: [
               { label: "Backgrounds", href: "/studio.html" },
               { label: "Elements", href: "/examples/marketing/sections.html?s=elements" },
+              { label: "WebGL text", href: "/examples/marketing/sections.html?s=webgl-text" },
               { label: "Sections", href: "/examples/marketing/sections.html" },
             ],
           },

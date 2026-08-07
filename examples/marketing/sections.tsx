@@ -98,11 +98,7 @@ import {
   MOTION_ELEMENTS,
 } from "./motionDemos";
 import type { MotionCategory } from "./motionDemos";
-import {
-  SURFACE_CATEGORY,
-  SURFACE_DEMOS,
-  SURFACE_ELEMENTS,
-} from "./surfaceDemos";
+import { SURFACE_DEMOS } from "./surfaceDemos";
 import type { BrandPalette } from "../../src/core/theme";
 
 const brand: BrandPalette = {
@@ -189,7 +185,6 @@ type ElementCategory =
   | "Kinetic type"
   | "Spatial"
   | "Reactive media"
-  | typeof SURFACE_CATEGORY
   | MotionCategory;
 
 interface ElementCatalogItem {
@@ -207,7 +202,6 @@ const ELEMENT_CATEGORIES: ElementCategory[] = [
   "Kinetic type",
   "Spatial",
   "Reactive media",
-  SURFACE_CATEGORY,
   ...MOTION_CATEGORIES,
 ];
 
@@ -270,7 +264,6 @@ const ELEMENTS: ElementCatalogItem[] = [
   { name: "AudioReactiveShader", category: "Reactive media", description: "An opt-in microphone visual driven by live audio energy.", demo: "experimental-media" },
   { name: "WebcamPixelGrid", category: "Reactive media", description: "An opt-in camera feed transformed into a graphic mosaic.", demo: "experimental-media" },
 
-  ...SURFACE_ELEMENTS.map((item) => ({ ...item, category: SURFACE_CATEGORY })),
   ...MOTION_ELEMENTS,
 ];
 

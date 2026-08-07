@@ -6,6 +6,7 @@
  * current settings, so what you copy is what you are looking at.
  */
 import { useState } from "react";
+import { sitePath } from "../../src/core/sitePath";
 import {
   CodeBlock,
   Container,
@@ -39,6 +40,84 @@ export const SURFACE_ELEMENTS: SurfaceCatalogItem[] = [
   { name: "FluidText", description: "The word as dye in a fluid simulation you can stir.", demo: "surface-fluid" },
 ];
 
+/* ---- catalog index ------------------------------------------------------ */
+
+/**
+ * The section's own front page.
+ *
+ * These are a family rather than a category: every one takes a word, rasters
+ * it, and hands it to the GPU. They were listed inside the tactile-element
+ * catalog for a while and read as an odd sub-heading there, so they get their
+ * own door — a peer of the shader studio and the element catalog.
+ */
+export function SurfacesCatalog() {
+  const blurbs: Record<string, string> = {
+    ParticleText: "Transform feedback",
+    GlyphText: "Character grid",
+    LensText: "SDF refraction",
+    ShatterText: "Voronoi shards",
+    FluidText: "Navier–Stokes",
+  };
+
+  return (
+    <main className="min-h-screen bg-ink-950 py-20">
+      <Container>
+        <a href={sitePath("/")} className="text-sm text-ink-400 transition-colors hover:text-ink-0">
+          ← Back to the collection
+        </a>
+        <div className="mt-10 grid gap-8 border-b border-ink-700 pb-12 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-300">
+              WebGL animated text
+            </p>
+            <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.055em] text-ink-0 sm:text-7xl">
+              A word is a texture. Do something to it.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">
+              Each surface rasterises your text to an offscreen canvas and hands
+              it to the GPU — as a particle field, a character grid, a lens, a
+              pile of shards, or dye in a fluid. The real word stays in the DOM
+              underneath, so the headline survives without WebGL2.
+            </p>
+          </div>
+          <div className="rounded-full border border-brand-400/30 bg-brand-500/10 px-5 py-3 font-mono text-sm text-brand-200">
+            {SURFACE_ELEMENTS.length} surfaces
+          </div>
+        </div>
+
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {SURFACE_ELEMENTS.map((item, index) => (
+            <li key={item.name}>
+              <a
+                href={`?s=${item.demo}`}
+                className="group flex h-full min-h-52 flex-col rounded-2xl border border-ink-700 bg-ink-850 p-6 transition-[border-color,transform,background-color] hover:-translate-y-1 hover:border-brand-400/70 hover:bg-ink-800"
+              >
+                <div className="flex items-baseline justify-between">
+                  <span className="font-mono text-[10px] text-ink-500">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-300/70">
+                    {blurbs[item.name]}
+                  </span>
+                </div>
+                <h2 className="mt-6 text-xl font-semibold tracking-tight text-ink-0">
+                  {item.name}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-ink-400">
+                  {item.description}
+                </p>
+                <span className="mt-auto pt-6 text-xs font-semibold text-brand-300 transition-transform group-hover:translate-x-1">
+                  Open demo →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </main>
+  );
+}
+
 /* ---- shell -------------------------------------------------------------- */
 
 function SurfaceDemo({
@@ -57,8 +136,8 @@ function SurfaceDemo({
   return (
     <main className="min-h-screen bg-ink-950 py-16 sm:py-20">
       <Container>
-        <a href="?s=elements" className="text-sm text-ink-400 transition-colors hover:text-ink-0">
-          ← All tactile elements
+        <a href="?s=webgl-text" className="text-sm text-ink-400 transition-colors hover:text-ink-0">
+          ← All WebGL text surfaces
         </a>
         <div className="mt-10 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-300">
@@ -379,6 +458,7 @@ function FluidDemo() {
 /* ---- registry ----------------------------------------------------------- */
 
 export const SURFACE_DEMOS: Record<string, () => React.ReactNode> = {
+  "webgl-text": () => <SurfacesCatalog />,
   "particle-text": () => <ParticleDemo />,
   "surface-glyphs": () => <GlyphDemo />,
   "surface-lens": () => <LensDemo />,
