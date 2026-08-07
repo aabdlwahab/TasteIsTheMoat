@@ -23,11 +23,11 @@ export const holoFoil: ShaderDef = {
   uniforms: {
     u_thickness: { type: "float", value: 520, min: 150, max: 1200, label: "Film nm" },
     u_ior: { type: "float", value: 1.62, min: 1.1, max: 2.8, label: "Film IOR" },
-    u_scale: { type: "float", value: 1.75, min: 0.6, max: 8, label: "Crinkle scale" },
-    u_relief: { type: "float", value: 0.36, min: 0.02, max: 1, label: "Relief" },
+    u_scale: { type: "float", value: 1.05, min: 0.6, max: 8, label: "Crinkle scale" },
+    u_relief: { type: "float", value: 0.44, min: 0.02, max: 1, label: "Relief" },
     u_lightHeight: { type: "float", value: 0.9, min: 0, max: 3, label: "Light height" },
-    u_gloss: { type: "float", value: 0.6, min: 0, max: 1, label: "Gloss" },
-    u_gain: { type: "float", value: 2.2, min: 0, max: 4, label: "Gain" },
+    u_gloss: { type: "float", value: 0.65, min: 0, max: 1, label: "Gloss" },
+    u_gain: { type: "float", value: 3.1, min: 0, max: 5, label: "Gain" },
     u_grain: { type: "float", value: 0.035, min: 0, max: 0.2, label: "Grain" },
   },
   fragment: /* glsl */ `
@@ -123,10 +123,10 @@ void main() {
   float diff = max(dot(n, L), 0.0);
   float fres = pow(1.0 - max(dot(n, E), 0.0), 4.0);
 
-  vec3 col = vec3(0.03, 0.032, 0.042);
-  col += irid * (0.32 + 1.3 * spec + 0.6 * fres) * (0.45 + 0.9 * diff) * u_gain;
-  col += vec3(1.0, 0.97, 0.93) * spec * 0.4;
-  col *= 0.85 + 0.5 * h0;
+  vec3 col = vec3(0.035, 0.038, 0.05);
+  col += irid * (0.42 + 1.5 * spec + 0.75 * fres) * (0.55 + 0.95 * diff) * u_gain;
+  col += vec3(1.0, 0.97, 0.93) * spec * 0.45;
+  col *= 0.9 + 0.55 * h0;
 
   col += grain(uv + fract(u_time * 0.5)) * u_grain;
   gl_FragColor = vec4(col, 1.0);
