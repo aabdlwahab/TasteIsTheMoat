@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import {
-  CTA,
   Features,
   Footer,
   Gallery,
@@ -15,10 +14,14 @@ import {
   Button,
   Container,
   CopyField,
+  GlyphText,
   GradientText,
   KineticTypeRibbon,
   ParticleText,
 } from "../ui/index";
+// Magnetic and TextEffect live in the motion subpath, kept out of the main
+// barrel so its Accordion/MorphingDialog/ProgressiveBlur do not collide.
+import { Magnetic, TextEffect } from "../ui/motion/index";
 import type { BrandPalette } from "../core/theme";
 
 const brand: BrandPalette = {
@@ -90,6 +93,34 @@ const collection = [
             ))}
           </div>
         </div>
+      </div>
+    ),
+  },
+  {
+    title: "GPU Lab",
+    category: "18 techniques",
+    result: "Read the source",
+    href: "/examples/marketing/sections.html?s=gpu-lab",
+    description:
+      "Four standalone benches—raymarching and domain warping, physarum and lenia, vertex-shader worlds, a full camera stack.",
+    visual: (
+      <div className="relative size-full overflow-hidden bg-[#08090b] p-7 font-mono text-[10px] text-[#7d838e]">
+        <div className="flex items-baseline justify-between tracking-[0.14em]">
+          <span>04 BENCHES</span>
+          <span className="text-[#6fd3e0]">18 MODES</span>
+        </div>
+        <div className="mt-6 space-y-1.5">
+          {["raymarched sdf", "physarum", "lenia", "instanced grass", "kuwahara"].map(
+            (mode, i) => (
+              <div key={mode} className="flex items-center gap-2">
+                <span className="text-[#575c66]">0{i + 1}</span>
+                <span className="h-px flex-1 bg-white/10" />
+                <span>{mode}</span>
+              </div>
+            ),
+          )}
+        </div>
+        <div className="absolute bottom-6 left-7 right-7 h-8 bg-[linear-gradient(90deg,transparent,rgba(111,211,224,.35),transparent)]" />
       </div>
     ),
   },
@@ -183,7 +214,7 @@ function CollectionHome() {
           subhead="Taste is the Moat is a curated collection of animated backgrounds, tactile components, complete sections, and authored landing pages for teams that refuse to look interchangeable."
           primaryAction={{ label: "Explore the collection", href: "#collection" }}
           secondaryAction={{ label: "Read the thesis", href: "#principles" }}
-          note="69 backgrounds · 84 elements · 5 text surfaces · 26 sections · 16 complete pages"
+          note="69 backgrounds · 84 elements · 5 text surfaces · 18 GPU techniques · 26 sections · 16 complete pages"
           layout="split"
           visual={
             <BrowserFrame url="tasteisthemoat.dev/collection">
@@ -248,6 +279,7 @@ function CollectionHome() {
             { value: 69, label: "Atmospheric backgrounds" },
             { value: 84, label: "Tactile elements" },
             { value: 5, label: "WebGL text surfaces" },
+            { value: 18, label: "GPU Lab techniques" },
             { value: 26, label: "Narrative sections" },
             { value: 16, label: "Complete worlds" },
           ]}
@@ -256,7 +288,7 @@ function CollectionHome() {
         <Gallery
           id="collection"
           eyebrow="The collection"
-          title="Five doors into better work"
+          title="Six doors into better work"
           description="Start with a moment, break a headline, assemble a story, or borrow an entire visual world. Every path stays editable."
           items={collection}
         />
@@ -268,9 +300,18 @@ function CollectionHome() {
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#8c3b18]">
                   The thesis
                 </p>
-                <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.92] tracking-[-0.055em] sm:text-6xl">
+                {/* The thesis sentence earns a reveal — it is the one line the
+                    whole page is arguing for. Per word, not per character:
+                    this is prose to be read, not a logotype. */}
+                <TextEffect
+                  as="h2"
+                  per="word"
+                  preset="fade-in-blur"
+                  speedReveal={1.4}
+                  className="mt-5 max-w-md font-serif text-5xl leading-[0.92] tracking-[-0.055em] sm:text-6xl"
+                >
                   Design is abundant. Discernment is scarce.
-                </h2>
+                </TextEffect>
               </div>
               <div>
                 <p className="max-w-2xl text-xl leading-relaxed text-[#4c433a] sm:text-2xl">
@@ -317,23 +358,56 @@ function CollectionHome() {
                 <p className="mt-4 max-w-xl leading-relaxed text-ink-300">
                   Everything is plain TypeScript and Tailwind with accessible states, reduced-motion behavior, and graceful shader fallbacks already considered.
                 </p>
-                <Button href="/examples/marketing/" variant="secondary" className="mt-7">
-                  See an assembled page
-                </Button>
+                <Magnetic actionArea="parent" range={110} className="mt-7">
+                  <Button href="/examples/marketing/" variant="secondary">
+                    See an assembled page
+                  </Button>
+                </Magnetic>
               </div>
               <CopyField value="npm install taste-is-the-moat" label="Install the collection" />
             </div>
           </Container>
         </section>
 
-        <CTA
-          shader="liquid-ripple"
-          brand={brand}
-          title="Make the first scroll impossible to forget."
-          description="Choose a strong starting point. Break what needs breaking. Ship something with a point of view."
-          primaryAction={{ label: "Browse complete pages", href: "/examples/templates/" }}
-          secondaryAction={{ label: "Open the shader studio", href: "/studio.html" }}
-        />
+        {/* The closing moment. This was a liquid-ripple shader; it is now the
+            glyph surface, which says the same thing in the collection's own
+            vocabulary — the last word before the footer, dissolving as you
+            move through it. The scrim is doing real work here: a matrix rain
+            behind body copy is illegible without one. */}
+        <section className="relative isolate overflow-hidden border-t border-ink-700 bg-[#06070d]">
+          <GlyphText
+            text="REMEMBER"
+            className="absolute inset-0 h-full"
+            charset={0}
+            palette={2}
+            treatment={2}
+            cell={13}
+            radius={190}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,7,13,0.82)_0%,rgba(6,7,13,0.94)_100%)]"
+          />
+          <Container>
+            <div className="relative z-10 mx-auto max-w-2xl py-28 text-center sm:py-36">
+              <h2 className="text-balance font-serif text-4xl leading-[1.05] tracking-[-0.04em] text-ink-0 sm:text-5xl">
+                Make the first scroll impossible to forget.
+              </h2>
+              <p className="mt-5 text-pretty text-lg leading-relaxed text-ink-300">
+                Choose a strong starting point. Break what needs breaking. Ship
+                something with a point of view.
+              </p>
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+                <Magnetic actionArea="parent" range={120}>
+                  <Button href="/examples/templates/">Browse complete pages</Button>
+                </Magnetic>
+                <Button href="/studio.html" variant="secondary">
+                  Open the shader studio
+                </Button>
+              </div>
+            </div>
+          </Container>
+        </section>
       </main>
       <Footer
         logo={<BrandLockup />}
@@ -345,6 +419,7 @@ function CollectionHome() {
               { label: "Backgrounds", href: "/studio.html" },
               { label: "Elements", href: "/examples/marketing/sections.html?s=elements" },
               { label: "WebGL text", href: "/examples/marketing/sections.html?s=webgl-text" },
+              { label: "GPU Lab", href: "/examples/marketing/sections.html?s=gpu-lab" },
               { label: "Sections", href: "/examples/marketing/sections.html" },
             ],
           },

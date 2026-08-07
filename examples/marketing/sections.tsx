@@ -99,6 +99,7 @@ import {
 } from "./motionDemos";
 import type { MotionCategory } from "./motionDemos";
 import { SURFACE_DEMOS } from "./surfaceDemos";
+import { GpuLabCatalog } from "./gpuLab";
 import type { BrandPalette } from "../../src/core/theme";
 
 const brand: BrandPalette = {
@@ -794,6 +795,7 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
   ),
   elements: () => <ElementsCatalog />,
   ...SURFACE_DEMOS,
+  "gpu-lab": () => <GpuLabCatalog />,
   ...MOTION_DEMOS,
   "foundation-button": () => (
     <FoundationDemo
