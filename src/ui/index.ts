@@ -6,6 +6,14 @@ export type { BrandMarkProps } from "./BrandMark";
 export { ParticleText } from "./ParticleText";
 export type { ParticleTextProps } from "./ParticleText";
 
+export { GlyphText, LensText, ShatterText, FluidText } from "./TextSurfaces";
+export type {
+  GlyphTextProps,
+  LensTextProps,
+  ShatterTextProps,
+  FluidTextProps,
+} from "./TextSurfaces";
+
 export { ShaderSection } from "./ShaderSection";
 export type { ShaderSectionProps, ScrimStrength } from "./ShaderSection";
 
@@ -43,6 +51,9 @@ export type { RatingProps } from "./Rating";
 
 export { CopyField } from "./CopyField";
 export type { CopyFieldProps } from "./CopyField";
+
+export { CodeBlock } from "./CodeBlock";
+export type { CodeBlockProps } from "./CodeBlock";
 
 export { SegmentedControl } from "./SegmentedControl";
 export type {
