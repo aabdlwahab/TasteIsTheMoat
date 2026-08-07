@@ -1,11 +1,11 @@
 /**
  * The "GPU Lab" section.
  *
- * Unlike everything else in the catalog, the four benches are not React
+ * Unlike everything else in the catalog, the five benches are not React
  * components — they are standalone WebGL2 pages with their own control panel,
  * FPS meter, keyboard shortcuts and mode cycling, served verbatim from
  * `public/gpu-lab/`. They were authored to run from a file:// URL with no
- * build step, and rewriting eighteen techniques into components would lose
+ * build step, and rewriting these techniques into components would lose
  * the lab itself, which is the point of them.
  *
  * So this is a front page in the site's own voice that hands off to them.
@@ -87,6 +87,22 @@ export const GPU_LAB_BENCHES: Bench[] = [
       "webcam source",
     ],
   },
+  {
+    n: "05",
+    name: "Holography",
+    href: "/gpu-lab/05-holographic.html",
+    technique: "Spectral colour",
+    count: "5 modes",
+    description:
+      "Iridescence done honestly: reflectance evaluated per wavelength against the CIE colour-matching functions, not a hand-tuned rainbow ramp.",
+    modes: [
+      "holographic card",
+      "iridescent foil",
+      "diffraction grating",
+      "projected volume",
+      "soap film",
+    ],
+  },
 ];
 
 /**
@@ -115,7 +131,7 @@ export function GpuLabCatalog() {
               GPU Lab
             </p>
             <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.055em] text-ink-0 sm:text-7xl">
-              Four benches, one core.
+              Five benches, one core.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">
               Each bench is a standalone WebGL2 page — the same full-screen-pass

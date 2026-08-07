@@ -98,19 +98,19 @@ const collection = [
   },
   {
     title: "GPU Lab",
-    category: "18 techniques",
+    category: "23 techniques",
     result: "Read the source",
     href: "/examples/marketing/sections.html?s=gpu-lab",
     description:
-      "Four standalone benches—raymarching and domain warping, physarum and lenia, vertex-shader worlds, a full camera stack.",
+      "Five standalone benches—raymarching and domain warping, physarum and lenia, vertex-shader worlds, a full camera stack, spectral holography.",
     visual: (
       <div className="relative size-full overflow-hidden bg-[#08090b] p-7 font-mono text-[10px] text-[#7d838e]">
         <div className="flex items-baseline justify-between tracking-[0.14em]">
-          <span>04 BENCHES</span>
-          <span className="text-[#6fd3e0]">18 MODES</span>
+          <span>05 BENCHES</span>
+          <span className="text-[#6fd3e0]">23 MODES</span>
         </div>
         <div className="mt-6 space-y-1.5">
-          {["raymarched sdf", "physarum", "lenia", "instanced grass", "kuwahara"].map(
+          {["raymarched sdf", "physarum", "lenia", "instanced grass", "iridescent foil"].map(
             (mode, i) => (
               <div key={mode} className="flex items-center gap-2">
                 <span className="text-[#575c66]">0{i + 1}</span>
@@ -214,7 +214,7 @@ function CollectionHome() {
           subhead="Taste is the Moat is a curated collection of animated backgrounds, tactile components, complete sections, and authored landing pages for teams that refuse to look interchangeable."
           primaryAction={{ label: "Explore the collection", href: "#collection" }}
           secondaryAction={{ label: "Read the thesis", href: "#principles" }}
-          note="69 backgrounds · 84 elements · 5 text surfaces · 18 GPU techniques · 26 sections · 16 complete pages"
+          note="69 backgrounds · 84 elements · 5 text surfaces · 23 GPU techniques · 26 sections · 16 complete pages"
           layout="split"
           visual={
             <BrowserFrame url="tasteisthemoat.dev/collection">
@@ -279,7 +279,7 @@ function CollectionHome() {
             { value: 69, label: "Atmospheric backgrounds" },
             { value: 84, label: "Tactile elements" },
             { value: 5, label: "WebGL text surfaces" },
-            { value: 18, label: "GPU Lab techniques" },
+            { value: 23, label: "GPU Lab techniques" },
             { value: 26, label: "Narrative sections" },
             { value: 16, label: "Complete worlds" },
           ]}
