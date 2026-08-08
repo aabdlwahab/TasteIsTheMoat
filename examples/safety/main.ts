@@ -1,434 +1,298 @@
-const CYCLE = 16;
-const INSTANCE_COUNT = 84;
+const COLS = 64;
+const ROWS = 30;
+const SCENE_SECONDS = 2.6;
+const SCENE_COUNT = 6;
+const CYCLE_SECONDS = SCENE_SECONDS * SCENE_COUNT;
+const MAX_PIXELS = 720;
 
-type Scene = {
-  number: string;
-  tag: string;
-  title: string;
-  detail: string;
-  time: number;
+type RGB = [number, number, number];
+type Pixel = { x: number; y: number; color: RGB };
+type Scene = { method: string; copy: string; formula: string; status: string; selection: string };
+
+const COLORS = {
+  ink: [0.06, 0.075, 0.065] as RGB,
+  grey: [0.64, 0.68, 0.65] as RGB,
+  soft: [0.84, 0.86, 0.84] as RGB,
+  excel: [0.13, 0.45, 0.27] as RGB,
+  green: [0.13, 0.65, 0.39] as RGB,
+  acid: [0.84, 1.0, 0.26] as RGB,
+  orange: [1.0, 0.35, 0.14] as RGB,
+  yellow: [1.0, 0.79, 0.20] as RGB,
+  red: [0.93, 0.22, 0.18] as RGB,
+  purple: [0.43, 0.28, 0.63] as RGB,
 };
 
 const scenes: Scene[] = [
-  {
-    number: "01",
-    tag: "IMPORT / SOURCE LOG",
-    title: "A spreadsheet is not a safety case.",
-    detail: "84 rows detected · 12 links missing",
-    time: 0.4,
-  },
-  {
-    number: "02",
-    tag: "FTA / TOP EVENT LOGIC",
-    title: "Expose every path to the top event.",
-    detail: "21 events linked · minimal cut sets resolved",
-    time: 5,
-  },
-  {
-    number: "03",
-    tag: "FMEA / RISK PRIORITY",
-    title: "Put engineering attention where it matters.",
-    detail: "Severity × occurrence × detection",
-    time: 8.7,
-  },
-  {
-    number: "04",
-    tag: "FMEDA / DIAGNOSTIC COVERAGE",
-    title: "Turn coverage into a defensible claim.",
-    detail: "Failure modes linked · evidence preserved",
-    time: 12.1,
-  },
+  { method: "IMPORTING SOURCE DATA", copy: "Every row becomes traceable.", formula: "=KERNL.IMPORT(Safety_Case_Master)", status: "READY · 126 LINKS VERIFIED", selection: "KERNL is importing" },
+  { method: "FAULT TREE ANALYSIS", copy: "Cells assemble into fault logic.", formula: "=FTA.TOP_EVENT(Brake_Loss)", status: "FTA · 21 EVENTS LINKED", selection: "Building FTA" },
+  { method: "FAULT TREE ANALYSIS", copy: "Every path reaches the top event.", formula: "=FTA.MINIMAL_CUT_SETS(A1:A21)", status: "FTA · 6 CUT SETS RESOLVED", selection: "Tracing causes" },
+  { method: "FAILURE MODE & EFFECTS", copy: "Risk becomes impossible to miss.", formula: "=FMEA.PRIORITY(Severity,Occurrence,Detection)", status: "FMEA · 84 MODES PRIORITIZED", selection: "Ranking risk" },
+  { method: "FMEDA / DIAGNOSTICS", copy: "Coverage becomes a visible claim.", formula: "=FMEDA.DC(Safe,Detected,Residual)", status: "FMEDA · 97% DIAGNOSTIC COVERAGE", selection: "Calculating DC" },
+  { method: "ONE CONNECTED MODEL", copy: "The safety case moves as one.", formula: "=KERNL.CONNECT(FTA,FMEA,FMEDA)", status: "CONNECTED · EVIDENCE PRESERVED", selection: "Safety case synced" },
 ];
 
-const canvas = document.querySelector<HTMLCanvasElement>("#safety-canvas");
-const stage = document.querySelector<HTMLElement>("#safety-stage");
-const sceneNumber = document.querySelector<HTMLElement>("#scene-number");
-const sceneTag = document.querySelector<HTMLElement>("#scene-tag");
-const sceneTitle = document.querySelector<HTMLElement>("#scene-title");
-const sceneDetail = document.querySelector<HTMLElement>("#scene-detail");
-const sceneCaption = document.querySelector<HTMLElement>(".scene-caption");
-const frameCount = document.querySelector<HTMLElement>("#frame-count");
-const frameProgress = document.querySelector<HTMLElement>("#frame-progress");
-const phaseButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".phase-nav button"));
-const replayButton = document.querySelector<HTMLButtonElement>("#replay");
+const FONT: Record<string, string[]> = {
+  A:["01110","10001","10001","11111","10001","10001","10001"],
+  C:["01111","10000","10000","10000","10000","10000","01111"],
+  D:["11110","10001","10001","10001","10001","10001","11110"],
+  E:["11111","10000","10000","11110","10000","10000","11111"],
+  F:["11111","10000","10000","11110","10000","10000","10000"],
+  M:["10001","11011","10101","10101","10001","10001","10001"],
+  N:["10001","11001","10101","10011","10001","10001","10001"],
+  O:["01110","10001","10001","10001","10001","10001","01110"],
+  T:["11111","00100","00100","00100","00100","00100","00100"],
+  7:["11111","00001","00010","00100","01000","01000","01000"],
+  9:["01110","10001","10001","01111","00001","00001","11110"],
+  "%":["11001","11010","00100","01000","10110","00110","00000"],
+};
+
+function hash(value: number) {
+  const x = Math.sin(value * 91.733) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function addRect(out: Pixel[], x: number, y: number, width: number, height: number, color: RGB, hollow = false) {
+  for (let row = 0; row < height; row += 1) {
+    for (let col = 0; col < width; col += 1) {
+      if (!hollow || row === 0 || col === 0 || row === height - 1 || col === width - 1) out.push({ x: x + col, y: y + row, color });
+    }
+  }
+}
+
+function addLine(out: Pixel[], x0: number, y0: number, x1: number, y1: number, color: RGB) {
+  const steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+  for (let i = 0; i <= steps; i += 1) {
+    const p = steps === 0 ? 0 : i / steps;
+    out.push({ x: Math.round(x0 + (x1 - x0) * p), y: Math.round(y0 + (y1 - y0) * p), color });
+  }
+}
+
+function addText(out: Pixel[], text: string, x: number, y: number, scale: number, color: RGB, colorForPixel?: (x: number, y: number) => RGB) {
+  let cursor = x;
+  for (const character of text) {
+    const glyph = FONT[character];
+    if (!glyph) { cursor += 3 * scale; continue; }
+    glyph.forEach((row, rowIndex) => {
+      [...row].forEach((value, colIndex) => {
+        if (value !== "1") return;
+        const pixelColor = colorForPixel?.(cursor + colIndex * scale, y + rowIndex * scale) ?? color;
+        addRect(out, cursor + colIndex * scale, y + rowIndex * scale, scale, scale, pixelColor);
+      });
+    });
+    cursor += 6 * scale;
+  }
+}
+
+function sourcePattern(): Pixel[] {
+  const out: Pixel[] = [];
+  addText(out, "DATA", 35, 2, 1, COLORS.excel);
+  addRect(out, 31, 10, 30, 2, COLORS.excel);
+  for (let row = 12; row < 27; row += 2) {
+    for (let col = 31; col < 61; col += 3) {
+      const seed = hash(row * 71 + col);
+      const color = col > 54 ? (seed > .72 ? COLORS.red : seed > .42 ? COLORS.yellow : COLORS.green) : seed > .8 ? COLORS.orange : seed > .45 ? COLORS.soft : COLORS.grey;
+      addRect(out, col, row, col > 54 ? 2 : 1 + Math.floor(seed * 2), 1, color);
+    }
+  }
+  return out;
+}
+
+function ftaTitlePattern(): Pixel[] {
+  const out: Pixel[] = [];
+  addText(out, "FTA", 5, 4, 3, COLORS.ink, (x) => x > 42 ? COLORS.orange : x > 24 ? COLORS.excel : COLORS.ink);
+  return out;
+}
+
+function faultTreePattern(): Pixel[] {
+  const out: Pixel[] = [];
+  addText(out, "FTA", 2, 2, 1, COLORS.excel);
+  addRect(out, 29, 3, 8, 3, COLORS.red, true);
+  addLine(out, 33, 6, 33, 9, COLORS.ink);
+  addLine(out, 17, 9, 49, 9, COLORS.ink);
+  for (const x of [17, 33, 49]) {
+    addLine(out, x, 9, x, 12, COLORS.ink);
+    addRect(out, x - 3, 12, 7, 3, COLORS.yellow, true);
+  }
+  const leaves = [9,17,25,33,41,49,57];
+  leaves.forEach((x, index) => {
+    const parent = index < 2 ? 17 : index < 5 ? 33 : 49;
+    addLine(out, parent, 15, parent, 18, COLORS.ink);
+    addLine(out, Math.min(parent,x), 18, Math.max(parent,x), 18, COLORS.ink);
+    addLine(out, x, 18, x, 21, COLORS.ink);
+    addRect(out, x - 2, 21, 5, 3, index === 3 ? COLORS.orange : COLORS.green, true);
+  });
+  return out;
+}
+
+function fmeaPattern(): Pixel[] {
+  const out: Pixel[] = [];
+  addText(out, "FMEA", 8, 4, 2, COLORS.ink, (x, y) => {
+    const risk = x / COLS * .58 + (1 - y / ROWS) * .42;
+    return risk > .67 ? COLORS.red : risk > .43 ? COLORS.yellow : COLORS.green;
+  });
+  addRect(out, 19, 23, 26, 1, COLORS.ink);
+  for (let i = 0; i < 13; i += 1) out.push({ x: 20 + i * 2, y: 25, color: i < 4 ? COLORS.green : i < 8 ? COLORS.yellow : COLORS.red });
+  return out;
+}
+
+function fmedaPattern(): Pixel[] {
+  const out: Pixel[] = [];
+  const cx = 33, cy = 15;
+  for (let ring = 0; ring < 3; ring += 1) {
+    const radius = 8 + ring * 3;
+    const samples = 42 + ring * 16;
+    for (let i = 0; i < samples; i += 1) {
+      const angle = i / samples * Math.PI * 2;
+      if (ring === 2 && angle > 5.2) continue;
+      out.push({ x: Math.round(cx + Math.cos(angle) * radius), y: Math.round(cy + Math.sin(angle) * radius), color: ring === 0 ? COLORS.orange : ring === 1 ? COLORS.green : COLORS.acid });
+    }
+  }
+  addText(out, "97%", 24, 11, 1, COLORS.ink);
+  addText(out, "FMEDA", 18, 25, 1, COLORS.excel);
+  return out;
+}
+
+function connectedPattern(): Pixel[] {
+  const out: Pixel[] = [];
+  addText(out, "CONNECTED", 5, 19, 1, COLORS.ink, (x) => x > 42 ? COLORS.excel : COLORS.ink);
+  addLine(out, 20, 10, 29, 18, COLORS.green);
+  addLine(out, 29, 18, 47, 4, COLORS.green);
+  addLine(out, 20, 11, 29, 19, COLORS.acid);
+  addLine(out, 29, 19, 47, 5, COLORS.acid);
+  for (let i = 0; i < 15; i += 1) out.push({ x: 6 + i * 4, y: 27, color: i % 3 === 0 ? COLORS.orange : COLORS.soft });
+  return out;
+}
+
+const patterns = [sourcePattern(), ftaTitlePattern(), faultTreePattern(), fmeaPattern(), fmedaPattern(), connectedPattern()];
+
+const canvas = document.querySelector<HTMLCanvasElement>("#sheet-canvas");
+const stage = document.querySelector<HTMLElement>("#sheet-stage");
+const columnHeads = document.querySelector<HTMLElement>("#column-heads");
+const rowHeads = document.querySelector<HTMLElement>("#row-heads");
+const sceneStep = document.querySelector<HTMLElement>("#scene-step");
+const sceneMethod = document.querySelector<HTMLElement>("#scene-method");
+const sceneCopy = document.querySelector<HTMLElement>("#scene-copy");
+const cellAddress = document.querySelector<HTMLElement>("#cell-address");
+const formulaValue = document.querySelector<HTMLElement>("#formula-value");
+const statusCopy = document.querySelector<HTMLElement>("#status-copy");
+const selectionLabel = document.querySelector<HTMLElement>("#selection-label");
+const replay = document.querySelector<HTMLButtonElement>("#replay");
+const chapterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".chapter-scrubber button"));
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function fillFallbackGrid() {
-  const fallback = document.querySelector<HTMLElement>(".fallback-grid");
-  if (!fallback) return;
-  for (let i = 0; i < 70; i += 1) fallback.append(document.createElement("i"));
+function columnName(index: number) {
+  let result = "";
+  let value = index + 1;
+  while (value > 0) { value -= 1; result = String.fromCharCode(65 + value % 26) + result; value = Math.floor(value / 26); }
+  return result;
 }
 
-function createShader(gl: WebGL2RenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type);
-  if (!shader) throw new Error("Unable to create shader");
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const message = gl.getShaderInfoLog(shader) || "Unknown shader error";
-    gl.deleteShader(shader);
-    throw new Error(message);
-  }
-  return shader;
+for (let i = 0; i < COLS; i += 1) { const span = document.createElement("span"); span.textContent = columnName(i); columnHeads?.append(span); }
+for (let i = 0; i < ROWS; i += 1) { const span = document.createElement("span"); span.textContent = String(i + 1); rowHeads?.append(span); }
+
+function shader(gl: WebGL2RenderingContext, type: number, source: string) {
+  const value = gl.createShader(type);
+  if (!value) throw new Error("Unable to create shader");
+  gl.shaderSource(value, source); gl.compileShader(value);
+  if (!gl.getShaderParameter(value, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(value) || "Shader error");
+  return value;
 }
 
-function createProgram(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
-  const program = gl.createProgram();
-  if (!program) throw new Error("Unable to create WebGL program");
-  gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vertex));
-  gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fragment));
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    throw new Error(gl.getProgramInfoLog(program) || "Unable to link WebGL program");
-  }
-  return program;
+function program(gl: WebGL2RenderingContext, vertex: string, fragment: string) {
+  const value = gl.createProgram();
+  if (!value) throw new Error("Unable to create program");
+  gl.attachShader(value, shader(gl, gl.VERTEX_SHADER, vertex)); gl.attachShader(value, shader(gl, gl.FRAGMENT_SHADER, fragment)); gl.linkProgram(value);
+  if (!gl.getProgramParameter(value, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(value) || "Link error");
+  return value;
 }
 
-const backgroundVertex = `#version 300 es
-precision highp float;
-out vec2 vUv;
-void main() {
-  vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
-  vUv = p;
-  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+const bgVertex = `#version 300 es
+precision highp float; out vec2 vUv;
+void main(){ vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2)); vUv=p; gl_Position=vec4(p*2.0-1.0,0,1); }`;
+const bgFragment = `#version 300 es
+precision highp float; in vec2 vUv; out vec4 outColor;
+uniform vec4 uSelection;
+void main(){
+  vec2 cells=vec2(64.0,30.0); vec2 g=abs(fract(vUv*cells)-.5)/max(fwidth(vUv*cells),vec2(.001));
+  float line=1.0-min(min(g.x,g.y),1.0); vec3 color=mix(vec3(.985,.987,.979),vec3(.82,.84,.82),line*.72);
+  vec2 cell=floor(vUv*cells); float selected=step(uSelection.x,cell.x)*step(cell.x,uSelection.z)*step(uSelection.y,cell.y)*step(cell.y,uSelection.w);
+  color=mix(color,vec3(.90,.97,.92),selected*.22);
+  outColor=vec4(color,1);
 }`;
-
-const backgroundFragment = `#version 300 es
-precision highp float;
-in vec2 vUv;
-out vec4 outColor;
-uniform float uTime;
-uniform vec2 uResolution;
-uniform vec2 uPointer;
-
-float segment(vec2 p, vec2 a, vec2 b, float w) {
-  vec2 pa = p - a;
-  vec2 ba = b - a;
-  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-  return 1.0 - smoothstep(w, w + 0.008, length(pa - ba * h));
-}
-
-float ring(vec2 p, float r, float w) {
-  return 1.0 - smoothstep(w, w + 0.01, abs(length(p) - r));
-}
-
-void main() {
-  vec2 uv = vUv;
-  vec2 p = uv * 2.0 - 1.0;
-  float aspect = uResolution.x / max(uResolution.y, 1.0);
-  p.x *= aspect;
-  vec3 color = vec3(0.055, 0.066, 0.052);
-
-  vec2 gridUv = uv * vec2(30.0 * aspect, 30.0);
-  vec2 gridLine = abs(fract(gridUv) - 0.5) / max(fwidth(gridUv), vec2(0.0001));
-  float grid = 1.0 - min(min(gridLine.x, gridLine.y), 1.0);
-  color += grid * vec3(0.032, 0.037, 0.029);
-
-  vec2 pointer = uPointer;
-  pointer.x *= aspect;
-  float glow = exp(-3.2 * length(p - pointer));
-  color += glow * vec3(0.10, 0.055, 0.015);
-
-  float t = mod(uTime, 16.0);
-  float treeA = smoothstep(3.6, 4.8, t) * (1.0 - smoothstep(6.8, 8.1, t));
-  float matrixA = smoothstep(7.0, 8.4, t) * (1.0 - smoothstep(10.2, 11.6, t));
-  float ringA = smoothstep(10.4, 11.8, t) * (1.0 - smoothstep(13.7, 15.5, t));
-
-  vec2 q = p;
-  q.x /= max(aspect, 1.0);
-  float tree = 0.0;
-  tree += segment(q, vec2(0.0,.61), vec2(-.63,.19), .005);
-  tree += segment(q, vec2(0.0,.61), vec2(0.0,.19), .005);
-  tree += segment(q, vec2(0.0,.61), vec2(.63,.19), .005);
-  tree += segment(q, vec2(-.63,.19), vec2(-.78,-.28), .004);
-  tree += segment(q, vec2(-.63,.19), vec2(-.43,-.28), .004);
-  tree += segment(q, vec2(0.0,.19), vec2(-.17,-.28), .004);
-  tree += segment(q, vec2(0.0,.19), vec2(.17,-.28), .004);
-  tree += segment(q, vec2(.63,.19), vec2(.43,-.28), .004);
-  tree += segment(q, vec2(.63,.19), vec2(.78,-.28), .004);
-  color += min(tree, 1.0) * treeA * vec3(.16,.23,.16);
-
-  float scan = 1.0 - smoothstep(.01, .025, abs(q.x + q.y * .9 - .05));
-  color += scan * matrixA * vec3(.16,.055,.018);
-
-  float circles = ring(q, .30, .006) + ring(q, .47, .004) + ring(q, .64, .003);
-  float sweep = smoothstep(-.25, .2, sin(atan(q.y,q.x) - t * .7));
-  color += min(circles,1.0) * ringA * mix(vec3(.04,.16,.08), vec3(.23,.38,.06), sweep);
-
-  float vignette = smoothstep(1.35, .28, length((uv - .5) * vec2(1.0,.9)));
-  color *= .74 + .26 * vignette;
-  float noise = fract(sin(dot(floor(gl_FragCoord.xy + uTime * 7.0), vec2(12.9898,78.233))) * 43758.5453);
-  color += (noise - .5) * .014;
-  outColor = vec4(color, 1.0);
+const pixelVertex = `#version 300 es
+precision highp float; layout(location=0) in vec2 aCorner; layout(location=1) in vec2 aCell; layout(location=2) in vec4 aColor;
+out vec2 vLocal; out vec4 vColor;
+void main(){
+  vec2 uv=(aCell+vec2(.5))/vec2(64.0,30.0); vec2 size=vec2(.94/64.0,.91/30.0);
+  vec2 pos=uv+aCorner*size*.5; gl_Position=vec4(pos.x*2.0-1.0,1.0-pos.y*2.0,0,1); vLocal=aCorner; vColor=aColor;
 }`;
+const pixelFragment = `#version 300 es
+precision highp float; in vec2 vLocal; in vec4 vColor; out vec4 outColor;
+void main(){ float edge=max(abs(vLocal.x),abs(vLocal.y)); float mask=1.0-smoothstep(.88,1.0,edge); vec3 c=mix(vColor.rgb*1.08,vColor.rgb*.72,smoothstep(.72,.92,edge)); outColor=vec4(c,vColor.a*mask); }`;
 
-const tileVertex = `#version 300 es
-precision highp float;
-layout(location = 0) in vec2 aCorner;
-out vec2 vLocal;
-out vec3 vColor;
-out float vGlow;
-uniform float uTime;
-uniform vec2 uResolution;
-uniform vec2 uPointer;
-
-float hash(float n) { return fract(sin(n * 91.3458) * 47453.5453); }
-mat2 rotate2d(float a) { float s = sin(a), c = cos(a); return mat2(c,-s,s,c); }
-float quantize(float p, float steps) { return floor(clamp(p,0.0,1.0) * steps) / steps; }
-float ease(float p) { p = clamp(p,0.0,1.0); return 1.0 - pow(1.0 - p, 3.0); }
-
-void resolveLayout(float layoutIndex, float fi, out vec2 center, out vec2 size, out float rotation, out vec3 color) {
-  float col = mod(fi, 12.0);
-  float row = floor(fi / 12.0);
-  float seed = hash(fi + 2.0);
-  if (layoutIndex < .5) {
-    center = vec2((col - 5.5) * .137, (.5 * 6.0 - row) * .115);
-    center = rotate2d(-.07) * center;
-    center.y += center.x * .055;
-    size = vec2(.126, .099);
-    rotation = -.07;
-    color = row < .5 ? mix(vec3(1.0,.36,.17), vec3(.84,1.0,.27), step(.72,seed)) : mix(vec3(.50,.53,.47), vec3(.91,.90,.84), seed);
-  } else if (layoutIndex < 1.5) {
-    float node = floor(fi / 4.0);
-    float cell = mod(fi, 4.0);
-    vec2 local = vec2(mod(cell,2.0), floor(cell/2.0)) - .5;
-    vec2 nodeCenter;
-    if (node < 1.0) {
-      nodeCenter = vec2(0.0,.61);
-    } else if (node < 4.0) {
-      nodeCenter = vec2((node - 2.0) * .63, .19);
-    } else if (node < 10.0) {
-      nodeCenter = vec2((node - 6.5) * .245, -.28);
-    } else {
-      nodeCenter = vec2((node - 15.0) * .15, -.69);
-    }
-    center = nodeCenter + local * vec2(.062,.048);
-    size = vec2(.054,.041);
-    rotation = 0.0;
-    color = node < 1.0 ? vec3(1.0,.36,.17) : (node < 10.0 ? vec3(.88,.87,.80) : vec3(.20,.82,.48));
-  } else if (layoutIndex < 2.5) {
-    center = vec2((col - 5.5) * .127, (3.0 - row) * .13);
-    size = vec2(.111,.112);
-    rotation = 0.0;
-    float risk = (col / 11.0) * .55 + ((6.0-row) / 6.0) * .45;
-    vec3 green = vec3(.20,.82,.48);
-    vec3 amber = vec3(1.0,.71,.20);
-    vec3 red = vec3(1.0,.24,.12);
-    color = risk < .5 ? mix(green, amber, risk * 2.0) : mix(amber, red, (risk-.5)*2.0);
-  } else {
-    float ringId = floor(fi / 28.0);
-    float slot = mod(fi, 28.0);
-    float angle = slot / 28.0 * 6.283185 + ringId * .09;
-    float radius = .29 + ringId * .17;
-    center = vec2(cos(angle), sin(angle)) * radius;
-    size = vec2(.046,.046);
-    rotation = angle + 1.5708;
-    color = mix(vec3(.20,.82,.48), vec3(.84,1.0,.27), ringId / 2.0);
-  }
-}
-
-void main() {
-  float fi = float(gl_InstanceID);
-  float t = mod(uTime, 16.0);
-  float fromLayout = 0.0;
-  float toLayout = 0.0;
-  float p = 0.0;
-  if (t < 3.25) {
-    fromLayout = 0.0; toLayout = 0.0;
-  } else if (t < 4.85) {
-    fromLayout = 0.0; toLayout = 1.0; p = (t - 3.25) / 1.6;
-  } else if (t < 6.75) {
-    fromLayout = 1.0; toLayout = 1.0;
-  } else if (t < 8.35) {
-    fromLayout = 1.0; toLayout = 2.0; p = (t - 6.75) / 1.6;
-  } else if (t < 10.25) {
-    fromLayout = 2.0; toLayout = 2.0;
-  } else if (t < 11.85) {
-    fromLayout = 2.0; toLayout = 3.0; p = (t - 10.25) / 1.6;
-  } else if (t < 13.75) {
-    fromLayout = 3.0; toLayout = 3.0;
-  } else {
-    fromLayout = 3.0; toLayout = 0.0; p = (t - 13.75) / 2.25;
-  }
-
-  float stagger = hash(fi) * .35;
-  p = quantize((p - stagger) / max(1.0 - stagger, .01), 9.0);
-  p = ease(p);
-
-  vec2 centerA, centerB, sizeA, sizeB;
-  float rotationA, rotationB;
-  vec3 colorA, colorB;
-  resolveLayout(fromLayout, fi, centerA, sizeA, rotationA, colorA);
-  resolveLayout(toLayout, fi, centerB, sizeB, rotationB, colorB);
-  vec2 center = mix(centerA, centerB, p);
-  vec2 size = mix(sizeA, sizeB, p);
-  float rotation = mix(rotationA, rotationB, p);
-  vColor = mix(colorA, colorB, p);
-
-  float aspect = uResolution.x / max(uResolution.y,1.0);
-  vec2 pointer = uPointer;
-  vec2 pointerDelta = center - pointer;
-  float pointerForce = exp(-5.0 * dot(pointerDelta,pointerDelta));
-  center += normalize(pointerDelta + .0001) * pointerForce * .025;
-
-  vec2 local = rotate2d(rotation) * (aCorner * size);
-  vec2 position = center + local;
-  position.x /= max(1.0, aspect * .77);
-  float zLift = sin((fi + floor(uTime * 9.0)) * 1.73) * .003;
-  gl_Position = vec4(position, zLift, 1.0);
-  vLocal = aCorner;
-  vGlow = pointerForce;
-}`;
-
-const tileFragment = `#version 300 es
-precision highp float;
-in vec2 vLocal;
-in vec3 vColor;
-in float vGlow;
-out vec4 outColor;
-void main() {
-  vec2 q = abs(vLocal);
-  float edge = max(q.x,q.y);
-  float mask = 1.0 - smoothstep(.90,1.0,edge);
-  float border = smoothstep(.80,.87,edge) * mask;
-  vec3 color = mix(vColor * 1.14, vColor * .48, border);
-  color += vGlow * vec3(.18,.07,.015);
-  outColor = vec4(color, mask * .96);
-}`;
-
-function sceneIndexForTime(t: number) {
-  if (t < 3.9 || t >= 14.9) return 0;
-  if (t < 7.5) return 1;
-  if (t < 11) return 2;
-  return 3;
-}
-
-if (!canvas || !stage) {
-  fillFallbackGrid();
-} else {
-  const gl = canvas.getContext("webgl2", {
-    antialias: true,
-    alpha: false,
-    powerPreference: "high-performance",
-  });
-
-  if (!gl) {
-    stage.classList.add("no-webgl");
-    fillFallbackGrid();
-  } else {
+if (canvas && stage) {
+  const gl = canvas.getContext("webgl2", { antialias: false, alpha: true, powerPreference: "high-performance" });
+  if (!gl) stage.classList.add("no-webgl");
+  else {
     try {
-      const bgProgram = createProgram(gl, backgroundVertex, backgroundFragment);
-      const tileProgram = createProgram(gl, tileVertex, tileFragment);
-      const cornerBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, cornerBuffer);
-      gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]),
-        gl.STATIC_DRAW,
-      );
-
-      const bgTime = gl.getUniformLocation(bgProgram, "uTime");
-      const bgResolution = gl.getUniformLocation(bgProgram, "uResolution");
-      const bgPointer = gl.getUniformLocation(bgProgram, "uPointer");
-      const tileTime = gl.getUniformLocation(tileProgram, "uTime");
-      const tileResolution = gl.getUniformLocation(tileProgram, "uResolution");
-      const tilePointer = gl.getUniformLocation(tileProgram, "uPointer");
-
-      let width = 1;
-      let height = 1;
-      let pointerX = 0;
-      let pointerY = 0;
-      let currentScene = -1;
-      let timeAnchor = performance.now();
-      let timeOffset = 0.4;
+      const backgroundProgram = program(gl, bgVertex, bgFragment);
+      const pixelsProgram = program(gl, pixelVertex, pixelFragment);
+      const corners = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, corners);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+      const instanceBuffer = gl.createBuffer();
+      const instanceData = new Float32Array(MAX_PIXELS * 6);
+      const selectionUniform = gl.getUniformLocation(backgroundProgram,"uSelection");
+      let width = 1, height = 1, anchor = performance.now(), offset = .25, currentScene = -1, lastFrame = -1;
 
       const resize = () => {
-        const rect = canvas.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
-        width = Math.max(1, Math.round(rect.width * dpr));
-        height = Math.max(1, Math.round(rect.height * dpr));
-        if (canvas.width !== width || canvas.height !== height) {
-          canvas.width = width;
-          canvas.height = height;
+        const rect = canvas.getBoundingClientRect(); const dpr = Math.min(window.devicePixelRatio || 1,1.5);
+        width=Math.max(1,Math.round(rect.width*dpr)); height=Math.max(1,Math.round(rect.height*dpr));
+        if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+      };
+      resize(); new ResizeObserver(resize).observe(canvas);
+
+      const setUI = (index: number) => {
+        if(index===currentScene) return; currentScene=index; const scene=scenes[index]; stage.dataset.scene=String(index);
+        if(sceneStep) sceneStep.textContent=`${String(index+1).padStart(2,"0")} / 06`;
+        if(sceneMethod) sceneMethod.textContent=scene.method; if(sceneCopy) sceneCopy.textContent=scene.copy;
+        if(formulaValue) formulaValue.textContent=scene.formula; if(statusCopy) statusCopy.textContent=scene.status;
+        if(selectionLabel) selectionLabel.textContent=scene.selection; if(cellAddress) cellAddress.textContent=["N24","F7","AG10","S18","AH15","K20"][index];
+        chapterButtons.forEach((button)=>{const active=Number(button.dataset.scene)===index||(index===2&&Number(button.dataset.scene)===1);button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));});
+      };
+
+      const seek = (sceneIndex: number) => { offset=sceneIndex*SCENE_SECONDS+.2; anchor=performance.now(); currentScene=-1; lastFrame=-1; if(reducedMotion) render(performance.now()); };
+      chapterButtons.forEach((button)=>button.addEventListener("click",()=>seek(Number(button.dataset.scene||0))));
+      replay?.addEventListener("click",()=>seek(0));
+
+      const fillInstances = (sceneIndex: number, nextIndex: number, progress: number) => {
+        const a=patterns[sceneIndex], b=patterns[nextIndex];
+        for(let i=0;i<MAX_PIXELS;i+=1){
+          const pa=i<a.length?a[i]:undefined, pb=i<b.length?b[i]:undefined; const from=pa??pb, to=pb??pa; const base=i*6;
+          if(!from||!to){instanceData[base+5]=0;continue;}
+          const stagger=hash(i+sceneIndex*991)*.22; let p=Math.max(0,Math.min(1,(progress-stagger)/(1-stagger))); p=Math.floor(p*9)/9;
+          instanceData[base]=Math.round(from.x+(to.x-from.x)*p); instanceData[base+1]=Math.round(from.y+(to.y-from.y)*p);
+          instanceData[base+2]=from.color[0]+(to.color[0]-from.color[0])*p; instanceData[base+3]=from.color[1]+(to.color[1]-from.color[1])*p; instanceData[base+4]=from.color[2]+(to.color[2]-from.color[2])*p;
+          instanceData[base+5]=pa&&pb?1:pa?1-p:p;
         }
+        gl.bindBuffer(gl.ARRAY_BUFFER,instanceBuffer); gl.bufferData(gl.ARRAY_BUFFER,instanceData,gl.DYNAMIC_DRAW);
       };
-      resize();
-      const observer = new ResizeObserver(resize);
-      observer.observe(canvas);
-
-      const setSceneUI = (index: number) => {
-        if (index === currentScene) return;
-        currentScene = index;
-        const scene = scenes[index];
-        sceneCaption?.classList.add("swap");
-        window.setTimeout(() => {
-          if (sceneNumber) sceneNumber.textContent = scene.number;
-          if (sceneTag) sceneTag.textContent = scene.tag;
-          if (sceneTitle) sceneTitle.textContent = scene.title;
-          if (sceneDetail) sceneDetail.textContent = scene.detail;
-          sceneCaption?.classList.remove("swap");
-        }, reducedMotion ? 0 : 90);
-        phaseButtons.forEach((button, buttonIndex) => {
-          button.classList.toggle("active", buttonIndex === index);
-          button.setAttribute("aria-pressed", String(buttonIndex === index));
-        });
-      };
-
-      const seek = (time: number) => {
-        timeOffset = time;
-        timeAnchor = performance.now();
-        currentScene = -1;
-        if (reducedMotion) render(performance.now());
-      };
-
-      phaseButtons.forEach((button) => {
-        button.addEventListener("click", () => seek(Number(button.dataset.time || 0)));
-      });
-      replayButton?.addEventListener("click", () => seek(.4));
-
-      canvas.addEventListener("pointermove", (event) => {
-        const rect = canvas.getBoundingClientRect();
-        pointerX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        pointerY = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
-      });
-      canvas.addEventListener("pointerleave", () => { pointerX = 0; pointerY = 0; });
 
       const render = (now: number) => {
-        resize();
-        const elapsed = reducedMotion ? 0 : (now - timeAnchor) / 1000;
-        const time = (timeOffset + elapsed) % CYCLE;
-        const sceneIndex = sceneIndexForTime(time);
-        setSceneUI(sceneIndex);
-        if (frameCount) frameCount.textContent = String(Math.floor(time * 9) + 1).padStart(3, "0");
-        if (frameProgress) frameProgress.style.width = `${(time / CYCLE) * 100}%`;
-
-        gl.viewport(0, 0, width, height);
-        gl.disable(gl.DEPTH_TEST);
-        gl.disable(gl.BLEND);
-        gl.useProgram(bgProgram);
-        gl.uniform1f(bgTime, time);
-        gl.uniform2f(bgResolution, width, height);
-        gl.uniform2f(bgPointer, pointerX, pointerY);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.useProgram(tileProgram);
-        gl.uniform1f(tileTime, time);
-        gl.uniform2f(tileResolution, width, height);
-        gl.uniform2f(tilePointer, pointerX, pointerY);
-        gl.bindBuffer(gl.ARRAY_BUFFER, cornerBuffer);
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-        gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, INSTANCE_COUNT);
-
-        if (!reducedMotion) requestAnimationFrame(render);
+        resize(); const elapsed=reducedMotion?0:(now-anchor)/1000; const time=(offset+elapsed)%CYCLE_SECONDS;
+        const sceneIndex=Math.floor(time/SCENE_SECONDS)%SCENE_COUNT; const nextIndex=(sceneIndex+1)%SCENE_COUNT; const local=(time%SCENE_SECONDS)/SCENE_SECONDS;
+        const progress=Math.max(0,Math.min(1,(local-.43)/.52)); const snappedFrame=Math.floor(time*8);
+        setUI(sceneIndex);
+        if(snappedFrame!==lastFrame){lastFrame=snappedFrame;fillInstances(sceneIndex,nextIndex,progress);}
+        gl.viewport(0,0,width,height); gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND); gl.useProgram(backgroundProgram);
+        const selections=[[30,9,61,27],[4,3,57,26],[7,2,58,25],[7,3,58,26],[18,3,52,28],[4,3,60,28]]; const s=selections[sceneIndex]; gl.uniform4f(selectionUniform,s[0],s[1],s[2],s[3]); gl.drawArrays(gl.TRIANGLES,0,3);
+        gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA); gl.useProgram(pixelsProgram);
+        gl.bindBuffer(gl.ARRAY_BUFFER,corners); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0); gl.vertexAttribDivisor(0,0);
+        gl.bindBuffer(gl.ARRAY_BUFFER,instanceBuffer); gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1,2,gl.FLOAT,false,24,0); gl.vertexAttribDivisor(1,1); gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2,4,gl.FLOAT,false,24,8); gl.vertexAttribDivisor(2,1);
+        gl.drawArraysInstanced(gl.TRIANGLES,0,6,MAX_PIXELS);
+        if(!reducedMotion) requestAnimationFrame(render);
       };
       requestAnimationFrame(render);
-    } catch (error) {
-      console.error("Safety animation unavailable", error);
-      stage.classList.add("no-webgl");
-      fillFallbackGrid();
-    }
+    } catch(error) { console.error("Spreadsheet animation unavailable",error); stage.classList.add("no-webgl"); }
   }
 }

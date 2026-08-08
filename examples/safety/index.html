@@ -3,178 +3,145 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kernl — Functional safety, connected</title>
-    <meta
-      name="description"
-      content="Kernl connects FTA, FMEA and FMEDA in one living, review-ready safety case."
-    />
-    <meta name="theme-color" content="#f2f0e8" />
-    <meta property="og:title" content="Kernl — From spreadsheet sprawl to safety clarity" />
-    <meta
-      property="og:description"
-      content="One connected workspace for FTA, FMEA and FMEDA."
-    />
+    <title>Kernl — The living safety case</title>
+    <meta name="description" content="Kernl connects FTA, FMEA and FMEDA in one living safety case." />
+    <meta name="theme-color" content="#217346" />
+    <meta property="og:title" content="Kernl — The living safety case" />
+    <meta property="og:description" content="FTA, FMEA and FMEDA. Connected, traceable, alive." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/safety-og.png" />
+    <meta property="og:image" content="/safety-og-v2.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/safety-og.png" />
+    <meta name="twitter:image" content="/safety-og-v2.png" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="site-shell">
-      <header class="nav" aria-label="Primary navigation">
-        <a class="brand" href="#top" aria-label="Kernl home">
-          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span>KERNL</span>
-        </a>
-        <nav class="nav-links" aria-label="Product links">
-          <a href="#system">Platform</a>
-          <a href="#methods">Methods</a>
-          <a href="#assurance">Assurance</a>
-        </nav>
-        <a class="nav-cta" href="#contact">Book a demo <span aria-hidden="true">↗</span></a>
-      </header>
+    <header class="site-nav">
+      <a class="brand" href="#top" aria-label="Kernl home"><span class="brand-grid" aria-hidden="true"></span>KERNL</a>
+      <nav aria-label="Primary navigation">
+        <a href="#platform">Platform</a>
+        <a href="#methods">Methods</a>
+        <a href="#company">Company</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Request access <span>↗</span></a>
+    </header>
 
-      <main id="top">
-        <section class="hero" aria-labelledby="hero-title">
-          <div class="hero-copy">
-            <p class="eyebrow"><span>01</span> Functional safety intelligence</p>
-            <h1 id="hero-title">
-              From spreadsheet sprawl<br />
-              <em>to safety clarity.</em>
-            </h1>
-            <p class="hero-lede">
-              Kernl turns scattered risk data into one connected, review-ready
-              safety case for FTA, FMEA and FMEDA.
-            </p>
-            <div class="hero-actions">
-              <a class="button button-dark" href="#contact">
-                <span>See Kernl in action</span><b aria-hidden="true">↗</b>
-              </a>
-              <button class="button button-text" id="replay" type="button">
-                <span class="play-icon" aria-hidden="true">▶</span> Replay the story
-              </button>
+    <main id="top">
+      <section class="workbook-hero" aria-labelledby="hero-title">
+        <div class="excel-window">
+          <div class="excel-titlebar">
+            <div class="quick-actions" aria-hidden="true"><i></i><i></i><i></i></div>
+            <p><span class="excel-app-icon">X</span> Safety_Case_Master.xlsx <b>— Saved to Kernl</b></p>
+            <div class="window-actions" aria-hidden="true"><span>—</span><span>□</span><span>×</span></div>
+          </div>
+
+          <div class="excel-tabs" aria-hidden="true">
+            <span>File</span><span class="active">Home</span><span>Insert</span><span>Page Layout</span>
+            <span>Formulas</span><span>Data</span><span>Review</span><span>View</span>
+            <b class="kernl-addin">Kernl Safety</b>
+          </div>
+
+          <div class="excel-ribbon" aria-hidden="true">
+            <div class="ribbon-paste"><b></b><span>Paste</span></div>
+            <div class="ribbon-cluster"><i></i><i></i><i></i><small>Clipboard</small></div>
+            <div class="font-box"><span>Arial</span><span>10</span><div><b>B</b><em>I</em><u>U</u><i>A</i></div><small>Font</small></div>
+            <div class="align-box"><i></i><i></i><i></i><i></i><i></i><i></i><small>Alignment</small></div>
+            <div class="number-box"><span>General</span><div><b>$</b><b>%</b><b>,</b></div><small>Number</small></div>
+            <div class="style-box"><i></i><i></i><i></i><small>Styles</small></div>
+            <div class="kernl-ribbon"><span class="brand-grid"></span><b>Sync safety case</b><small>FTA · FMEA · FMEDA</small></div>
+          </div>
+
+          <div class="formula-bar">
+            <span id="cell-address">N24</span><b>fx</b><p id="formula-value">=KERNL.CONNECT(FTA,FMEA,FMEDA)</p>
+          </div>
+
+          <div class="sheet-stage" id="sheet-stage">
+            <div class="column-heads" id="column-heads" aria-hidden="true"></div>
+            <div class="row-heads" id="row-heads" aria-hidden="true"></div>
+            <canvas id="sheet-canvas" aria-hidden="true"></canvas>
+
+            <div class="hero-message">
+              <p class="message-cell">KERNL / FUNCTIONAL SAFETY OS</p>
+              <h1 id="hero-title">Your safety case.<br /><em>Alive.</em></h1>
+              <p class="hero-subhead">FTA, FMEA and FMEDA move together—cell by cell, change by change.</p>
+              <div class="hero-actions">
+                <a href="#contact">Open the live model <span>↗</span></a>
+                <button id="replay" type="button"><i>▶</i> Replay animation</button>
+              </div>
             </div>
-            <div class="hero-proof" aria-label="Product methods">
-              <span>FTA</span><i></i><span>FMEA</span><i></i><span>FMEDA</span>
-              <small>One live safety case</small>
+
+            <div class="animation-readout" aria-live="polite">
+              <span id="scene-step">01 / 06</span>
+              <div><small id="scene-method">IMPORTING SOURCE DATA</small><b id="scene-copy">Every row becomes traceable.</b></div>
             </div>
+
+            <div class="selection-label" id="selection-label" aria-hidden="true">KERNL is editing</div>
           </div>
 
-          <div class="visual-column">
-            <div class="visual-kicker" aria-hidden="true">
-              <span>RAW INPUT</span>
-              <span class="visual-kicker-line"></span>
-              <span>ENGINEERING PROOF</span>
-            </div>
-            <div class="safety-stage" id="safety-stage">
-              <canvas id="safety-canvas" aria-hidden="true"></canvas>
-              <div class="fallback-grid" aria-hidden="true"></div>
-              <div class="stage-topline">
-                <span>KERNL / LIVE SAFETY CASE</span>
-                <span class="running"><i></i> ANALYSIS RUNNING</span>
-              </div>
-              <div class="scene-index" aria-hidden="true">
-                <span id="scene-number">01</span><small>/04</small>
-              </div>
-              <div class="scene-caption" aria-live="polite">
-                <span id="scene-tag">IMPORT / SOURCE LOG</span>
-                <strong id="scene-title">A spreadsheet is not a safety case.</strong>
-                <p id="scene-detail">84 rows detected · 12 links missing</p>
-              </div>
-              <div class="frame-meter" aria-hidden="true">
-                <span>FRAME <b id="frame-count">001</b></span>
-                <i><b id="frame-progress"></b></i>
-                <span>16 SEC LOOP</span>
-              </div>
-              <p class="sr-only">
-                An animated spreadsheet grid transforms into a fault tree, an FMEA
-                risk matrix, and an FMEDA diagnostic-coverage model.
-              </p>
-            </div>
-            <div class="phase-nav" role="group" aria-label="Choose an analysis view">
-              <button class="active" type="button" data-time="0.4"><span>01</span> Raw data</button>
-              <button type="button" data-time="5.0"><span>02</span> Fault tree</button>
-              <button type="button" data-time="8.7"><span>03</span> FMEA</button>
-              <button type="button" data-time="12.1"><span>04</span> FMEDA</button>
-            </div>
+          <div class="sheet-footer" aria-hidden="true">
+            <div class="sheet-nav">‹ ‹ › ›</div>
+            <span class="sheet-tab active">Safety Case</span>
+            <span class="sheet-tab">FTA</span><span class="sheet-tab">FMEA</span><span class="sheet-tab">FMEDA</span>
+            <span class="new-sheet">＋</span>
+            <p id="status-copy">READY · 126 LINKS VERIFIED</p>
+            <div class="zoom">− <i><b></b></i> ＋ &nbsp; 100%</div>
           </div>
-        </section>
+        </div>
 
-        <section class="signal-strip" aria-label="Product outcomes">
-          <p>Traceable by design</p><span>◆</span>
-          <p>Built for technical review</p><span>◆</span>
-          <p>Changes propagate, evidence stays linked</p><span>◆</span>
-          <p>Audit-ready without the scramble</p>
-        </section>
+        <div class="chapter-scrubber" role="group" aria-label="Choose an animation chapter">
+          <button class="active" type="button" data-scene="0"><span>01</span>Raw workbook</button>
+          <button type="button" data-scene="1"><span>02</span>FTA</button>
+          <button type="button" data-scene="3"><span>03</span>FMEA</button>
+          <button type="button" data-scene="4"><span>04</span>FMEDA</button>
+          <button type="button" data-scene="5"><span>05</span>Connected</button>
+        </div>
+      </section>
 
-        <section class="system-section" id="system" aria-labelledby="system-title">
-          <div class="section-label"><span>02</span> One connected model</div>
-          <div class="system-heading">
-            <h2 id="system-title">Every analysis.<br /><em>One line of truth.</em></h2>
-            <p>
-              Stop reconciling disconnected files. Kernl keeps functions, failure
-              modes, effects, mitigations and evidence linked as the design evolves.
-            </p>
-          </div>
-          <div class="method-grid" id="methods">
-            <article class="method-card method-card-dark">
-              <div class="method-top"><span>FTA</span><small>01 / LOGIC</small></div>
-              <div class="fault-tree-mini" aria-hidden="true">
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              </div>
-              <h3>See every path to the top event.</h3>
-              <p>Build and review fault logic without losing the engineering context beneath it.</p>
-            </article>
-            <article class="method-card">
-              <div class="method-top"><span>FMEA</span><small>02 / PRIORITY</small></div>
-              <div class="risk-grid-mini" aria-hidden="true">
-                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              </div>
-              <h3>Focus teams on what matters first.</h3>
-              <p>Turn severity, occurrence and detection into shared, visible engineering priorities.</p>
-            </article>
-            <article class="method-card method-card-accent">
-              <div class="method-top"><span>FMEDA</span><small>03 / COVERAGE</small></div>
-              <div class="coverage-mini" aria-hidden="true"><b>97<sup>%</sup></b></div>
-              <h3>Make diagnostic coverage defensible.</h3>
-              <p>Connect failure rates, mechanisms and diagnostics to the claim they support.</p>
-            </article>
-          </div>
-        </section>
+      <section class="press-line" aria-label="Product positioning">
+        <p>SPREADSHEETS RECORD RISK.</p><strong>KERNL MAKES IT MOVE.</strong><span>FTA</span><i></i><span>FMEA</span><i></i><span>FMEDA</span>
+      </section>
 
-        <section class="assurance-section" id="assurance" aria-labelledby="assurance-title">
-          <div class="assurance-copy">
-            <div class="section-label"><span>03</span> Change with confidence</div>
-            <h2 id="assurance-title">When the design moves,<br /><em>the safety case moves with it.</em></h2>
-          </div>
-          <div class="assurance-stats">
-            <div><strong>01</strong><p>Connected source of truth across analyses</p></div>
-            <div><strong>∞</strong><p>Traceable relationships preserved through change</p></div>
-            <div><strong>0</strong><p>Last-minute spreadsheet reconciliation marathons</p></div>
-          </div>
-        </section>
+      <section class="editorial-section" id="platform">
+        <p class="section-index">02 / THE LIVING SAFETY CASE</p>
+        <div class="editorial-heading">
+          <h2>Stop rebuilding the truth<br />every time the design changes.</h2>
+          <p>Kernl links functions, failure modes, effects, diagnostics and evidence in one model. Change one assumption and see the safety case respond.</p>
+        </div>
+        <div class="big-statement" aria-hidden="true"><span>CHANGE</span><i>→</i><span>IMPACT</span><i>→</i><span>PROOF</span></div>
+      </section>
 
-        <section class="closing" id="contact">
-          <p class="eyebrow"><span>04</span> Replace spreadsheet heroics</p>
-          <h2>Build the safety case<br />your product deserves.</h2>
-          <a class="button button-light" href="mailto:hello@example.com">
-            <span>Start the conversation</span><b aria-hidden="true">↗</b>
-          </a>
-          <p class="closing-note">FTA · FMEA · FMEDA · One connected workspace</p>
-        </section>
-      </main>
+      <section class="methods-section" id="methods">
+        <p class="section-index">03 / ONE MODEL, THREE VIEWS</p>
+        <div class="method-row">
+          <article>
+            <span class="cell-ref">FTA!A1</span><b class="method-acronym">FTA</b>
+            <h3>See the path to the top event.</h3><p>Build fault logic on the same data your teams use everywhere else.</p>
+          </article>
+          <article>
+            <span class="cell-ref">FMEA!A1</span><b class="method-acronym">FMEA</b>
+            <h3>Put attention where it matters.</h3><p>Prioritize failure modes without reconciling another disconnected file.</p>
+          </article>
+          <article>
+            <span class="cell-ref">FMEDA!A1</span><b class="method-acronym">FMEDA</b>
+            <h3>Defend every coverage claim.</h3><p>Keep failure rates, diagnostics and evidence linked to the result.</p>
+          </article>
+        </div>
+      </section>
 
-      <footer>
-        <a class="brand brand-footer" href="#top">
-          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span>KERNL</span>
-        </a>
-        <p>Functional safety, connected.</p>
-        <p>© 2026 KERNL</p>
-      </footer>
-    </div>
+      <section class="quote-section" id="company">
+        <p class="section-index">04 / ENGINEERING CONFIDENCE</p>
+        <blockquote>“The file is no longer the safety case.<br /><em>The connections are.</em>”</blockquote>
+        <div class="proof-cells"><span>LIVE TRACEABILITY</span><span>CHANGE IMPACT</span><span>REVIEW-READY EVIDENCE</span></div>
+      </section>
+
+      <section class="closing-section" id="contact">
+        <p>READY TO LEAVE THE WORKBOOK BEHIND?</p>
+        <h2>Make risk<br /><em>visible.</em></h2>
+        <a href="mailto:hello@example.com">Request a private demo <span>↗</span></a>
+      </section>
+    </main>
+
+    <footer><a class="brand" href="#top"><span class="brand-grid"></span>KERNL</a><p>Functional safety, connected.</p><p>© 2026</p></footer>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
