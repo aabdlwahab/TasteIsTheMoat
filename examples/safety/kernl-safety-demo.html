@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kernl — The living safety case</title>
+    <meta name="description" content="Kernl connects FTA, FMEA and FMEDA in one living safety case." />
+    <meta name="theme-color" content="#217346" />
+    <meta property="og:title" content="Kernl — The living safety case" />
+    <meta property="og:description" content="FTA, FMEA and FMEDA. Connected, traceable, alive." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="" />
+    <style>
+:root {
+  --excel: #217346;
+  --excel-dark: #185c37;
+  --ink: #101311;
+  --paper: #f7f7f3;
+  --grid: #d8ddd9;
+  --orange: #ff5b24;
+  --acid: #d7ff43;
+  --green: #22a663;
+  --yellow: #ffd44a;
+  --red: #ef483f;
+  --sans: Inter, "Helvetica Neue", Arial, sans-serif;
+  --mono: "SFMono-Regular", Consolas, monospace;
+  --serif: Georgia, "Times New Roman", serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--paper); }
+body { margin: 0; min-width: 320px; color: var(--ink); background: var(--paper); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--acid); color: var(--ink); }
+a { color: inherit; }
+button { font: inherit; }
+
+.site-nav {
+  height: 72px; padding: 0 clamp(20px, 3.2vw, 56px); display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; background: #0d0f0e; color: white; border-bottom: 1px solid rgba(255,255,255,.14);
+}
+.brand { display: inline-flex; align-items: center; gap: 11px; width: max-content; color: inherit; text-decoration: none; font-size: 15px; font-weight: 900; letter-spacing: .16em; }
+.brand-grid { width: 25px; height: 25px; display: block; background: conic-gradient(from 90deg, var(--orange) 0 25%, transparent 0 50%, var(--acid) 0 75%, white 0); box-shadow: inset 0 0 0 1px rgba(255,255,255,.5); }
+.site-nav nav { display: flex; gap: 34px; }
+.site-nav nav a { color: rgba(255,255,255,.6); text-decoration: none; font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.site-nav nav a:hover { color: white; }
+.nav-cta { justify-self: end; display: inline-flex; gap: 24px; align-items: center; padding: 11px 15px; border: 1px solid rgba(255,255,255,.55); text-decoration: none; font: 800 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.nav-cta:hover { color: var(--ink); background: var(--acid); border-color: var(--acid); }
+
+.workbook-hero { padding: 0 0 28px; background: #c9ceca; }
+.excel-window { width: 100%; height: calc(100svh - 116px); min-height: 690px; display: grid; grid-template-rows: 34px 32px 86px 29px minmax(0,1fr) 28px; background: white; box-shadow: 0 20px 60px rgba(0,0,0,.18); }
+.excel-titlebar { padding: 0 8px 0 12px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: white; background: var(--excel); font-size: 12px; }
+.excel-titlebar p { margin: 0; }
+.excel-titlebar p b { font-weight: 400; opacity: .64; }
+.excel-app-icon { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 8px; background: rgba(255,255,255,.15); font-weight: 900; }
+.quick-actions { display: flex; gap: 13px; }
+.quick-actions i { width: 13px; height: 13px; border: 1px solid rgba(255,255,255,.7); }
+.quick-actions i:nth-child(2) { border-radius: 50%; }
+.window-actions { justify-self: end; height: 100%; display: flex; align-items: center; }
+.window-actions span { display: grid; place-items: center; width: 45px; height: 100%; }
+.window-actions span:last-child:hover { background: #c42b1c; }
+.excel-tabs { display: flex; align-items: end; gap: 5px; padding: 0 10px; border-bottom: 1px solid #d5d8d5; color: #2a2d2a; background: #fafafa; font-size: 11px; }
+.excel-tabs span { padding: 9px 11px 7px; }
+.excel-tabs span:first-child { color: white; background: var(--excel-dark); }
+.excel-tabs .active { border-bottom: 3px solid var(--excel); }
+.kernl-addin { margin-left: auto; padding: 8px 12px; color: var(--excel); font: 800 10px/1 var(--mono); letter-spacing: .08em; }
+.excel-ribbon { display: flex; gap: 9px; padding: 7px 12px 5px; overflow: hidden; border-bottom: 1px solid #cfd3cf; background: #fff; color: #343734; }
+.excel-ribbon > div { min-width: 74px; height: 70px; position: relative; padding: 3px 8px 14px; border-right: 1px solid #dfe2df; }
+.excel-ribbon small { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; color: #747874; font-size: 9px; }
+.ribbon-paste { display: grid; grid-template-columns: 32px 1fr; align-items: center; font-size: 10px; }
+.ribbon-paste b { width: 27px; height: 32px; border: 2px solid #7e837e; position: relative; }
+.ribbon-paste b::before { content: ""; position: absolute; width: 14px; height: 5px; left: 5px; top: -7px; border: 2px solid #7e837e; background: white; }
+.ribbon-cluster, .align-box, .style-box { display: grid; grid-template-columns: repeat(3,16px); align-content: start; gap: 6px; }
+.ribbon-cluster i, .align-box i, .style-box i { display: block; width: 15px; height: 12px; border: 1px solid #858a85; background: linear-gradient(#cdd1cd 0 30%,transparent 30% 55%,#cdd1cd 55% 70%,transparent 70%); }
+.font-box { min-width: 158px !important; display: grid; grid-template-columns: 1fr 37px; gap: 4px; align-content: start; font-size: 10px; }
+.font-box > span, .number-box > span { height: 20px; padding: 4px; border: 1px solid #bfc4bf; }
+.font-box div { grid-column: 1 / 3; display: flex; gap: 13px; padding: 5px; font-size: 12px; }
+.font-box em { font-family: var(--serif); }
+.font-box div i { color: #d13a32; font-style: normal; }
+.align-box { min-width: 94px !important; }
+.number-box { min-width: 110px !important; display: grid; gap: 5px; align-content: start; }
+.number-box div { display: flex; gap: 20px; font-size: 11px; }
+.style-box { min-width: 90px !important; }
+.style-box i:nth-child(1) { background: #f6d1cb; }.style-box i:nth-child(2) { background: #fff0af; }.style-box i:nth-child(3) { background: #c8eed8; }
+.kernl-ribbon { min-width: 190px !important; margin-left: auto; display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; gap: 2px 9px; align-items: center; border: 1px solid #93c6aa !important; background: #eff8f3; }
+.kernl-ribbon .brand-grid { grid-row: 1 / 3; width: 34px; height: 34px; box-shadow: none; }
+.kernl-ribbon b { color: var(--excel-dark); font-size: 11px; }.kernl-ribbon small { position: static; text-align: left; font: 8px/1 var(--mono); }
+.formula-bar { display: grid; grid-template-columns: 86px 34px 1fr; align-items: center; border-bottom: 1px solid #bfc4bf; background: white; font-size: 11px; }
+.formula-bar > * { height: 100%; margin: 0; display: flex; align-items: center; padding: 0 9px; border-right: 1px solid #d3d7d3; }
+.formula-bar b { justify-content: center; color: #777; font: italic 15px var(--serif); }
+.formula-bar p { font-family: var(--mono); color: #343a35; }
+
+.sheet-stage { position: relative; min-height: 0; overflow: hidden; background: white; }
+#sheet-canvas { position: absolute; left: 42px; top: 24px; width: calc(100% - 42px); height: calc(100% - 24px); }
+.cell-text-layer { position: absolute; z-index: 4; left: 42px; top: 24px; width: calc(100% - 42px); height: calc(100% - 24px); overflow: hidden; pointer-events: none; }
+.cell-text { position: absolute; height: calc(100% / 30); display: flex; align-items: center; overflow: hidden; white-space: nowrap; padding: 0 3px; color: #202520; background: rgba(255,255,255,.88); border-right: 1px solid rgba(173,181,175,.6); font: 600 clamp(6px,.54vw,9px)/1 Arial,sans-serif; will-change: left,top,width,opacity; }
+.cell-text.header { color: white; background: var(--excel); font-weight: 800; }
+.cell-text.critical { color: white; background: var(--red); font-weight: 800; }
+.cell-text.warning { color: var(--ink); background: var(--yellow); font-weight: 800; }
+.cell-text.good { color: white; background: var(--green); font-weight: 800; }
+.cell-text.node { height: calc(100% / 30 * 2); justify-content: center; border: 2px solid var(--ink); background: rgba(255,255,255,.96); text-align: center; font: 800 clamp(6px,.6vw,10px)/1.05 var(--mono); }
+.cell-text.metric { height: calc(100% / 30 * 2); justify-content: center; color: var(--excel-dark); background: rgba(255,255,255,.92); border: 2px solid var(--excel); font: 900 clamp(11px,1.35vw,23px)/1 var(--mono); letter-spacing: -.05em; }
+.cell-text.formula { color: #4a275e; background: #f3e9fa; font-family: var(--mono); }
+.active-cell { position: absolute; z-index: 5; left: 42px; top: 24px; width: calc((100% - 42px) / 64 * 5); height: calc((100% - 24px) / 30); border: 2px solid var(--excel); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); will-change: transform,width,height; }
+.active-cell i { position: absolute; width: 7px; height: 7px; right: -5px; bottom: -5px; background: var(--excel); border: 1px solid white; }
+.column-heads { position: absolute; z-index: 3; left: 42px; right: 0; top: 0; height: 24px; display: grid; grid-template-columns: repeat(64,minmax(17px,1fr)); overflow: hidden; border-bottom: 1px solid #aeb5af; background: #f0f2f0; }
+.column-heads span { display: grid; place-items: center; min-width: 0; border-right: 1px solid #c8cdc9; color: #535853; font: 9px/1 Arial,sans-serif; }
+.row-heads { position: absolute; z-index: 3; left: 0; top: 24px; bottom: 0; width: 42px; display: grid; grid-template-rows: repeat(30,1fr); overflow: hidden; border-right: 1px solid #aeb5af; background: #f0f2f0; }
+.row-heads span { display: grid; place-items: center; border-bottom: 1px solid #c8cdc9; color: #535853; font: 9px/1 Arial,sans-serif; }
+.sheet-stage::before { content: ""; position: absolute; z-index: 4; left: 0; top: 0; width: 42px; height: 24px; border-right: 1px solid #aeb5af; border-bottom: 1px solid #aeb5af; background: linear-gradient(135deg,#f0f2f0 50%,#bdc3be 51% 54%,#f0f2f0 55%); }
+.hero-message { position: absolute; z-index: 5; left: clamp(70px,7vw,130px); top: 11%; width: min(520px,42vw); padding: 18px 24px 24px; background: rgba(255,255,255,.94); border: 2px solid var(--excel); box-shadow: 6px 6px 0 rgba(33,115,70,.18); }
+.hero-message { transition: opacity .12s steps(2,end), transform .12s steps(2,end); }
+.sheet-stage:not([data-scene="0"]) .hero-message { opacity: .075; transform: translate(-10px,8px); pointer-events: none; }
+.sheet-stage:not([data-scene="0"]) .hero-message h1,.sheet-stage:not([data-scene="0"]) .hero-message p,.sheet-stage:not([data-scene="0"]) .hero-message .hero-actions { visibility: hidden; }
+.hero-message::after { content: ""; position: absolute; width: 8px; height: 8px; right: -6px; bottom: -6px; background: var(--excel); border: 1px solid white; }
+.message-cell { margin: 0 0 21px; color: var(--excel); font: 800 9px/1 var(--mono); letter-spacing: .12em; }
+.hero-message h1 { margin: 0; font-size: clamp(50px,6vw,106px); line-height: .76; letter-spacing: -.075em; font-weight: 880; }
+.hero-message h1 em { font-family: var(--serif); font-weight: 400; color: var(--orange); }
+.hero-subhead { max-width: 430px; margin: 26px 0 0; color: #4f5550; font-size: clamp(14px,1.25vw,18px); line-height: 1.5; }
+.hero-actions { display: flex; gap: 22px; align-items: center; margin-top: 27px; flex-wrap: wrap; }
+.hero-actions a { display: inline-flex; justify-content: space-between; gap: 32px; min-width: 215px; padding: 15px 17px; color: white; background: var(--excel); text-decoration: none; font: 800 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.hero-actions a:hover { background: var(--excel-dark); }
+.hero-actions button { border: 0; padding: 0; background: transparent; color: #343934; font: 750 9px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.hero-actions button i { display: inline-grid; place-items: center; width: 28px; height: 28px; margin-right: 8px; border: 1px solid #535a54; border-radius: 50%; font-size: 8px; font-style: normal; }
+.animation-readout { position: absolute; z-index: 5; right: 24px; bottom: 24px; width: min(385px,35vw); display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 13px 15px; color: white; background: #111512; border-left: 5px solid var(--orange); }
+.animation-readout > span { font: 700 11px/1 var(--mono); color: var(--acid); }
+.animation-readout div { display: grid; gap: 5px; }.animation-readout small { color: #8f9690; font: 700 8px/1 var(--mono); letter-spacing: .09em; }.animation-readout b { font-size: 14px; }
+.selection-label { position: absolute; z-index: 6; left: 70%; top: 14%; padding: 5px 7px; color: white; background: var(--excel); font: 700 8px/1 var(--mono); box-shadow: 0 0 0 1px white; pointer-events: none; will-change: left,top; }
+.sheet-footer { display: flex; align-items: center; gap: 0; border-top: 1px solid #bbc0bb; background: #f2f3f2; color: #444944; font-size: 9px; }
+.sheet-nav { padding: 0 12px; font-size: 13px; }.sheet-tab { height: 28px; padding: 9px 16px 0; border-right: 1px solid #d0d4d0; }.sheet-tab.active { color: var(--excel-dark); background: white; border-top: 2px solid var(--excel); padding-top: 7px; font-weight: 700; }.new-sheet { padding: 0 13px; font-size: 15px; }
+.sheet-footer p { margin: 0 0 0 auto; font: 7px/1 var(--mono); letter-spacing: .08em; }.zoom { display: flex; align-items: center; gap: 8px; margin: 0 14px 0 25px; }.zoom i { width: 70px; height: 2px; display: block; background: #b6bbb6; }.zoom i b { display: block; width: 8px; height: 8px; margin: -3px 0 0 45px; border-radius: 50%; background: var(--excel); }
+.chapter-scrubber { max-width: 930px; margin: 18px auto 0; display: grid; grid-template-columns: repeat(5,1fr); }
+.chapter-scrubber button { padding: 10px 12px; border: 0; border-top: 1px solid #8d948e; background: transparent; color: #535a54; text-align: left; font: 800 9px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.chapter-scrubber button span { display: block; margin-bottom: 5px; color: #8d948e; font-size: 8px; }.chapter-scrubber button.active { border-top: 3px solid var(--excel); color: var(--excel-dark); padding-top: 8px; }.chapter-scrubber button.active span { color: var(--orange); }
+
+.press-line { min-height: 116px; padding: 25px clamp(20px,4vw,70px); display: flex; align-items: center; gap: clamp(14px,2.3vw,42px); overflow: auto; color: white; background: #0e110f; }
+.press-line p,.press-line strong,.press-line span { margin: 0; white-space: nowrap; font: 800 clamp(10px,1vw,14px)/1 var(--mono); letter-spacing: .1em; }.press-line p { color: #949a95; }.press-line strong { color: var(--acid); }.press-line span { color: white; }.press-line i { width: 6px; height: 6px; flex: 0 0 auto; background: var(--orange); transform: rotate(45deg); }
+
+.section-index { margin: 0 0 45px; color: var(--excel-dark); font: 800 10px/1 var(--mono); letter-spacing: .14em; }
+.editorial-section { padding: clamp(90px,11vw,180px) max(24px,calc((100vw - 1500px)/2)); background: var(--paper); }
+.editorial-heading { display: grid; grid-template-columns: 1.2fr .6fr; gap: 10vw; align-items: end; }
+.editorial-heading h2 { margin: 0; font-size: clamp(45px,6vw,96px); line-height: .94; letter-spacing: -.06em; }
+.editorial-heading p { margin: 0 0 6px; color: #515751; font-size: 17px; line-height: 1.6; }
+.big-statement { margin-top: 105px; display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; border: 1px solid var(--ink); }
+.big-statement span { min-height: 165px; display: grid; place-items: center; font: 900 clamp(30px,4.5vw,72px)/1 var(--sans); letter-spacing: -.05em; }.big-statement span:nth-of-type(2) { background: var(--acid); }.big-statement span:nth-of-type(3) { color: white; background: var(--excel); }.big-statement i { font-style: normal; font-size: 25px; }
+.methods-section { padding: 100px max(24px,calc((100vw - 1500px)/2)) 140px; background: #e5e8e4; }
+.method-row { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--ink); }
+.method-row article { min-height: 520px; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid var(--ink); background: linear-gradient(rgba(16,19,17,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(16,19,17,.06) 1px,transparent 1px),#f9f9f5; background-size: 30px 30px; }.method-row article:last-child { border-right: 0; }.method-row article:nth-child(2) { background-color: #fff4dc; }.method-row article:nth-child(3) { background-color: #edf8f0; }
+.cell-ref { align-self: flex-start; padding: 6px 8px; color: white; background: var(--excel); font: 700 9px/1 var(--mono); }.method-acronym { margin-top: 56px; font: 900 clamp(55px,7vw,112px)/.8 var(--sans); letter-spacing: -.09em; }.method-row h3 { margin: auto 0 13px; max-width: 370px; font-size: 30px; line-height: 1; letter-spacing: -.04em; }.method-row p { margin: 0; max-width: 360px; color: #5d635d; font-size: 14px; line-height: 1.55; }
+.quote-section { padding: 120px max(24px,calc((100vw - 1500px)/2)); color: white; background: var(--excel-dark); }
+.quote-section .section-index { color: #b8d9c5; }.quote-section blockquote { margin: 0; font-size: clamp(48px,7.4vw,116px); line-height: .9; letter-spacing: -.07em; font-weight: 800; }.quote-section blockquote em { font-family: var(--serif); font-weight: 400; color: var(--acid); }.proof-cells { margin-top: 90px; display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid rgba(255,255,255,.4); }.proof-cells span { padding: 20px 0; font: 750 9px/1 var(--mono); letter-spacing: .11em; }
+.closing-section { min-height: 82vh; padding: 100px 20px; display: grid; place-items: center; align-content: center; text-align: center; background: #0e110f; color: white; }.closing-section > p { margin: 0; color: #8d958f; font: 800 9px/1 var(--mono); letter-spacing: .13em; }.closing-section h2 { margin: 35px 0 50px; font-size: clamp(80px,13vw,210px); line-height: .65; letter-spacing: -.1em; }.closing-section h2 em { font-family: var(--serif); font-weight: 400; color: var(--orange); }.closing-section a { min-width: 280px; display: inline-flex; justify-content: space-between; padding: 18px 20px; color: var(--ink); background: var(--acid); text-decoration: none; font: 800 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; box-shadow: 8px 8px 0 var(--orange); }
+footer { min-height: 100px; padding: 0 clamp(20px,4vw,70px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: #7f8781; background: #0e110f; border-top: 1px solid #323733; font: 700 9px/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }footer .brand { color: white; }footer p:last-child { justify-self: end; }
+
+@media (max-width: 950px) {
+  .site-nav { grid-template-columns: 1fr auto; }.site-nav nav { display: none; }
+  .excel-window { min-height: 660px; grid-template-rows: 34px 32px 64px 29px minmax(0,1fr) 28px; }.excel-ribbon > div:nth-child(n+4):not(.kernl-ribbon) { display: none; }.excel-ribbon { height: 64px; }.kernl-ribbon { min-width: 175px !important; }
+  .hero-message { width: min(540px,72vw); top: 8%; }.animation-readout { width: 46vw; }
+  .editorial-heading { grid-template-columns: 1fr; gap: 35px; }.big-statement { grid-template-columns: 1fr; }.big-statement i { display: none; }.big-statement span { min-height: 120px; border-bottom: 1px solid var(--ink); }
+  .method-row { grid-template-columns: 1fr; }.method-row article { min-height: 440px; border-right: 0; border-bottom: 1px solid var(--ink); }.method-row article:last-child { border-bottom: 0; }
+}
+@media (max-width: 640px) {
+  .site-nav { height: 64px; padding: 0 14px; }.nav-cta { padding: 9px; gap: 7px; font-size: 8px; }
+  .excel-window { height: 700px; min-height: 0; grid-template-rows: 32px 30px 0 29px minmax(0,1fr) 28px; }.excel-ribbon { display: none; }.excel-tabs { gap: 0; overflow: hidden; }.excel-tabs span { padding: 8px 9px 7px; white-space: nowrap; }.excel-tabs span:nth-child(n+5) { display: none; }.kernl-addin { display: none; }.quick-actions,.excel-titlebar p b { display: none; }.excel-titlebar { grid-template-columns: 1fr auto; }.excel-titlebar p { grid-column: 1; }.window-actions { grid-column: 2; }.window-actions span { width: 32px; }
+  .hero-message { left: 60px; top: 8%; width: calc(100% - 80px); padding: 16px; }.hero-message h1 { font-size: clamp(48px,15vw,76px); }.hero-subhead { font-size: 14px; }.hero-actions { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .animation-readout { right: 10px; bottom: 12px; width: calc(100% - 62px); }.selection-label { display: none; }.column-heads { grid-template-columns: repeat(64,28px); }.sheet-footer p,.zoom { display: none; }.sheet-tab { padding-inline: 10px; }.chapter-scrubber { grid-template-columns: repeat(5,110px); overflow-x: auto; padding: 0 12px; }
+  .press-line { min-height: 90px; }.editorial-section,.methods-section,.quote-section { padding-left: 16px; padding-right: 16px; }.editorial-heading h2 { font-size: 48px; }.big-statement { margin-top: 65px; }.quote-section blockquote { font-size: 53px; }.proof-cells { grid-template-columns: 1fr; }.proof-cells span { border-bottom: 1px solid rgba(255,255,255,.3); }.closing-section h2 { font-size: 94px; }
+  footer { grid-template-columns: 1fr auto; }footer p:nth-of-type(1) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+
+    </style>
+  </head>
+  <body>
+    <header class="site-nav">
+      <a class="brand" href="#top" aria-label="Kernl home"><span class="brand-grid" aria-hidden="true"></span>KERNL</a>
+      <nav aria-label="Primary navigation">
+        <a href="#platform">Platform</a>
+        <a href="#methods">Methods</a>
+        <a href="#company">Company</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Request access <span>↗</span></a>
+    </header>
+
+    <main id="top">
+      <section class="workbook-hero" aria-labelledby="hero-title">
+        <div class="excel-window">
+          <div class="excel-titlebar">
+            <div class="quick-actions" aria-hidden="true"><i></i><i></i><i></i></div>
+            <p><span class="excel-app-icon">X</span> Safety_Case_Master.xlsx <b>— Saved to Kernl</b></p>
+            <div class="window-actions" aria-hidden="true"><span>—</span><span>□</span><span>×</span></div>
+          </div>
+
+          <div class="excel-tabs" aria-hidden="true">
+            <span>File</span><span class="active">Home</span><span>Insert</span><span>Page Layout</span>
+            <span>Formulas</span><span>Data</span><span>Review</span><span>View</span>
+            <b class="kernl-addin">Kernl Safety</b>
+          </div>
+
+          <div class="excel-ribbon" aria-hidden="true">
+            <div class="ribbon-paste"><b></b><span>Paste</span></div>
+            <div class="ribbon-cluster"><i></i><i></i><i></i><small>Clipboard</small></div>
+            <div class="font-box"><span>Arial</span><span>10</span><div><b>B</b><em>I</em><u>U</u><i>A</i></div><small>Font</small></div>
+            <div class="align-box"><i></i><i></i><i></i><i></i><i></i><i></i><small>Alignment</small></div>
+            <div class="number-box"><span>General</span><div><b>$</b><b>%</b><b>,</b></div><small>Number</small></div>
+            <div class="style-box"><i></i><i></i><i></i><small>Styles</small></div>
+            <div class="kernl-ribbon"><span class="brand-grid"></span><b>Sync safety case</b><small>FTA · FMEA · FMEDA</small></div>
+          </div>
+
+          <div class="formula-bar">
+            <span id="cell-address">N24</span><b>fx</b><p id="formula-value">=KERNL.CONNECT(FTA,FMEA,FMEDA)</p>
+          </div>
+
+          <div class="sheet-stage" id="sheet-stage">
+            <div class="column-heads" id="column-heads" aria-hidden="true"></div>
+            <div class="row-heads" id="row-heads" aria-hidden="true"></div>
+            <canvas id="sheet-canvas" aria-hidden="true"></canvas>
+            <div class="cell-text-layer" id="cell-text-layer" aria-hidden="true"></div>
+            <div class="active-cell" id="active-cell" aria-hidden="true"><i></i></div>
+
+            <div class="hero-message">
+              <p class="message-cell">KERNL / FUNCTIONAL SAFETY OS</p>
+              <h1 id="hero-title">Your safety case.<br /><em>Alive.</em></h1>
+              <p class="hero-subhead">FTA, FMEA and FMEDA move together—cell by cell, change by change.</p>
+              <div class="hero-actions">
+                <a href="#contact">Open the live model <span>↗</span></a>
+                <button id="replay" type="button"><i>▶</i> Replay animation</button>
+              </div>
+            </div>
+
+            <div class="animation-readout" aria-live="polite">
+              <span id="scene-step">01 / 06</span>
+              <div><small id="scene-method">IMPORTING SOURCE DATA</small><b id="scene-copy">Every row becomes traceable.</b></div>
+            </div>
+
+            <div class="selection-label" id="selection-label" aria-hidden="true">KERNL is editing</div>
+          </div>
+
+          <div class="sheet-footer" aria-hidden="true">
+            <div class="sheet-nav">‹ ‹ › ›</div>
+            <span class="sheet-tab active">Safety Case</span>
+            <span class="sheet-tab">FTA</span><span class="sheet-tab">FMEA</span><span class="sheet-tab">FMEDA</span>
+            <span class="new-sheet">＋</span>
+            <p id="status-copy">READY · 126 LINKS VERIFIED</p>
+            <div class="zoom">− <i><b></b></i> ＋ &nbsp; 100%</div>
+          </div>
+        </div>
+
+        <div class="chapter-scrubber" role="group" aria-label="Choose an animation chapter">
+          <button class="active" type="button" data-scene="0"><span>01</span>Raw workbook</button>
+          <button type="button" data-scene="1"><span>02</span>FTA</button>
+          <button type="button" data-scene="3"><span>03</span>FMEA</button>
+          <button type="button" data-scene="4"><span>04</span>FMEDA</button>
+          <button type="button" data-scene="5"><span>05</span>Connected</button>
+        </div>
+      </section>
+
+      <section class="press-line" aria-label="Product positioning">
+        <p>SPREADSHEETS RECORD RISK.</p><strong>KERNL MAKES IT MOVE.</strong><span>FTA</span><i></i><span>FMEA</span><i></i><span>FMEDA</span>
+      </section>
+
+      <section class="editorial-section" id="platform">
+        <p class="section-index">02 / THE LIVING SAFETY CASE</p>
+        <div class="editorial-heading">
+          <h2>Stop rebuilding the truth<br />every time the design changes.</h2>
+          <p>Kernl links functions, failure modes, effects, diagnostics and evidence in one model. Change one assumption and see the safety case respond.</p>
+        </div>
+        <div class="big-statement" aria-hidden="true"><span>CHANGE</span><i>→</i><span>IMPACT</span><i>→</i><span>PROOF</span></div>
+      </section>
+
+      <section class="methods-section" id="methods">
+        <p class="section-index">03 / ONE MODEL, THREE VIEWS</p>
+        <div class="method-row">
+          <article>
+            <span class="cell-ref">FTA!A1</span><b class="method-acronym">FTA</b>
+            <h3>See the path to the top event.</h3><p>Build fault logic on the same data your teams use everywhere else.</p>
+          </article>
+          <article>
+            <span class="cell-ref">FMEA!A1</span><b class="method-acronym">FMEA</b>
+            <h3>Put attention where it matters.</h3><p>Prioritize failure modes without reconciling another disconnected file.</p>
+          </article>
+          <article>
+            <span class="cell-ref">FMEDA!A1</span><b class="method-acronym">FMEDA</b>
+            <h3>Defend every coverage claim.</h3><p>Keep failure rates, diagnostics and evidence linked to the result.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="quote-section" id="company">
+        <p class="section-index">04 / ENGINEERING CONFIDENCE</p>
+        <blockquote>“The file is no longer the safety case.<br /><em>The connections are.</em>”</blockquote>
+        <div class="proof-cells"><span>LIVE TRACEABILITY</span><span>CHANGE IMPACT</span><span>REVIEW-READY EVIDENCE</span></div>
+      </section>
+
+      <section class="closing-section" id="contact">
+        <p>READY TO LEAVE THE WORKBOOK BEHIND?</p>
+        <h2>Make risk<br /><em>visible.</em></h2>
+        <a href="mailto:hello@example.com">Request a private demo <span>↗</span></a>
+      </section>
+    </main>
+
+    <footer><a class="brand" href="#top"><span class="brand-grid"></span>KERNL</a><p>Functional safety, connected.</p><p>© 2026</p></footer>
+    <script>
+const COLS = 64;
+const ROWS = 30;
+const SCENE_SECONDS = 2.6;
+const SCENE_COUNT = 6;
+const CYCLE_SECONDS = SCENE_SECONDS * SCENE_COUNT;
+const MAX_PIXELS = 720;
+const COLORS = {
+    ink: [0.06, 0.075, 0.065],
+    grey: [0.64, 0.68, 0.65],
+    soft: [0.84, 0.86, 0.84],
+    excel: [0.13, 0.45, 0.27],
+    green: [0.13, 0.65, 0.39],
+    acid: [0.84, 1.0, 0.26],
+    orange: [1.0, 0.35, 0.14],
+    yellow: [1.0, 0.79, 0.20],
+    red: [0.93, 0.22, 0.18],
+    purple: [0.43, 0.28, 0.63],
+};
+const scenes = [
+    { method: "IMPORTING SOURCE DATA", copy: "Every row becomes traceable.", formula: "=KERNL.IMPORT(Safety_Case_Master)", status: "READY · 126 LINKS VERIFIED", selection: "KERNL is importing" },
+    { method: "FAULT TREE ANALYSIS", copy: "Cells assemble into fault logic.", formula: "=FTA.TOP_EVENT(Brake_Loss)", status: "FTA · 21 EVENTS LINKED", selection: "Building FTA" },
+    { method: "FAULT TREE ANALYSIS", copy: "Every path reaches the top event.", formula: "=FTA.MINIMAL_CUT_SETS(A1:A21)", status: "FTA · 6 CUT SETS RESOLVED", selection: "Tracing causes" },
+    { method: "FAILURE MODE & EFFECTS", copy: "Risk becomes impossible to miss.", formula: "=FMEA.PRIORITY(Severity,Occurrence,Detection)", status: "FMEA · 84 MODES PRIORITIZED", selection: "Ranking risk" },
+    { method: "FMEDA / DIAGNOSTICS", copy: "Coverage becomes a visible claim.", formula: "=FMEDA.DC(Safe,Detected,Residual)", status: "FMEDA · 97% DIAGNOSTIC COVERAGE", selection: "Calculating DC" },
+    { method: "ONE CONNECTED MODEL", copy: "The safety case moves as one.", formula: "=KERNL.CONNECT(FTA,FMEA,FMEDA)", status: "CONNECTED · EVIDENCE PRESERVED", selection: "Safety case synced" },
+];
+const FONT = {
+    A: ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
+    C: ["01111", "10000", "10000", "10000", "10000", "10000", "01111"],
+    D: ["11110", "10001", "10001", "10001", "10001", "10001", "11110"],
+    E: ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
+    F: ["11111", "10000", "10000", "11110", "10000", "10000", "10000"],
+    M: ["10001", "11011", "10101", "10101", "10001", "10001", "10001"],
+    N: ["10001", "11001", "10101", "10011", "10001", "10001", "10001"],
+    O: ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
+    T: ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
+    7: ["11111", "00001", "00010", "00100", "01000", "01000", "01000"],
+    9: ["01110", "10001", "10001", "01111", "00001", "00001", "11110"],
+    "%": ["11001", "11010", "00100", "01000", "10110", "00110", "00000"],
+};
+function hash(value) {
+    const x = Math.sin(value * 91.733) * 43758.5453;
+    return x - Math.floor(x);
+}
+function addRect(out, x, y, width, height, color, hollow = false) {
+    for (let row = 0; row < height; row += 1) {
+        for (let col = 0; col < width; col += 1) {
+            if (!hollow || row === 0 || col === 0 || row === height - 1 || col === width - 1)
+                out.push({ x: x + col, y: y + row, color });
+        }
+    }
+}
+function addLine(out, x0, y0, x1, y1, color) {
+    const steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+    for (let i = 0; i <= steps; i += 1) {
+        const p = steps === 0 ? 0 : i / steps;
+        out.push({ x: Math.round(x0 + (x1 - x0) * p), y: Math.round(y0 + (y1 - y0) * p), color });
+    }
+}
+function addText(out, text, x, y, scale, color, colorForPixel) {
+    let cursor = x;
+    for (const character of text) {
+        const glyph = FONT[character];
+        if (!glyph) {
+            cursor += 3 * scale;
+            continue;
+        }
+        glyph.forEach((row, rowIndex) => {
+            [...row].forEach((value, colIndex) => {
+                if (value !== "1")
+                    return;
+                const pixelColor = colorForPixel?.(cursor + colIndex * scale, y + rowIndex * scale) ?? color;
+                addRect(out, cursor + colIndex * scale, y + rowIndex * scale, scale, scale, pixelColor);
+            });
+        });
+        cursor += 6 * scale;
+    }
+}
+function sourcePattern() {
+    const out = [];
+    addText(out, "DATA", 35, 2, 1, COLORS.excel);
+    addRect(out, 31, 10, 30, 2, COLORS.excel);
+    for (let row = 12; row < 27; row += 2) {
+        for (let col = 31; col < 61; col += 3) {
+            const seed = hash(row * 71 + col);
+            const color = col > 54 ? (seed > .72 ? COLORS.red : seed > .42 ? COLORS.yellow : COLORS.green) : seed > .8 ? COLORS.orange : seed > .45 ? COLORS.soft : COLORS.grey;
+            addRect(out, col, row, col > 54 ? 2 : 1 + Math.floor(seed * 2), 1, color);
+        }
+    }
+    return out;
+}
+function ftaTitlePattern() {
+    const out = [];
+    addText(out, "FTA", 5, 4, 3, COLORS.ink, (x) => x > 42 ? COLORS.orange : x > 24 ? COLORS.excel : COLORS.ink);
+    return out;
+}
+function faultTreePattern() {
+    const out = [];
+    addText(out, "FTA", 2, 2, 1, COLORS.excel);
+    addRect(out, 29, 3, 8, 3, COLORS.red, true);
+    addLine(out, 33, 6, 33, 9, COLORS.ink);
+    addLine(out, 17, 9, 49, 9, COLORS.ink);
+    for (const x of [17, 33, 49]) {
+        addLine(out, x, 9, x, 12, COLORS.ink);
+        addRect(out, x - 3, 12, 7, 3, COLORS.yellow, true);
+    }
+    const leaves = [9, 17, 25, 33, 41, 49, 57];
+    leaves.forEach((x, index) => {
+        const parent = index < 2 ? 17 : index < 5 ? 33 : 49;
+        addLine(out, parent, 15, parent, 18, COLORS.ink);
+        addLine(out, Math.min(parent, x), 18, Math.max(parent, x), 18, COLORS.ink);
+        addLine(out, x, 18, x, 21, COLORS.ink);
+        addRect(out, x - 2, 21, 5, 3, index === 3 ? COLORS.orange : COLORS.green, true);
+    });
+    return out;
+}
+function fmeaPattern() {
+    const out = [];
+    addText(out, "FMEA", 8, 4, 2, COLORS.ink, (x, y) => {
+        const risk = x / COLS * .58 + (1 - y / ROWS) * .42;
+        return risk > .67 ? COLORS.red : risk > .43 ? COLORS.yellow : COLORS.green;
+    });
+    addRect(out, 19, 23, 26, 1, COLORS.ink);
+    for (let i = 0; i < 13; i += 1)
+        out.push({ x: 20 + i * 2, y: 25, color: i < 4 ? COLORS.green : i < 8 ? COLORS.yellow : COLORS.red });
+    return out;
+}
+function fmedaPattern() {
+    const out = [];
+    const cx = 33, cy = 15;
+    for (let ring = 0; ring < 3; ring += 1) {
+        const radius = 8 + ring * 3;
+        const samples = 42 + ring * 16;
+        for (let i = 0; i < samples; i += 1) {
+            const angle = i / samples * Math.PI * 2;
+            if (ring === 2 && angle > 5.2)
+                continue;
+            out.push({ x: Math.round(cx + Math.cos(angle) * radius), y: Math.round(cy + Math.sin(angle) * radius), color: ring === 0 ? COLORS.orange : ring === 1 ? COLORS.green : COLORS.acid });
+        }
+    }
+    addText(out, "97%", 24, 11, 1, COLORS.ink);
+    addText(out, "FMEDA", 18, 25, 1, COLORS.excel);
+    return out;
+}
+function connectedPattern() {
+    const out = [];
+    addText(out, "CONNECTED", 5, 19, 1, COLORS.ink, (x) => x > 42 ? COLORS.excel : COLORS.ink);
+    addLine(out, 20, 10, 29, 18, COLORS.green);
+    addLine(out, 29, 18, 47, 4, COLORS.green);
+    addLine(out, 20, 11, 29, 19, COLORS.acid);
+    addLine(out, 29, 19, 47, 5, COLORS.acid);
+    for (let i = 0; i < 15; i += 1)
+        out.push({ x: 6 + i * 4, y: 27, color: i % 3 === 0 ? COLORS.orange : COLORS.soft });
+    return out;
+}
+const patterns = [sourcePattern(), ftaTitlePattern(), faultTreePattern(), fmeaPattern(), fmedaPattern(), connectedPattern()];
+const labelScenes = [
+    [
+        { text: "ID", x: 31, y: 10, width: 3, kind: "header" }, { text: "Function", x: 34, y: 10, width: 6, kind: "header" }, { text: "Failure mode", x: 40, y: 10, width: 7, kind: "header" }, { text: "Local effect", x: 47, y: 10, width: 7, kind: "header" }, { text: "S", x: 54, y: 10, width: 2, kind: "header" }, { text: "O", x: 56, y: 10, width: 2, kind: "header" }, { text: "D", x: 58, y: 10, width: 2, kind: "header" }, { text: "RPN", x: 60, y: 10, width: 4, kind: "header" },
+        { text: "EPS-014", x: 31, y: 12, width: 3 }, { text: "Provide assist", x: 34, y: 12, width: 6 }, { text: "Loss of torque", x: 40, y: 12, width: 7 }, { text: "Assist unavailable", x: 47, y: 12, width: 7 }, { text: "9", x: 54, y: 12, width: 2, kind: "critical" }, { text: "3", x: 56, y: 12, width: 2, kind: "warning" }, { text: "2", x: 58, y: 12, width: 2, kind: "good" }, { text: "54", x: 60, y: 12, width: 4, kind: "warning" },
+        { text: "SEN-022", x: 31, y: 14, width: 3 }, { text: "Sense angle", x: 34, y: 14, width: 6 }, { text: "Signal stuck", x: 40, y: 14, width: 7 }, { text: "Wrong command", x: 47, y: 14, width: 7 }, { text: "10", x: 54, y: 14, width: 2, kind: "critical" }, { text: "2", x: 56, y: 14, width: 2, kind: "good" }, { text: "4", x: 58, y: 14, width: 2, kind: "warning" }, { text: "80", x: 60, y: 14, width: 4, kind: "critical" },
+        { text: "COM-008", x: 31, y: 16, width: 3 }, { text: "Transmit state", x: 34, y: 16, width: 6 }, { text: "Bus timeout", x: 40, y: 16, width: 7 }, { text: "State unavailable", x: 47, y: 16, width: 7 }, { text: "8", x: 54, y: 16, width: 2, kind: "critical" }, { text: "4", x: 56, y: 16, width: 2, kind: "warning" }, { text: "3", x: 58, y: 16, width: 2, kind: "warning" }, { text: "96", x: 60, y: 16, width: 4, kind: "critical" },
+        { text: "=S*O*D", x: 60, y: 18, width: 4, kind: "formula" }, { text: "Revision 04 · 84 failure modes", x: 31, y: 25, width: 17, kind: "good" }
+    ],
+    [
+        { text: "TOP EVENT", x: 28, y: 2, width: 10, kind: "critical" }, { text: "Loss of braking", x: 25, y: 6, width: 16, kind: "node" }, { text: "OR", x: 31, y: 10, width: 4, kind: "warning" }, { text: "Sensor fault", x: 10, y: 20, width: 9, kind: "node" }, { text: "Power loss", x: 28, y: 20, width: 9, kind: "node" }, { text: "Bus timeout", x: 46, y: 20, width: 9, kind: "node" }, { text: "λ = 1.23E-7 / h", x: 43, y: 4, width: 12, kind: "formula" }
+    ],
+    [
+        { text: "TOP EVENT · LOSS OF BRAKING", x: 25, y: 3, width: 16, kind: "critical" }, { text: "OR", x: 31, y: 8, width: 4, kind: "warning" }, { text: "Input path", x: 13, y: 12, width: 8, kind: "node" }, { text: "Control path", x: 29, y: 12, width: 8, kind: "node" }, { text: "Output path", x: 45, y: 12, width: 8, kind: "node" }, { text: "Angle sensor", x: 6, y: 21, width: 7, kind: "good" }, { text: "Supply", x: 15, y: 21, width: 7, kind: "good" }, { text: "MCU", x: 27, y: 21, width: 7, kind: "warning" }, { text: "CAN", x: 35, y: 21, width: 7, kind: "good" }, { text: "Driver", x: 47, y: 21, width: 7, kind: "good" }, { text: "Motor", x: 55, y: 21, width: 7, kind: "critical" }, { text: "MCS-02 · ASIL D", x: 26, y: 26, width: 13, kind: "formula" }
+    ],
+    [
+        { text: "Failure mode", x: 16, y: 19, width: 11, kind: "header" }, { text: "Effect", x: 27, y: 19, width: 9, kind: "header" }, { text: "S", x: 36, y: 19, width: 3, kind: "header" }, { text: "O", x: 39, y: 19, width: 3, kind: "header" }, { text: "D", x: 42, y: 19, width: 3, kind: "header" }, { text: "RPN", x: 45, y: 19, width: 6, kind: "header" }, { text: "Sensor timeout", x: 16, y: 21, width: 11 }, { text: "Assist lost", x: 27, y: 21, width: 9 }, { text: "9", x: 36, y: 21, width: 3, kind: "critical" }, { text: "4", x: 39, y: 21, width: 3, kind: "warning" }, { text: "6", x: 42, y: 21, width: 3, kind: "warning" }, { text: "216", x: 45, y: 21, width: 6, kind: "critical" }, { text: "ACTION REQUIRED", x: 52, y: 21, width: 10, kind: "critical" }, { text: "=SORT(RPN, DESC)", x: 16, y: 25, width: 14, kind: "formula" }
+    ],
+    [
+        { text: "97.2%", x: 28, y: 13, width: 10, kind: "metric" }, { text: "DIAGNOSTIC COVERAGE", x: 24, y: 16, width: 18, kind: "good" }, { text: "SPFM", x: 7, y: 7, width: 6, kind: "header" }, { text: "99.1%", x: 13, y: 7, width: 7, kind: "metric" }, { text: "LFM", x: 45, y: 7, width: 6, kind: "header" }, { text: "91.4%", x: 51, y: 7, width: 7, kind: "metric" }, { text: "Safe faults", x: 6, y: 23, width: 9 }, { text: "Detected dangerous", x: 20, y: 23, width: 12, kind: "good" }, { text: "Residual", x: 45, y: 23, width: 8, kind: "critical" }, { text: "18.3 FIT", x: 53, y: 23, width: 8, kind: "warning" }, { text: "=DC/(DD+DU)", x: 27, y: 26, width: 10, kind: "formula" }
+    ],
+    [
+        { text: "FTA", x: 7, y: 7, width: 7, kind: "header" }, { text: "21 events linked", x: 14, y: 7, width: 11, kind: "good" }, { text: "FMEA", x: 7, y: 10, width: 7, kind: "header" }, { text: "84 modes linked", x: 14, y: 10, width: 11, kind: "good" }, { text: "FMEDA", x: 7, y: 13, width: 7, kind: "header" }, { text: "126 rates linked", x: 14, y: 13, width: 11, kind: "good" }, { text: "126 RELATIONSHIPS", x: 37, y: 8, width: 15, kind: "metric" }, { text: "0 ORPHAN RECORDS", x: 37, y: 12, width: 15, kind: "good" }, { text: "EVIDENCE PRESERVED", x: 37, y: 16, width: 15, kind: "header" }, { text: "=KERNL.CONNECT(*)", x: 23, y: 26, width: 18, kind: "formula" }
+    ]
+];
+const canvas = document.querySelector("#sheet-canvas");
+const stage = document.querySelector("#sheet-stage");
+const columnHeads = document.querySelector("#column-heads");
+const rowHeads = document.querySelector("#row-heads");
+const sceneStep = document.querySelector("#scene-step");
+const sceneMethod = document.querySelector("#scene-method");
+const sceneCopy = document.querySelector("#scene-copy");
+const cellAddress = document.querySelector("#cell-address");
+const formulaValue = document.querySelector("#formula-value");
+const statusCopy = document.querySelector("#status-copy");
+const selectionLabel = document.querySelector("#selection-label");
+const cellTextLayer = document.querySelector("#cell-text-layer");
+const activeCell = document.querySelector("#active-cell");
+const replay = document.querySelector("#replay");
+const chapterButtons = Array.from(document.querySelectorAll(".chapter-scrubber button"));
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function columnName(index) {
+    let result = "";
+    let value = index + 1;
+    while (value > 0) {
+        value -= 1;
+        result = String.fromCharCode(65 + value % 26) + result;
+        value = Math.floor(value / 26);
+    }
+    return result;
+}
+for (let i = 0; i < COLS; i += 1) {
+    const span = document.createElement("span");
+    span.textContent = columnName(i);
+    columnHeads?.append(span);
+}
+for (let i = 0; i < ROWS; i += 1) {
+    const span = document.createElement("span");
+    span.textContent = String(i + 1);
+    rowHeads?.append(span);
+}
+const labelPool = Array.from({ length: 36 }, () => {
+    const label = document.createElement("span");
+    label.className = "cell-text";
+    cellTextLayer?.append(label);
+    return label;
+});
+function shader(gl, type, source) {
+    const value = gl.createShader(type);
+    if (!value)
+        throw new Error("Unable to create shader");
+    gl.shaderSource(value, source);
+    gl.compileShader(value);
+    if (!gl.getShaderParameter(value, gl.COMPILE_STATUS))
+        throw new Error(gl.getShaderInfoLog(value) || "Shader error");
+    return value;
+}
+function program(gl, vertex, fragment) {
+    const value = gl.createProgram();
+    if (!value)
+        throw new Error("Unable to create program");
+    gl.attachShader(value, shader(gl, gl.VERTEX_SHADER, vertex));
+    gl.attachShader(value, shader(gl, gl.FRAGMENT_SHADER, fragment));
+    gl.linkProgram(value);
+    if (!gl.getProgramParameter(value, gl.LINK_STATUS))
+        throw new Error(gl.getProgramInfoLog(value) || "Link error");
+    return value;
+}
+const bgVertex = `#version 300 es
+precision highp float; out vec2 vUv;
+void main(){ vec2 p=vec2(float((gl_VertexID<<1)&2),float(gl_VertexID&2)); vUv=p; gl_Position=vec4(p*2.0-1.0,0,1); }`;
+const bgFragment = `#version 300 es
+precision highp float; in vec2 vUv; out vec4 outColor;
+uniform vec4 uSelection;
+void main(){
+  vec2 cells=vec2(64.0,30.0); vec2 g=abs(fract(vUv*cells)-.5)/max(fwidth(vUv*cells),vec2(.001));
+  float line=1.0-min(min(g.x,g.y),1.0); vec3 color=mix(vec3(.985,.987,.979),vec3(.82,.84,.82),line*.72);
+  vec2 cell=floor(vUv*cells); float selected=step(uSelection.x,cell.x)*step(cell.x,uSelection.z)*step(uSelection.y,cell.y)*step(cell.y,uSelection.w);
+  color=mix(color,vec3(.90,.97,.92),selected*.22);
+  outColor=vec4(color,1);
+}`;
+const pixelVertex = `#version 300 es
+precision highp float; layout(location=0) in vec2 aCorner; layout(location=1) in vec2 aCell; layout(location=2) in vec4 aColor;
+out vec2 vLocal; out vec4 vColor;
+void main(){
+  vec2 uv=(aCell+vec2(.5))/vec2(64.0,30.0); vec2 size=vec2(.94/64.0,.91/30.0);
+  vec2 pos=uv+aCorner*size*.5; gl_Position=vec4(pos.x*2.0-1.0,1.0-pos.y*2.0,0,1); vLocal=aCorner; vColor=aColor;
+}`;
+const pixelFragment = `#version 300 es
+precision highp float; in vec2 vLocal; in vec4 vColor; out vec4 outColor;
+void main(){ float edge=max(abs(vLocal.x),abs(vLocal.y)); float mask=1.0-smoothstep(.88,1.0,edge); vec3 c=mix(vColor.rgb*1.08,vColor.rgb*.72,smoothstep(.72,.92,edge)); outColor=vec4(c,vColor.a*mask); }`;
+if (canvas && stage) {
+    const gl = canvas.getContext("webgl2", { antialias: false, alpha: true, powerPreference: "high-performance" });
+    if (!gl)
+        stage.classList.add("no-webgl");
+    else {
+        try {
+            const backgroundProgram = program(gl, bgVertex, bgFragment);
+            const pixelsProgram = program(gl, pixelVertex, pixelFragment);
+            const corners = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, corners);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+            const instanceBuffer = gl.createBuffer();
+            const instanceData = new Float32Array(MAX_PIXELS * 6);
+            const selectionUniform = gl.getUniformLocation(backgroundProgram, "uSelection");
+            let width = 1, height = 1, anchor = performance.now(), offset = .25, currentScene = -1, lastFrame = -1;
+            const resize = () => {
+                const rect = canvas.getBoundingClientRect();
+                const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                width = Math.max(1, Math.round(rect.width * dpr));
+                height = Math.max(1, Math.round(rect.height * dpr));
+                if (canvas.width !== width || canvas.height !== height) {
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+            };
+            resize();
+            new ResizeObserver(resize).observe(canvas);
+            const setUI = (index) => {
+                if (index === currentScene)
+                    return;
+                currentScene = index;
+                const scene = scenes[index];
+                stage.dataset.scene = String(index);
+                if (sceneStep)
+                    sceneStep.textContent = `${String(index + 1).padStart(2, "0")} / 06`;
+                if (sceneMethod)
+                    sceneMethod.textContent = scene.method;
+                if (sceneCopy)
+                    sceneCopy.textContent = scene.copy;
+                if (formulaValue)
+                    formulaValue.textContent = scene.formula;
+                if (statusCopy)
+                    statusCopy.textContent = scene.status;
+                if (selectionLabel)
+                    selectionLabel.textContent = scene.selection;
+                if (cellAddress)
+                    cellAddress.textContent = ["N24", "F7", "AG10", "S18", "AH15", "K20"][index];
+                chapterButtons.forEach((button) => { const active = Number(button.dataset.scene) === index || (index === 2 && Number(button.dataset.scene) === 1); button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active)); });
+            };
+            const seek = (sceneIndex) => { offset = sceneIndex * SCENE_SECONDS + .2; anchor = performance.now(); currentScene = -1; lastFrame = -1; if (reducedMotion)
+                render(performance.now()); };
+            chapterButtons.forEach((button) => button.addEventListener("click", () => seek(Number(button.dataset.scene || 0))));
+            replay?.addEventListener("click", () => seek(0));
+            const fillInstances = (sceneIndex, nextIndex, progress) => {
+                const a = patterns[sceneIndex], b = patterns[nextIndex];
+                for (let i = 0; i < MAX_PIXELS; i += 1) {
+                    const pa = i < a.length ? a[i] : undefined, pb = i < b.length ? b[i] : undefined;
+                    const from = pa ?? pb, to = pb ?? pa;
+                    const base = i * 6;
+                    if (!from || !to) {
+                        instanceData[base + 5] = 0;
+                        continue;
+                    }
+                    const stagger = hash(i + sceneIndex * 991) * .22;
+                    let p = Math.max(0, Math.min(1, (progress - stagger) / (1 - stagger)));
+                    p = Math.floor(p * 9) / 9;
+                    const hop = Math.sin(Math.PI * p);
+                    const travelX = (hash(i * 17 + sceneIndex) - .5) * 12 * hop;
+                    const travelY = -(2 + hash(i * 29 + sceneIndex) * 6) * hop;
+                    instanceData[base] = Math.max(0, Math.min(COLS - 1, Math.round(from.x + (to.x - from.x) * p + travelX)));
+                    instanceData[base + 1] = Math.max(0, Math.min(ROWS - 1, Math.round(from.y + (to.y - from.y) * p + travelY)));
+                    instanceData[base + 2] = from.color[0] + (to.color[0] - from.color[0]) * p;
+                    instanceData[base + 3] = from.color[1] + (to.color[1] - from.color[1]) * p;
+                    instanceData[base + 4] = from.color[2] + (to.color[2] - from.color[2]) * p;
+                    instanceData[base + 5] = pa && pb ? 1 : pa ? 1 - p : p;
+                }
+                gl.bindBuffer(gl.ARRAY_BUFFER, instanceBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, instanceData, gl.DYNAMIC_DRAW);
+            };
+            const updateLabels = (sceneIndex, nextIndex, progress, local) => {
+                const fromLabels = labelScenes[sceneIndex], toLabels = labelScenes[nextIndex];
+                labelPool.forEach((element, index) => {
+                    const from = fromLabels[index] ?? toLabels[index], to = toLabels[index] ?? fromLabels[index];
+                    if (!from || !to) {
+                        element.style.opacity = "0";
+                        return;
+                    }
+                    const stagger = hash(index * 43 + sceneIndex) * .18;
+                    let p = Math.max(0, Math.min(1, (progress - stagger) / (1 - stagger)));
+                    p = Math.floor(p * 8) / 8;
+                    const hop = Math.sin(Math.PI * p);
+                    const x = Math.round(from.x + (to.x - from.x) * p + (hash(index * 13) - .5) * 7 * hop);
+                    const y = Math.round(from.y + (to.y - from.y) * p - (1 + hash(index * 31) * 3) * hop);
+                    const width = Math.max(2, Math.round(from.width + (to.width - from.width) * p));
+                    const shown = p < .5 ? from : to;
+                    element.textContent = shown.text;
+                    element.className = `cell-text ${shown.kind ?? "text"}`;
+                    element.style.left = `${x / COLS * 100}%`;
+                    element.style.top = `${y / ROWS * 100}%`;
+                    element.style.width = `${width / COLS * 100}%`;
+                    const existsFrom = index < fromLabels.length, existsTo = index < toLabels.length;
+                    element.style.opacity = String(existsFrom && existsTo ? 1 : existsFrom ? 1 - p : p);
+                });
+                const selectionAnchors = [[34, 12], [28, 6], [29, 12], [36, 21], [28, 13], [37, 8]];
+                const anchorPoint = selectionAnchors[sceneIndex];
+                const scan = Math.floor(local * 12);
+                const cellX = Math.min(COLS - 7, anchorPoint[0] + scan % 5);
+                const cellY = Math.min(ROWS - 3, anchorPoint[1] + Math.floor(scan / 5) % 2);
+                if (activeCell) {
+                    activeCell.style.transform = `translate(${cellX / COLS * (canvas?.clientWidth ?? 0)}px,${cellY / ROWS * (canvas?.clientHeight ?? 0)}px)`;
+                    activeCell.style.width = `calc((100% - 42px) / 64 * ${sceneIndex === 2 ? 8 : sceneIndex === 4 ? 10 : 5})`;
+                    activeCell.style.height = `calc((100% - 24px) / 30 * ${sceneIndex === 2 || sceneIndex === 4 ? 2 : 1})`;
+                }
+                if (selectionLabel) {
+                    selectionLabel.style.left = `${42 + (cellX + 1) / COLS * ((canvas?.clientWidth ?? 0))}px`;
+                    selectionLabel.style.top = `${24 + (cellY + 1.25) / ROWS * ((canvas?.clientHeight ?? 0))}px`;
+                }
+            };
+            const render = (now) => {
+                resize();
+                const elapsed = reducedMotion ? 0 : (now - anchor) / 1000;
+                const time = (offset + elapsed) % CYCLE_SECONDS;
+                const sceneIndex = Math.floor(time / SCENE_SECONDS) % SCENE_COUNT;
+                const nextIndex = (sceneIndex + 1) % SCENE_COUNT;
+                const local = (time % SCENE_SECONDS) / SCENE_SECONDS;
+                const progress = Math.max(0, Math.min(1, (local - .43) / .52));
+                const snappedFrame = Math.floor(time * 8);
+                setUI(sceneIndex);
+                if (snappedFrame !== lastFrame) {
+                    lastFrame = snappedFrame;
+                    fillInstances(sceneIndex, nextIndex, progress);
+                    updateLabels(sceneIndex, nextIndex, progress, local);
+                }
+                gl.viewport(0, 0, width, height);
+                gl.disable(gl.DEPTH_TEST);
+                gl.disable(gl.BLEND);
+                gl.useProgram(backgroundProgram);
+                const selections = [[30, 9, 61, 27], [4, 3, 57, 26], [7, 2, 58, 25], [7, 3, 58, 26], [18, 3, 52, 28], [4, 3, 60, 28]];
+                const s = selections[sceneIndex];
+                gl.uniform4f(selectionUniform, s[0], s[1], s[2], s[3]);
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+                gl.enable(gl.BLEND);
+                gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+                gl.useProgram(pixelsProgram);
+                gl.bindBuffer(gl.ARRAY_BUFFER, corners);
+                gl.enableVertexAttribArray(0);
+                gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+                gl.vertexAttribDivisor(0, 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, instanceBuffer);
+                gl.enableVertexAttribArray(1);
+                gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 24, 0);
+                gl.vertexAttribDivisor(1, 1);
+                gl.enableVertexAttribArray(2);
+                gl.vertexAttribPointer(2, 4, gl.FLOAT, false, 24, 8);
+                gl.vertexAttribDivisor(2, 1);
+                gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, MAX_PIXELS);
+                if (!reducedMotion)
+                    requestAnimationFrame(render);
+            };
+            requestAnimationFrame(render);
+        }
+        catch (error) {
+            console.error("Spreadsheet animation unavailable", error);
+            stage.classList.add("no-webgl");
+        }
+    }
+}
+
+    </script>
+  </body>
+</html>
