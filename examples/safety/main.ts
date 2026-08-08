@@ -8,6 +8,7 @@ const MAX_PIXELS = 720;
 type RGB = [number, number, number];
 type Pixel = { x: number; y: number; color: RGB };
 type Scene = { method: string; copy: string; formula: string; status: string; selection: string };
+type CellLabel = { text: string; x: number; y: number; width: number; kind?: "text" | "header" | "critical" | "warning" | "good" | "node" | "metric" | "formula" };
 
 const COLORS = {
   ink: [0.06, 0.075, 0.065] as RGB,
@@ -165,6 +166,31 @@ function connectedPattern(): Pixel[] {
 
 const patterns = [sourcePattern(), ftaTitlePattern(), faultTreePattern(), fmeaPattern(), fmedaPattern(), connectedPattern()];
 
+const labelScenes: CellLabel[][] = [
+  [
+    {text:"ID",x:31,y:10,width:3,kind:"header"},{text:"Function",x:34,y:10,width:6,kind:"header"},{text:"Failure mode",x:40,y:10,width:7,kind:"header"},{text:"Local effect",x:47,y:10,width:7,kind:"header"},{text:"S",x:54,y:10,width:2,kind:"header"},{text:"O",x:56,y:10,width:2,kind:"header"},{text:"D",x:58,y:10,width:2,kind:"header"},{text:"RPN",x:60,y:10,width:4,kind:"header"},
+    {text:"EPS-014",x:31,y:12,width:3},{text:"Provide assist",x:34,y:12,width:6},{text:"Loss of torque",x:40,y:12,width:7},{text:"Assist unavailable",x:47,y:12,width:7},{text:"9",x:54,y:12,width:2,kind:"critical"},{text:"3",x:56,y:12,width:2,kind:"warning"},{text:"2",x:58,y:12,width:2,kind:"good"},{text:"54",x:60,y:12,width:4,kind:"warning"},
+    {text:"SEN-022",x:31,y:14,width:3},{text:"Sense angle",x:34,y:14,width:6},{text:"Signal stuck",x:40,y:14,width:7},{text:"Wrong command",x:47,y:14,width:7},{text:"10",x:54,y:14,width:2,kind:"critical"},{text:"2",x:56,y:14,width:2,kind:"good"},{text:"4",x:58,y:14,width:2,kind:"warning"},{text:"80",x:60,y:14,width:4,kind:"critical"},
+    {text:"COM-008",x:31,y:16,width:3},{text:"Transmit state",x:34,y:16,width:6},{text:"Bus timeout",x:40,y:16,width:7},{text:"State unavailable",x:47,y:16,width:7},{text:"8",x:54,y:16,width:2,kind:"critical"},{text:"4",x:56,y:16,width:2,kind:"warning"},{text:"3",x:58,y:16,width:2,kind:"warning"},{text:"96",x:60,y:16,width:4,kind:"critical"},
+    {text:"=S*O*D",x:60,y:18,width:4,kind:"formula"},{text:"Revision 04 · 84 failure modes",x:31,y:25,width:17,kind:"good"}
+  ],
+  [
+    {text:"TOP EVENT",x:28,y:2,width:10,kind:"critical"},{text:"Loss of braking",x:25,y:6,width:16,kind:"node"},{text:"OR",x:31,y:10,width:4,kind:"warning"},{text:"Sensor fault",x:10,y:20,width:9,kind:"node"},{text:"Power loss",x:28,y:20,width:9,kind:"node"},{text:"Bus timeout",x:46,y:20,width:9,kind:"node"},{text:"λ = 1.23E-7 / h",x:43,y:4,width:12,kind:"formula"}
+  ],
+  [
+    {text:"TOP EVENT · LOSS OF BRAKING",x:25,y:3,width:16,kind:"critical"},{text:"OR",x:31,y:8,width:4,kind:"warning"},{text:"Input path",x:13,y:12,width:8,kind:"node"},{text:"Control path",x:29,y:12,width:8,kind:"node"},{text:"Output path",x:45,y:12,width:8,kind:"node"},{text:"Angle sensor",x:6,y:21,width:7,kind:"good"},{text:"Supply",x:15,y:21,width:7,kind:"good"},{text:"MCU",x:27,y:21,width:7,kind:"warning"},{text:"CAN",x:35,y:21,width:7,kind:"good"},{text:"Driver",x:47,y:21,width:7,kind:"good"},{text:"Motor",x:55,y:21,width:7,kind:"critical"},{text:"MCS-02 · ASIL D",x:26,y:26,width:13,kind:"formula"}
+  ],
+  [
+    {text:"Failure mode",x:16,y:19,width:11,kind:"header"},{text:"Effect",x:27,y:19,width:9,kind:"header"},{text:"S",x:36,y:19,width:3,kind:"header"},{text:"O",x:39,y:19,width:3,kind:"header"},{text:"D",x:42,y:19,width:3,kind:"header"},{text:"RPN",x:45,y:19,width:6,kind:"header"},{text:"Sensor timeout",x:16,y:21,width:11},{text:"Assist lost",x:27,y:21,width:9},{text:"9",x:36,y:21,width:3,kind:"critical"},{text:"4",x:39,y:21,width:3,kind:"warning"},{text:"6",x:42,y:21,width:3,kind:"warning"},{text:"216",x:45,y:21,width:6,kind:"critical"},{text:"ACTION REQUIRED",x:52,y:21,width:10,kind:"critical"},{text:"=SORT(RPN, DESC)",x:16,y:25,width:14,kind:"formula"}
+  ],
+  [
+    {text:"97.2%",x:28,y:13,width:10,kind:"metric"},{text:"DIAGNOSTIC COVERAGE",x:24,y:16,width:18,kind:"good"},{text:"SPFM",x:7,y:7,width:6,kind:"header"},{text:"99.1%",x:13,y:7,width:7,kind:"metric"},{text:"LFM",x:45,y:7,width:6,kind:"header"},{text:"91.4%",x:51,y:7,width:7,kind:"metric"},{text:"Safe faults",x:6,y:23,width:9},{text:"Detected dangerous",x:20,y:23,width:12,kind:"good"},{text:"Residual",x:45,y:23,width:8,kind:"critical"},{text:"18.3 FIT",x:53,y:23,width:8,kind:"warning"},{text:"=DC/(DD+DU)",x:27,y:26,width:10,kind:"formula"}
+  ],
+  [
+    {text:"FTA",x:7,y:7,width:7,kind:"header"},{text:"21 events linked",x:14,y:7,width:11,kind:"good"},{text:"FMEA",x:7,y:10,width:7,kind:"header"},{text:"84 modes linked",x:14,y:10,width:11,kind:"good"},{text:"FMEDA",x:7,y:13,width:7,kind:"header"},{text:"126 rates linked",x:14,y:13,width:11,kind:"good"},{text:"126 RELATIONSHIPS",x:37,y:8,width:15,kind:"metric"},{text:"0 ORPHAN RECORDS",x:37,y:12,width:15,kind:"good"},{text:"EVIDENCE PRESERVED",x:37,y:16,width:15,kind:"header"},{text:"=KERNL.CONNECT(*)",x:23,y:26,width:18,kind:"formula"}
+  ]
+];
+
 const canvas = document.querySelector<HTMLCanvasElement>("#sheet-canvas");
 const stage = document.querySelector<HTMLElement>("#sheet-stage");
 const columnHeads = document.querySelector<HTMLElement>("#column-heads");
@@ -176,6 +202,8 @@ const cellAddress = document.querySelector<HTMLElement>("#cell-address");
 const formulaValue = document.querySelector<HTMLElement>("#formula-value");
 const statusCopy = document.querySelector<HTMLElement>("#status-copy");
 const selectionLabel = document.querySelector<HTMLElement>("#selection-label");
+const cellTextLayer = document.querySelector<HTMLElement>("#cell-text-layer");
+const activeCell = document.querySelector<HTMLElement>("#active-cell");
 const replay = document.querySelector<HTMLButtonElement>("#replay");
 const chapterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".chapter-scrubber button"));
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -189,6 +217,10 @@ function columnName(index: number) {
 
 for (let i = 0; i < COLS; i += 1) { const span = document.createElement("span"); span.textContent = columnName(i); columnHeads?.append(span); }
 for (let i = 0; i < ROWS; i += 1) { const span = document.createElement("span"); span.textContent = String(i + 1); rowHeads?.append(span); }
+
+const labelPool = Array.from({length: 36}, () => {
+  const label = document.createElement("span"); label.className = "cell-text"; cellTextLayer?.append(label); return label;
+});
 
 function shader(gl: WebGL2RenderingContext, type: number, source: string) {
   const value = gl.createShader(type);
@@ -271,11 +303,28 @@ if (canvas && stage) {
           const pa=i<a.length?a[i]:undefined, pb=i<b.length?b[i]:undefined; const from=pa??pb, to=pb??pa; const base=i*6;
           if(!from||!to){instanceData[base+5]=0;continue;}
           const stagger=hash(i+sceneIndex*991)*.22; let p=Math.max(0,Math.min(1,(progress-stagger)/(1-stagger))); p=Math.floor(p*9)/9;
-          instanceData[base]=Math.round(from.x+(to.x-from.x)*p); instanceData[base+1]=Math.round(from.y+(to.y-from.y)*p);
+          const hop=Math.sin(Math.PI*p); const travelX=(hash(i*17+sceneIndex)-.5)*12*hop; const travelY=-(2+hash(i*29+sceneIndex)*6)*hop;
+          instanceData[base]=Math.max(0,Math.min(COLS-1,Math.round(from.x+(to.x-from.x)*p+travelX))); instanceData[base+1]=Math.max(0,Math.min(ROWS-1,Math.round(from.y+(to.y-from.y)*p+travelY)));
           instanceData[base+2]=from.color[0]+(to.color[0]-from.color[0])*p; instanceData[base+3]=from.color[1]+(to.color[1]-from.color[1])*p; instanceData[base+4]=from.color[2]+(to.color[2]-from.color[2])*p;
           instanceData[base+5]=pa&&pb?1:pa?1-p:p;
         }
         gl.bindBuffer(gl.ARRAY_BUFFER,instanceBuffer); gl.bufferData(gl.ARRAY_BUFFER,instanceData,gl.DYNAMIC_DRAW);
+      };
+
+      const updateLabels = (sceneIndex: number, nextIndex: number, progress: number, local: number) => {
+        const fromLabels=labelScenes[sceneIndex],toLabels=labelScenes[nextIndex];
+        labelPool.forEach((element,index)=>{
+          const from=fromLabels[index]??toLabels[index],to=toLabels[index]??fromLabels[index];
+          if(!from||!to){element.style.opacity="0";return;}
+          const stagger=hash(index*43+sceneIndex)*.18; let p=Math.max(0,Math.min(1,(progress-stagger)/(1-stagger))); p=Math.floor(p*8)/8;
+          const hop=Math.sin(Math.PI*p); const x=Math.round(from.x+(to.x-from.x)*p+(hash(index*13)-.5)*7*hop); const y=Math.round(from.y+(to.y-from.y)*p-(1+hash(index*31)*3)*hop); const width=Math.max(2,Math.round(from.width+(to.width-from.width)*p));
+          const shown=p<.5?from:to; element.textContent=shown.text; element.className=`cell-text ${shown.kind??"text"}`;
+          element.style.left=`${x/COLS*100}%`; element.style.top=`${y/ROWS*100}%`; element.style.width=`${width/COLS*100}%`;
+          const existsFrom=index<fromLabels.length,existsTo=index<toLabels.length; element.style.opacity=String(existsFrom&&existsTo?1:existsFrom?1-p:p);
+        });
+        const selectionAnchors=[[34,12],[28,6],[29,12],[36,21],[28,13],[37,8]]; const anchorPoint=selectionAnchors[sceneIndex]; const scan=Math.floor(local*12); const cellX=Math.min(COLS-7,anchorPoint[0]+scan%5); const cellY=Math.min(ROWS-3,anchorPoint[1]+Math.floor(scan/5)%2);
+        if(activeCell){activeCell.style.transform=`translate(${cellX/COLS*(canvas?.clientWidth??0)}px,${cellY/ROWS*(canvas?.clientHeight??0)}px)`;activeCell.style.width=`calc((100% - 42px) / 64 * ${sceneIndex===2?8:sceneIndex===4?10:5})`;activeCell.style.height=`calc((100% - 24px) / 30 * ${sceneIndex===2||sceneIndex===4?2:1})`;}
+        if(selectionLabel){selectionLabel.style.left=`${42+(cellX+1)/COLS*((canvas?.clientWidth??0))}px`;selectionLabel.style.top=`${24+(cellY+1.25)/ROWS*((canvas?.clientHeight??0))}px`;}
       };
 
       const render = (now: number) => {
@@ -283,7 +332,7 @@ if (canvas && stage) {
         const sceneIndex=Math.floor(time/SCENE_SECONDS)%SCENE_COUNT; const nextIndex=(sceneIndex+1)%SCENE_COUNT; const local=(time%SCENE_SECONDS)/SCENE_SECONDS;
         const progress=Math.max(0,Math.min(1,(local-.43)/.52)); const snappedFrame=Math.floor(time*8);
         setUI(sceneIndex);
-        if(snappedFrame!==lastFrame){lastFrame=snappedFrame;fillInstances(sceneIndex,nextIndex,progress);}
+        if(snappedFrame!==lastFrame){lastFrame=snappedFrame;fillInstances(sceneIndex,nextIndex,progress);updateLabels(sceneIndex,nextIndex,progress,local);}
         gl.viewport(0,0,width,height); gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND); gl.useProgram(backgroundProgram);
         const selections=[[30,9,61,27],[4,3,57,26],[7,2,58,25],[7,3,58,26],[18,3,52,28],[4,3,60,28]]; const s=selections[sceneIndex]; gl.uniform4f(selectionUniform,s[0],s[1],s[2],s[3]); gl.drawArrays(gl.TRIANGLES,0,3);
         gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA); gl.useProgram(pixelsProgram);

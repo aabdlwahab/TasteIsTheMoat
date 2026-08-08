@@ -78,6 +78,17 @@ button { font: inherit; }
 
 .sheet-stage { position: relative; min-height: 0; overflow: hidden; background: white; }
 #sheet-canvas { position: absolute; left: 42px; top: 24px; width: calc(100% - 42px); height: calc(100% - 24px); }
+.cell-text-layer { position: absolute; z-index: 4; left: 42px; top: 24px; width: calc(100% - 42px); height: calc(100% - 24px); overflow: hidden; pointer-events: none; }
+.cell-text { position: absolute; height: calc(100% / 30); display: flex; align-items: center; overflow: hidden; white-space: nowrap; padding: 0 3px; color: #202520; background: rgba(255,255,255,.88); border-right: 1px solid rgba(173,181,175,.6); font: 600 clamp(6px,.54vw,9px)/1 Arial,sans-serif; will-change: left,top,width,opacity; }
+.cell-text.header { color: white; background: var(--excel); font-weight: 800; }
+.cell-text.critical { color: white; background: var(--red); font-weight: 800; }
+.cell-text.warning { color: var(--ink); background: var(--yellow); font-weight: 800; }
+.cell-text.good { color: white; background: var(--green); font-weight: 800; }
+.cell-text.node { height: calc(100% / 30 * 2); justify-content: center; border: 2px solid var(--ink); background: rgba(255,255,255,.96); text-align: center; font: 800 clamp(6px,.6vw,10px)/1.05 var(--mono); }
+.cell-text.metric { height: calc(100% / 30 * 2); justify-content: center; color: var(--excel-dark); background: rgba(255,255,255,.92); border: 2px solid var(--excel); font: 900 clamp(11px,1.35vw,23px)/1 var(--mono); letter-spacing: -.05em; }
+.cell-text.formula { color: #4a275e; background: #f3e9fa; font-family: var(--mono); }
+.active-cell { position: absolute; z-index: 5; left: 42px; top: 24px; width: calc((100% - 42px) / 64 * 5); height: calc((100% - 24px) / 30); border: 2px solid var(--excel); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.7); will-change: transform,width,height; }
+.active-cell i { position: absolute; width: 7px; height: 7px; right: -5px; bottom: -5px; background: var(--excel); border: 1px solid white; }
 .column-heads { position: absolute; z-index: 3; left: 42px; right: 0; top: 0; height: 24px; display: grid; grid-template-columns: repeat(64,minmax(17px,1fr)); overflow: hidden; border-bottom: 1px solid #aeb5af; background: #f0f2f0; }
 .column-heads span { display: grid; place-items: center; min-width: 0; border-right: 1px solid #c8cdc9; color: #535853; font: 9px/1 Arial,sans-serif; }
 .row-heads { position: absolute; z-index: 3; left: 0; top: 24px; bottom: 0; width: 42px; display: grid; grid-template-rows: repeat(30,1fr); overflow: hidden; border-right: 1px solid #aeb5af; background: #f0f2f0; }
@@ -100,7 +111,7 @@ button { font: inherit; }
 .animation-readout { position: absolute; z-index: 5; right: 24px; bottom: 24px; width: min(385px,35vw); display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 13px 15px; color: white; background: #111512; border-left: 5px solid var(--orange); }
 .animation-readout > span { font: 700 11px/1 var(--mono); color: var(--acid); }
 .animation-readout div { display: grid; gap: 5px; }.animation-readout small { color: #8f9690; font: 700 8px/1 var(--mono); letter-spacing: .09em; }.animation-readout b { font-size: 14px; }
-.selection-label { position: absolute; z-index: 5; right: 7%; top: 14%; padding: 5px 7px; color: white; background: var(--excel); font: 700 8px/1 var(--mono); box-shadow: 0 0 0 1px white; }
+.selection-label { position: absolute; z-index: 6; left: 70%; top: 14%; padding: 5px 7px; color: white; background: var(--excel); font: 700 8px/1 var(--mono); box-shadow: 0 0 0 1px white; pointer-events: none; will-change: left,top; }
 .sheet-footer { display: flex; align-items: center; gap: 0; border-top: 1px solid #bbc0bb; background: #f2f3f2; color: #444944; font-size: 9px; }
 .sheet-nav { padding: 0 12px; font-size: 13px; }.sheet-tab { height: 28px; padding: 9px 16px 0; border-right: 1px solid #d0d4d0; }.sheet-tab.active { color: var(--excel-dark); background: white; border-top: 2px solid var(--excel); padding-top: 7px; font-weight: 700; }.new-sheet { padding: 0 13px; font-size: 15px; }
 .sheet-footer p { margin: 0 0 0 auto; font: 7px/1 var(--mono); letter-spacing: .08em; }.zoom { display: flex; align-items: center; gap: 8px; margin: 0 14px 0 25px; }.zoom i { width: 70px; height: 2px; display: block; background: #b6bbb6; }.zoom i b { display: block; width: 8px; height: 8px; margin: -3px 0 0 45px; border-radius: 50%; background: var(--excel); }
