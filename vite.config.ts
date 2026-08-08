@@ -46,6 +46,7 @@ export default defineConfig({
         templates: resolve(__dirname, "examples/templates/index.html"),
         contactSheet: resolve(__dirname, "examples/contact-sheet.html"),
         landing: resolve(__dirname, "examples/landing.html"),
+        safety: resolve(__dirname, "examples/safety/index.html"),
       },
     },
   },
