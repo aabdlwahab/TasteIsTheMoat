@@ -177,7 +177,7 @@ mat2 rotate2d(float a) { float s = sin(a), c = cos(a); return mat2(c,-s,s,c); }
 float quantize(float p, float steps) { return floor(clamp(p,0.0,1.0) * steps) / steps; }
 float ease(float p) { p = clamp(p,0.0,1.0); return 1.0 - pow(1.0 - p, 3.0); }
 
-void layout(float layoutIndex, float fi, out vec2 center, out vec2 size, out float rotation, out vec3 color) {
+void resolveLayout(float layoutIndex, float fi, out vec2 center, out vec2 size, out float rotation, out vec3 color) {
   float col = mod(fi, 12.0);
   float row = floor(fi / 12.0);
   float seed = hash(fi + 2.0);
@@ -258,8 +258,8 @@ void main() {
   vec2 centerA, centerB, sizeA, sizeB;
   float rotationA, rotationB;
   vec3 colorA, colorB;
-  layout(fromLayout, fi, centerA, sizeA, rotationA, colorA);
-  layout(toLayout, fi, centerB, sizeB, rotationB, colorB);
+  resolveLayout(fromLayout, fi, centerA, sizeA, rotationA, colorA);
+  resolveLayout(toLayout, fi, centerB, sizeB, rotationB, colorB);
   vec2 center = mix(centerA, centerB, p);
   vec2 size = mix(sizeA, sizeB, p);
   float rotation = mix(rotationA, rotationB, p);
