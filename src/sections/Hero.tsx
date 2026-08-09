@@ -15,6 +15,7 @@ export interface HeroProps {
   /** Shader id or def for the background. Omit for a plain gradient hero. */
   shader?: string | ShaderDef;
   brand?: BrandPalette;
+  uniforms?: Record<string, number | number[]>;
   scrim?: ScrimStrength;
   /** Small pill above the headline — announcements, launches, funding. */
   badge?: { label: ReactNode; href?: string };
@@ -35,6 +36,7 @@ export interface HeroProps {
   fadeBottom?: boolean;
   id?: string;
   className?: string;
+  copyClassName?: string;
 }
 
 /**
@@ -45,6 +47,7 @@ export interface HeroProps {
 export function Hero({
   shader = "mesh-gradient",
   brand,
+  uniforms,
   scrim = "medium",
   badge,
   headline,
@@ -57,11 +60,12 @@ export function Hero({
   fadeBottom = true,
   id = "top",
   className,
+  copyClassName,
 }: HeroProps) {
   const centered = layout === "centered";
 
   const copy = (
-    <div className={cn(centered && "mx-auto max-w-3xl text-center")}>
+    <div className={cn(centered && "mx-auto max-w-3xl text-center", copyClassName)}>
       {badge && (
         <Reveal>
           <Badge href={badge.href} className="mb-6">
@@ -125,6 +129,7 @@ export function Hero({
       id={id}
       shader={shader}
       brand={brand}
+      uniforms={uniforms}
       scrim={scrim}
       fadeBottom={fadeBottom}
       className={cn("min-h-[92svh] flex items-center", className)}
