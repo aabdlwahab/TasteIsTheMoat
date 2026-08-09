@@ -876,6 +876,7 @@ html.no-js [data-reveal="pending"] {
   border: 0;
 }
 .collection-gallery-item {
+  position: relative;
   display: block;
   width: 100%;
   min-height: 0;
@@ -895,10 +896,7 @@ html.no-js [data-reveal="pending"] {
   background: rgba(12,13,18,.9);
   transform: translateY(-2px);
 }
-.collection-gallery-item:focus-visible {
-  outline: 2px solid var(--color-accent-400);
-  outline-offset: .2rem;
-}
+.collection-gallery-item:focus-within { outline: 2px solid var(--color-accent-400); outline-offset: .2rem; }
 .collection-gallery-item.is-active {
   border-color: var(--work-b);
   box-shadow: 0 0 0 1px var(--work-b), 0 .8rem 2.5rem -1.2rem var(--work-a);
@@ -913,6 +911,14 @@ html.no-js [data-reveal="pending"] {
     radial-gradient(circle at 20% 86%, color-mix(in srgb, var(--work-a) 72%, transparent), transparent 38%),
     linear-gradient(140deg, #111116 12%, color-mix(in srgb, var(--work-a) 25%, #09090c) 54%, #08080b);
   isolation: isolate;
+}
+.collection-gallery-thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, transparent 58%, rgba(3,4,7,.42));
+  pointer-events: none;
 }
 .collection-gallery-thumb::after {
   content: "";
@@ -939,7 +945,7 @@ html.no-js [data-reveal="pending"] {
   position: absolute;
   right: .55rem;
   top: .55rem;
-  z-index: 2;
+  z-index: 3;
   padding: .25rem .45rem;
   border: 1px solid rgba(255,255,255,.14);
   border-radius: 999px;
@@ -957,9 +963,43 @@ html.no-js [data-reveal="pending"] {
 .collection-gallery-thumb i:nth-of-type(2) { width: 15%; aspect-ratio: 1; left: 8%; bottom: 5%; background: var(--work-a); }
 .collection-gallery-thumb i:nth-of-type(3) { width: 42%; height: .32rem; left: 31%; top: 54%; background: var(--work-b); transform: rotate(-23deg); transform-origin: left center; }
 .collection-gallery-cell:nth-child(3n + 2) .collection-gallery-thumb i:first-child { border-radius: 18% 82% 34% 66%; transform: rotate(24deg); }
-.collection-gallery-card-copy { min-height: 7.5rem; padding: .8rem .9rem .9rem; }
+.collection-gallery-thumb-live {
+  position: absolute !important;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #07080c;
+  pointer-events: none;
+  animation: collection-thumb-in .28s ease both;
+}
+iframe.collection-gallery-thumb-live {
+  width: 200%;
+  height: 200%;
+  transform: scale(.5);
+  transform-origin: left top;
+  color-scheme: dark;
+}
+@keyframes collection-thumb-in { from { opacity: 0; } to { opacity: 1; } }
+.collection-gallery-card-copy { position: relative; z-index: 2; min-height: 7.5rem; padding: .8rem .9rem .9rem; background: rgba(12,13,18,.96); }
 .collection-gallery-card-copy strong { display: block; font-size: .83rem; font-weight: 700; letter-spacing: -.01em; }
 .collection-gallery-card-copy span { display: -webkit-box; margin-top: .35rem; overflow: hidden; color: var(--color-ink-400); font-size: .69rem; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.collection-gallery-select {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  outline: 0;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+}
+.collection-gallery-select:hover,
+.collection-gallery-select:active { background: transparent; }
 .collection-gallery-empty { margin: 2rem 0; color: var(--color-ink-400); font-size: .9rem; }
 
 @media (max-width: 720px) {
@@ -974,6 +1014,9 @@ html.no-js [data-reveal="pending"] {
   .collection-gallery-head { grid-template-columns: 1fr; }
   .collection-gallery-head label { grid-row: 2; }
   .collection-gallery { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collection-gallery-thumb-live { display: none; }
 }
 
 /* Marquee used by LogoCloud and Testimonials. */

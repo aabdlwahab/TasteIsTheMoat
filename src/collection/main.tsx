@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import {
@@ -136,6 +136,54 @@ const collection = interleaveWorks([
   gpuWorks,
 ]);
 
+function MovingThumbnail({ item }: { item: CollectionWork }) {
+  const thumbnailRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const thumbnail = thumbnailRef.current;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!thumbnail || reducedMotion || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsPlaying(entry.isIntersecting && entry.intersectionRatio >= 0.35),
+      { threshold: [0, 0.35, 0.7] },
+    );
+    observer.observe(thumbnail);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={thumbnailRef} className="collection-gallery-thumb" aria-hidden="true">
+      <i></i><i></i><i></i>
+      <b>{item.title.slice(0, 1)}</b>
+      {isPlaying && (
+        item.shader ? (
+          <ShaderSection
+            as="div"
+            shader={item.shader}
+            brand={brand}
+            scrim="none"
+            maxDpr={1}
+            className="collection-gallery-thumb-live"
+            contentClassName="h-full"
+          />
+        ) : (
+          <iframe
+            className="collection-gallery-thumb-live"
+            src={sitePath(item.href)}
+            title={`${item.title} moving thumbnail`}
+            loading="lazy"
+            tabIndex={-1}
+            allow="autoplay"
+          />
+        )
+      )}
+      <span>{item.kind}</span>
+    </div>
+  );
+}
+
 function CollectionMedley() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [search, setSearch] = useState("");
@@ -235,23 +283,23 @@ function CollectionMedley() {
         <ul className="collection-gallery">
           {visibleWorks.map(({ item, index }) => (
             <li key={`${item.kind}-${item.title}`} className="collection-gallery-cell">
-              <button
-                type="button"
+              <article
                 className={`collection-gallery-item${selectedIndex === index ? " is-active" : ""}`}
                 data-kind={item.kind}
-                aria-pressed={selectedIndex === index}
-                onClick={() => selectWork(index)}
               >
-                <div className="collection-gallery-thumb" aria-hidden="true">
-                  <i></i><i></i><i></i>
-                  <b>{item.title.slice(0, 1)}</b>
-                  <span>{item.kind}</span>
-                </div>
+                <MovingThumbnail item={item} />
                 <div className="collection-gallery-card-copy">
                   <strong>{item.title}</strong>
                   <span>{item.description}</span>
                 </div>
-              </button>
+                <button
+                  type="button"
+                  className="collection-gallery-select"
+                  aria-label={`Preview ${item.title}`}
+                  aria-pressed={selectedIndex === index}
+                  onClick={() => selectWork(index)}
+                />
+              </article>
             </li>
           ))}
         </ul>
