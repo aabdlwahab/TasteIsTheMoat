@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import {
@@ -133,6 +134,62 @@ const collection = interleaveWorks([
   gpuWorks,
 ]);
 
+function LiveWork({ item, index }: { item: CollectionWork; index: number }) {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [isNearViewport, setIsNearViewport] = useState(false);
+
+  useEffect(() => {
+    const preview = previewRef.current;
+    if (!preview || !("IntersectionObserver" in window)) {
+      setIsNearViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsNearViewport(entry.isIntersecting),
+      { rootMargin: "1200px 0px" },
+    );
+    observer.observe(preview);
+    return () => observer.disconnect();
+  }, []);
+
+  const href = sitePath(item.href);
+
+  return (
+    <li className="collection-gallery-cell">
+      <article className="collection-gallery-item" data-kind={item.kind}>
+        <div className="collection-gallery-copy">
+          <div>
+            <span>{String(index + 1).padStart(2, "0")} / {item.kind}</span>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+          <a href={href} target="_blank" rel="noreferrer">
+            Full canvas <i>↗</i>
+          </a>
+        </div>
+        <div ref={previewRef} className="collection-gallery-live">
+          {isNearViewport ? (
+            <iframe
+              src={href}
+              title={`${item.title} — interactive preview`}
+              loading="lazy"
+              allow="autoplay; camera; microphone"
+              allowFullScreen
+            />
+          ) : (
+            <div className="collection-gallery-placeholder" aria-hidden="true">
+              <i></i><i></i><i></i>
+              <b>{item.title.slice(0, 1)}</b>
+              <span>Live work loads here</span>
+            </div>
+          )}
+        </div>
+      </article>
+    </li>
+  );
+}
+
 function CollectionMedley() {
   return (
     <ShaderSection
@@ -147,35 +204,17 @@ function CollectionMedley() {
       <Container className="max-w-[88rem]">
         <div className="collection-medley-heading">
           <p>The collection / one continuous gallery</p>
-          <h2>One gallery.<br /><em>Every kind of work.</em></h2>
-          <span>No category gateways. Shaders, interactions, type, GPU experiments, sections, and complete pages now sit side by side in one mixed sequence.</span>
+          <h2>The work itself.<br /><em>All on this page.</em></h2>
+          <span>Scroll through live shaders, interactions, type, GPU experiments, sections, and complete pages. Every frame below is the real, interactive work—not a link to another gallery.</span>
         </div>
 
         <ul className="collection-gallery">
           {collection.map((item, index) => (
-            <li key={`${item.kind}-${item.title}`} className="collection-gallery-cell">
-              <a
-                href={sitePath(item.href)}
-                className="collection-gallery-item"
-                data-kind={item.kind}
-              >
-                <div className="collection-gallery-visual" aria-hidden="true">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <i></i><i></i><i></i>
-                  <b>{item.title.slice(0, 1)}</b>
-                </div>
-                <div className="collection-gallery-copy">
-                  <span>{item.kind}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                  <strong>Open work <i>↗</i></strong>
-                </div>
-              </a>
-            </li>
+            <LiveWork key={`${item.kind}-${item.title}`} item={item} index={index} />
           ))}
         </ul>
 
-        <p className="collection-medley-footnote">{collection.length} selected works · one uninterrupted gallery · no departments</p>
+        <p className="collection-medley-footnote">{collection.length} live works · one page · no separate galleries</p>
       </Container>
     </ShaderSection>
   );
@@ -210,12 +249,12 @@ function CollectionHome() {
         links={[
           { label: "The collection", href: "#collection" },
           { label: "Principles", href: "#principles" },
-          { label: "Complete pages", href: "/examples/templates/" },
+          { label: "Keep the source", href: "#source" },
         ]}
-        secondaryCta={{ label: "Shader studio", href: "/studio.html" }}
+        secondaryCta={{ label: "Why taste matters", href: "#principles" }}
         cta={{ label: "Browse everything", href: "#collection" }}
       />
-      <main>
+      <main id="top">
         <Hero
           shader="holo-foil"
           brand={brand}
@@ -346,7 +385,7 @@ function CollectionHome() {
           ]}
         />
 
-        <section className="border-y border-ink-700 bg-ink-900/50 py-20">
+        <section id="source" className="border-y border-ink-700 bg-ink-900/50 py-20">
           <Container>
             <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
               <div>
@@ -360,8 +399,8 @@ function CollectionHome() {
                   Everything is plain TypeScript and Tailwind with accessible states, reduced-motion behavior, and graceful shader fallbacks already considered.
                 </p>
                 <Magnetic actionArea="parent" range={110} className="mt-7">
-                  <Button href="/examples/marketing/" variant="secondary">
-                    See an assembled page
+                  <Button href="#collection" variant="secondary">
+                    Return to the live collection
                   </Button>
                 </Magnetic>
               </div>
@@ -400,10 +439,10 @@ function CollectionHome() {
               </p>
               <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
                 <Magnetic actionArea="parent" range={120}>
-                  <Button href="/examples/templates/">Browse complete pages</Button>
+                  <Button href="#collection">Browse the live work</Button>
                 </Magnetic>
-                <Button href="/studio.html" variant="secondary">
-                  Open the shader studio
+                <Button href="#source" variant="secondary">
+                  Keep the source
                 </Button>
               </div>
             </div>
@@ -415,29 +454,27 @@ function CollectionHome() {
         tagline="A curated collection for the part of the web that still wants to be remembered."
         columns={[
           {
-            heading: "Collection",
+            heading: "On this page",
             links: [
-              { label: "Backgrounds", href: "/studio.html" },
-              { label: "Elements", href: "/examples/marketing/sections.html?s=elements" },
-              { label: "WebGL text", href: "/examples/marketing/sections.html?s=webgl-text" },
-              { label: "GPU Lab", href: "/examples/marketing/sections.html?s=gpu-lab" },
-              { label: "Sections", href: "/examples/marketing/sections.html" },
+              { label: "Live collection", href: "#collection" },
+              { label: "The thesis", href: "#principles" },
+              { label: "Source", href: "#source" },
             ],
           },
           {
-            heading: "Complete pages",
+            heading: "The collection",
             links: [
-              { label: "Infinite portfolio", href: "/examples/templates/?template=infinite-portfolio" },
-              { label: "Kinetic editorial", href: "/examples/templates/?template=kinetic-editorial" },
-              { label: "Generative studio", href: "/examples/templates/?template=generative-studio" },
+              { label: "Shaders + elements", href: "#collection" },
+              { label: "Sections + pages", href: "#collection" },
+              { label: "GPU + WebGL type", href: "#collection" },
             ],
           },
           {
-            heading: "Explore",
+            heading: "Navigate",
             links: [
-              { label: "Marketing demo", href: "/examples/marketing/" },
-              { label: "Contact sheet", href: "/examples/contact-sheet.html" },
-              { label: "Spatial agency", href: "/examples/templates/?template=spatial-agency" },
+              { label: "Back to top", href: "#top" },
+              { label: "Browse everything", href: "#collection" },
+              { label: "Why taste matters", href: "#principles" },
             ],
           },
         ]}
