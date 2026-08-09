@@ -49,7 +49,8 @@ interface Session {
 }
 const sessions = new Map<string, Session>();
 
-let current: ShaderDef = gallery[0];
+const requestedShader = new URLSearchParams(window.location.search).get("shader");
+let current: ShaderDef = gallery.find((shader) => shader.id === requestedShader) ?? gallery[0];
 let main: ShaderBackground;
 let editor: Editor;
 let thumbs: ThumbnailPool;

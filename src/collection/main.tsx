@@ -5,7 +5,6 @@ import {
   Footer,
   Hero,
   Nav,
-  Stats,
 } from "../sections/index";
 import {
   BrandMark,
@@ -24,6 +23,7 @@ import {
 import { Magnetic, TextEffect } from "../ui/motion/index";
 import type { BrandPalette } from "../core/theme";
 import { sitePath } from "../core/sitePath";
+import { shaderList } from "../shaders/index";
 
 const brand: BrandPalette = {
   primary: "#f97316",
@@ -41,56 +41,97 @@ function BrandLockup() {
   );
 }
 
-const collection = [
-  {
-    title: "Animated backgrounds",
-    category: "69 shaders",
-    result: "Enter the studio",
-    href: "/studio.html",
-    description:
-      "Living WebGL surfaces and moving gradients—tuned to give a first viewport atmosphere, not decoration.",
-  },
-  {
-    title: "Tactile elements",
-    category: "84 components",
-    result: "Touch the details",
-    href: "/examples/marketing/sections.html?s=elements",
-    description:
-      "Magnetic buttons, morphing cards, kinetic type, image trails, dither reveals, lenses, and stranger things.",
-  },
-  {
-    title: "WebGL animated text",
-    category: "5 surfaces",
-    result: "Break a headline",
-    href: "/examples/marketing/sections.html?s=webgl-text",
-    description:
-      "A word rasterised and handed to the GPU—as a particle field, a character grid, a lens, a pile of shards, or dye in a fluid.",
-  },
-  {
-    title: "GPU Lab",
-    category: "23 techniques",
-    result: "Read the source",
-    href: "/examples/marketing/sections.html?s=gpu-lab",
-    description:
-      "Five standalone benches—raymarching and domain warping, physarum and lenia, vertex-shader worlds, a full camera stack, spectral holography.",
-  },
-  {
-    title: "Marketing sections",
-    category: "26 systems",
-    result: "Build the sequence",
-    href: "/examples/marketing/sections.html",
-    description:
-      "Heroes, proof, pricing, stories, launches, and conversion moments designed to work as a deliberate whole.",
-  },
-  {
-    title: "Complete webpages",
-    category: "16 directions",
-    result: "Choose a world",
-    href: "/examples/templates/",
-    description:
-      "Opinionated starters for products, culture, portfolios, music, data, launches, luxury, and ideas without a category.",
-  },
+interface CollectionWork {
+  title: string;
+  kind: "Shader" | "Element" | "WebGL type" | "GPU study" | "Section" | "Page";
+  href: string;
+  description: string;
+}
+
+const selectedShaderIds = new Set([
+  "mesh-gradient",
+  "holo-foil",
+  "liquid-ripple",
+  "cursor-flow",
+  "metaballs",
+  "starfield",
+  "topographic",
+  "prism",
+]);
+
+const shaderWorks: CollectionWork[] = shaderList
+  .filter((shader) => selectedShaderIds.has(shader.id))
+  .map((shader) => ({
+    title: shader.name,
+    kind: "Shader",
+    href: `/studio.html?shader=${shader.id}`,
+    description: shader.description,
+  }));
+
+const elementWorks: CollectionWork[] = [
+  { title: "Magnetic button", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-controls", description: "A CTA that leans toward the pointer, then snaps cleanly home." },
+  { title: "Morphing dialog", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-cards", description: "A compact card that expands into a focused reading surface." },
+  { title: "Kinetic type ribbon", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-type", description: "Oversized type that responds to scroll direction and velocity." },
+  { title: "Infinite canvas", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-spatial", description: "A draggable world for portfolios and visual archives." },
+  { title: "Pixel dither reveal", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-media", description: "A dithered cover that clears to reveal the media beneath." },
+  { title: "Shader card", kind: "Element", href: "/examples/marketing/sections.html?s=shader-cards", description: "A shader-backed card that wakes only when it is touched." },
+  { title: "Border beam", kind: "Element", href: "/examples/marketing/sections.html?s=border-beam", description: "A precise light circuit travelling around a quiet frame." },
+  { title: "Image trail cursor", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-spatial", description: "Pointer movement leaves a fading trail of visual cards." },
 ];
+
+const textWorks: CollectionWork[] = [
+  { title: "Particle text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=particle-text", description: "A word becomes a responsive field of thousands of particles." },
+  { title: "Glyph field", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-glyphs", description: "A typographic image rebuilt as a shifting character grid." },
+  { title: "Lens text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-lens", description: "A headline refracted through a pointer-driven optical lens." },
+  { title: "Shatter text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-shatter", description: "Letterforms fractured into dimensional, reactive shards." },
+  { title: "Fluid text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-fluid", description: "Type that dissolves into dye and continuously returns." },
+];
+
+const gpuWorks: CollectionWork[] = [
+  { title: "Fragment", kind: "GPU study", href: "/gpu-lab/01-fragment.html", description: "Raymarching, domain warping, caustics, and feedback in one pass." },
+  { title: "GPGPU", kind: "GPU study", href: "/gpu-lab/02-gpgpu.html", description: "Physarum, reaction–diffusion, boids, sand, and lenia in textures." },
+  { title: "Geometry", kind: "GPU study", href: "/gpu-lab/03-geometry.html", description: "Vertex-shader worlds built from an index and a single draw call." },
+  { title: "Post", kind: "GPU study", href: "/gpu-lab/04-post.html", description: "Bloom, depth, grain, dither, optical flow, and a live camera stack." },
+  { title: "Holography", kind: "GPU study", href: "/gpu-lab/05-holographic.html", description: "Spectral colour, interference, thin films, and diffraction." },
+];
+
+const sectionWorks: CollectionWork[] = [
+  { title: "Split hero", kind: "Section", href: "/examples/marketing/sections.html?s=hero-split", description: "A product opening balanced between argument and live interface." },
+  { title: "Bento features", kind: "Section", href: "/examples/marketing/sections.html?s=features-bento", description: "A varied feature system with hierarchy built into the grid." },
+  { title: "Proof marquee", kind: "Section", href: "/examples/marketing/sections.html?s=testimonials-marquee", description: "Customer proof that moves as a continuous editorial rail." },
+  { title: "Timeline", kind: "Section", href: "/examples/marketing/sections.html?s=steps-timeline", description: "A process told as a deliberate sequence instead of three boxes." },
+  { title: "Customer story", kind: "Section", href: "/examples/marketing/sections.html?s=customer-story", description: "A single outcome given the room and pacing of a case study." },
+  { title: "Use cases", kind: "Section", href: "/examples/marketing/sections.html?s=use-cases", description: "Distinct audience stories composed inside one shared system." },
+  { title: "Waitlist", kind: "Section", href: "/examples/marketing/sections.html?s=waitlist", description: "A focused conversion moment with atmosphere and restraint." },
+  { title: "Gallery", kind: "Section", href: "/examples/marketing/sections.html?s=gallery", description: "A visual sequence that lets the work lead the narrative." },
+];
+
+const pageWorks: CollectionWork[] = [
+  { title: "SaaS product", kind: "Page", href: "/examples/templates/?template=saas", description: "A complete conversion story with proof, pricing, FAQ, and demo." },
+  { title: "Creative agency", kind: "Page", href: "/examples/templates/?template=agency", description: "An editorial portfolio shaped around selected work and outcomes." },
+  { title: "Infinite portfolio", kind: "Page", href: "/examples/templates/?template=infinite-portfolio", description: "Projects placed on a draggable canvas instead of a vertical feed." },
+  { title: "Kinetic editorial", kind: "Page", href: "/examples/templates/?template=kinetic-editorial", description: "A manifesto performed with live headlines and scroll velocity." },
+  { title: "Generative studio", kind: "Page", href: "/examples/templates/?template=generative-studio", description: "A full-screen art system with living previews and editable seeds." },
+  { title: "Luxury drop", kind: "Page", href: "/examples/templates/?template=luxury-drop", description: "One object examined slowly, precisely, and without visual clutter." },
+  { title: "Festival", kind: "Page", href: "/examples/templates/?template=festival", description: "A cultural page built from posters, ribbons, stages, and motion." },
+  { title: "Music release", kind: "Page", href: "/examples/templates/?template=music-release", description: "Audio-reactive colour and credits composed as a living liner note." },
+];
+
+function interleaveWorks(groups: CollectionWork[][]): CollectionWork[] {
+  const longest = Math.max(...groups.map((group) => group.length));
+  return Array.from({ length: longest }, (_, index) => groups.map((group) => group[index]))
+    .flat()
+    .filter((work): work is CollectionWork => Boolean(work));
+}
+
+const collection = interleaveWorks([
+  shaderWorks,
+  elementWorks,
+  pageWorks,
+  textWorks,
+  sectionWorks,
+  gpuWorks,
+]);
 
 function CollectionMedley() {
   return (
@@ -105,43 +146,36 @@ function CollectionMedley() {
     >
       <Container className="max-w-[88rem]">
         <div className="collection-medley-heading">
-          <p>The collection / mixed media</p>
-          <h2>Not six departments.<br /><em>One visual language.</em></h2>
-          <span>Shaders, interactions, type, GPU experiments, sections, and complete pages—mixed together the way they appear in real work.</span>
+          <p>The collection / one continuous gallery</p>
+          <h2>One gallery.<br /><em>Every kind of work.</em></h2>
+          <span>No category gateways. Shaders, interactions, type, GPU experiments, sections, and complete pages now sit side by side in one mixed sequence.</span>
         </div>
 
-        <div className="collection-medley-field">
-          <div className="medley-haze" aria-hidden="true"></div>
-          <div className="medley-kinetic-word" aria-hidden="true"><span>MAKE</span><i>it move</i></div>
-          <div className="medley-tactile" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div className="medley-code" aria-hidden="true">
-            <span>01 / raymarch.sdf</span><span>02 / physarum.field</span><span>03 / spectral.foil</span><span>04 / vertex.world</span>
-          </div>
-          <div className="medley-page-stack" aria-hidden="true">
-            <i></i><i></i><i><b>Point<br />of view.</b></i>
-          </div>
-          <div className="medley-pixel-trail" aria-hidden="true">
-            {Array.from({ length: 42 }, (_, index) => <i key={index}></i>)}
-          </div>
-          <div className="medley-ribbon" aria-hidden="true">DISTINCTIVE BY DEFAULT · DISTINCTIVE BY DEFAULT ·</div>
-          <div className="medley-orbit" aria-hidden="true"><i></i><i></i></div>
-
+        <ul className="collection-gallery">
           {collection.map((item, index) => (
-            <a
-              key={item.title}
-              href={sitePath(item.href)}
-              className="collection-medley-link"
-              data-medley-item={index + 1}
-            >
-              <span>{item.category}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-              <strong>{item.result} <i>↗</i></strong>
-            </a>
+            <li key={`${item.kind}-${item.title}`} className="collection-gallery-cell">
+              <a
+                href={sitePath(item.href)}
+                className="collection-gallery-item"
+                data-kind={item.kind}
+              >
+                <div className="collection-gallery-visual" aria-hidden="true">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <i></i><i></i><i></i>
+                  <b>{item.title.slice(0, 1)}</b>
+                </div>
+                <div className="collection-gallery-copy">
+                  <span>{item.kind}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <strong>Open work <i>↗</i></strong>
+                </div>
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <p className="collection-medley-footnote">223 pieces · 1 point of view · endless combinations</p>
+        <p className="collection-medley-footnote">{collection.length} selected works · one uninterrupted gallery · no departments</p>
       </Container>
     </ShaderSection>
   );
@@ -256,17 +290,6 @@ function CollectionHome() {
           text="Distinctive by default"
           repeat={6}
           className="border-brand-400/20 bg-brand-500 text-black [&_.text-brand-400]:text-accent-400"
-        />
-
-        <Stats
-          stats={[
-            { value: 69, label: "Atmospheric backgrounds" },
-            { value: 84, label: "Tactile elements" },
-            { value: 5, label: "WebGL text surfaces" },
-            { value: 23, label: "GPU Lab techniques" },
-            { value: 26, label: "Narrative sections" },
-            { value: 16, label: "Complete worlds" },
-          ]}
         />
 
         <CollectionMedley />
