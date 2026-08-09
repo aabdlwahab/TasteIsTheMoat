@@ -28,6 +28,9 @@ export const holoFoil: ShaderDef = {
     u_lightHeight: { type: "float", value: 0.9, min: 0, max: 3, label: "Light height" },
     u_gloss: { type: "float", value: 0.65, min: 0, max: 1, label: "Gloss" },
     u_gain: { type: "float", value: 3.1, min: 0, max: 5, label: "Gain" },
+    u_saturation: { type: "float", value: 1, min: 0, max: 1.4, label: "Saturation" },
+    u_speed: { type: "float", value: 1, min: 0, max: 2, label: "Motion speed" },
+    u_pointer: { type: "float", value: 1, min: 0, max: 2.5, label: "Pointer force" },
     u_grain: { type: "float", value: 0.035, min: 0, max: 0.2, label: "Grain" },
   },
   fragment: /* glsl */ `
@@ -102,15 +105,17 @@ void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
   vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / u_resolution.y;
 
-  vec2 cp = p * u_scale + vec2(u_time * 0.015, u_time * 0.008);
+  float motionTime = u_time * u_speed;
+  vec2 cp = p * u_scale + vec2(motionTime * 0.015, motionTime * 0.008);
   float e = 0.004 * u_scale;
   float h0 = crinkle(cp), hx = crinkle(cp + vec2(e, 0.0)), hy = crinkle(cp + vec2(0.0, e));
   vec3 n = normalize(vec3(-(hx - h0) / e, -(hy - h0) / e, 1.0 / max(u_relief, 0.02)));
 
   // The light tilts with the cursor, sweeping the spectrum across the
   // creases — until the pointer actually moves, it idles on a slow sweep.
-  vec2 idle = vec2(sin(u_time * 0.37) * 1.1, cos(u_time * 0.29) * 0.7);
-  vec2 mp = mix(idle, mouseSmoothPos(), u_mouseEnter);
+  vec2 idle = vec2(sin(motionTime * 0.37) * 1.1, cos(motionTime * 0.29) * 0.7);
+  vec2 pointer = p + (mouseSmoothPos() - p) * u_pointer;
+  vec2 mp = mix(idle, pointer, u_mouseEnter);
 
   vec3 E = normalize(vec3(-p, 2.4));
   vec3 L = normalize(vec3(mp - p, 0.35 + u_lightHeight));
@@ -127,6 +132,7 @@ void main() {
   col += irid * (0.42 + 1.5 * spec + 0.75 * fres) * (0.55 + 0.95 * diff) * u_gain;
   col += vec3(1.0, 0.97, 0.93) * spec * 0.45;
   col *= 0.9 + 0.55 * h0;
+  col = mix(vec3(dot(col, vec3(0.2126, 0.7152, 0.0722))), col, u_saturation);
 
   col += grain(uv + fract(u_time * 0.5)) * u_grain;
   gl_FragColor = vec4(col, 1.0);

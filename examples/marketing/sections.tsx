@@ -93,7 +93,6 @@ import {
   WetPaintButton,
 } from "../../src/ui/index";
 import {
-  MOTION_CATEGORIES,
   MOTION_DEMOS,
   MOTION_ELEMENTS,
 } from "./motionDemos";
@@ -195,17 +194,6 @@ interface ElementCatalogItem {
   demo: string;
 }
 
-const ELEMENT_CATEGORIES: ElementCategory[] = [
-  "Foundation",
-  "Shader-native",
-  "Controls",
-  "Physical cards",
-  "Kinetic type",
-  "Spatial",
-  "Reactive media",
-  ...MOTION_CATEGORIES,
-];
-
 const ELEMENTS: ElementCatalogItem[] = [
   { name: "Button", category: "Foundation", description: "Primary, secondary, and ghost actions with accessible focus states.", demo: "foundation-button" },
   { name: "Badge", category: "Foundation", description: "Compact labels for announcements, releases, and metadata.", demo: "foundation-badge" },
@@ -297,40 +285,30 @@ function ElementsCatalog() {
           </div>
         </div>
 
-        {ELEMENT_CATEGORIES.map((category) => {
-          const items = ELEMENTS.filter((item) => item.category === category);
-          return (
-            <section key={category} className="border-b border-ink-800 py-12 last:border-0">
-              <div className="mb-7 flex items-baseline justify-between gap-4">
-                <h2 className="font-serif text-3xl tracking-tight text-ink-0">{category}</h2>
-                <span className="font-mono text-xs text-ink-500">{items.length} components</span>
-              </div>
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((item, index) => (
-                  <li key={item.name}>
-                    <a
-                      href={`?s=${item.demo}`}
-                      className="group flex h-full min-h-44 flex-col rounded-2xl border border-ink-700 bg-ink-850 p-5 transition-[border-color,transform,background-color] hover:-translate-y-1 hover:border-brand-400/70 hover:bg-ink-800"
-                    >
-                      <span className="font-mono text-[10px] text-ink-500">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <h3 className="mt-5 text-lg font-semibold tracking-tight text-ink-0">
-                        {item.name}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-ink-400">
-                        {item.description}
-                      </p>
-                      <span className="mt-auto pt-5 text-xs font-semibold text-brand-300 transition-transform group-hover:translate-x-1">
-                        Open demo →
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          );
-        })}
+        <ul className="mt-12 grid border-l border-t border-ink-700 sm:grid-cols-2 lg:grid-cols-3">
+          {ELEMENTS.map((item, index) => (
+            <li key={item.name} className="border-b border-r border-ink-700">
+              <a
+                href={`?s=${item.demo}`}
+                className="group flex h-full min-h-48 flex-col bg-ink-900/35 p-5 transition-[background-color,color] hover:bg-brand-500/10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-brand-400"
+              >
+                <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.12em]">
+                  <span className="text-ink-500">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="text-brand-300/80">{item.category}</span>
+                </div>
+                <h2 className="mt-8 text-lg font-semibold tracking-tight text-ink-0 transition-colors group-hover:text-brand-200">
+                  {item.name}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-ink-400">
+                  {item.description}
+                </p>
+                <span className="mt-auto pt-5 text-xs font-semibold text-brand-300 transition-transform group-hover:translate-x-1">
+                  Open demo →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </Container>
     </main>
   );

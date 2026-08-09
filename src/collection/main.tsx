@@ -185,7 +185,7 @@ function CollectionHome() {
         <Hero
           shader="holo-foil"
           brand={brand}
-          uniforms={{ u_gain: 2.4, u_gloss: 0.58 }}
+          uniforms={{ u_gain: 2, u_gloss: 0.52, u_saturation: 0.58, u_speed: 0.38, u_pointer: 1.75 }}
           scrim="none"
           copyClassName="w-fit max-w-[39rem] rounded-3xl border border-white/15 bg-[#07080c]/75 p-6 shadow-[0_24px_80px_rgba(0,0,0,.34)] backdrop-blur-xl sm:p-8"
           badge={{ label: "The anti-generic web collection" }}
