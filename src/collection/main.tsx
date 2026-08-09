@@ -185,7 +185,7 @@ function CollectionHome() {
         <Hero
           shader="holo-foil"
           brand={brand}
-          scrim="strong"
+          scrim="none"
           badge={{ label: "The anti-generic web collection" }}
           headline={
             <>
