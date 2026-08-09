@@ -3,7 +3,6 @@ import "../ui/theme.css";
 import {
   Features,
   Footer,
-  Gallery,
   Hero,
   Nav,
   Stats,
@@ -18,11 +17,13 @@ import {
   GradientText,
   KineticTypeRibbon,
   ParticleText,
+  ShaderSection,
 } from "../ui/index";
 // Magnetic and TextEffect live in the motion subpath, kept out of the main
 // barrel so its Accordion/MorphingDialog/ProgressiveBlur do not collide.
 import { Magnetic, TextEffect } from "../ui/motion/index";
 import type { BrandPalette } from "../core/theme";
+import { sitePath } from "../core/sitePath";
 
 const brand: BrandPalette = {
   primary: "#f97316",
@@ -48,9 +49,6 @@ const collection = [
     href: "/studio.html",
     description:
       "Living WebGL surfaces and moving gradients—tuned to give a first viewport atmosphere, not decoration.",
-    visual: (
-      <div className="size-full bg-[radial-gradient(circle_at_20%_24%,#f97316,transparent_34%),radial-gradient(circle_at_78%_72%,#bef264,transparent_34%),linear-gradient(145deg,#0b0806,#321017)]" />
-    ),
   },
   {
     title: "Tactile elements",
@@ -59,16 +57,6 @@ const collection = [
     href: "/examples/marketing/sections.html?s=elements",
     description:
       "Magnetic buttons, morphing cards, kinetic type, image trails, dither reveals, lenses, and stranger things.",
-    visual: (
-      <div className="relative size-full overflow-hidden bg-[#100e0c] p-8">
-        <div className="absolute -right-8 -top-12 size-40 rounded-full border-[22px] border-brand-500/60" />
-        <div className="grid size-full grid-cols-2 gap-3">
-          <div className="rounded-full border border-white/15 bg-white/5" />
-          <div className="rounded-[45%_55%_34%_66%] bg-gradient-to-br from-brand-500 to-rose-500" />
-          <div className="col-span-2 rounded-xl border border-accent-400/30 bg-accent-400/10" />
-        </div>
-      </div>
-    ),
   },
   {
     title: "WebGL animated text",
@@ -77,24 +65,6 @@ const collection = [
     href: "/examples/marketing/sections.html?s=webgl-text",
     description:
       "A word rasterised and handed to the GPU—as a particle field, a character grid, a lens, a pile of shards, or dye in a fluid.",
-    visual: (
-      <div className="relative size-full overflow-hidden bg-[#06070d] p-8">
-        <div className="absolute inset-x-8 top-1/2 -translate-y-1/2">
-          <div className="font-serif text-[clamp(2rem,7vw,3.4rem)] leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_theme(colors.brand.400)]">
-            WORD
-          </div>
-          <div className="mt-2 flex gap-[3px]">
-            {Array.from({ length: 34 }, (_, i) => (
-              <span
-                key={i}
-                className="block w-[3px] rounded-full bg-accent-400/70"
-                style={{ height: `${6 + ((i * 37) % 22)}px`, opacity: 0.35 + ((i * 13) % 60) / 100 }}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    ),
   },
   {
     title: "GPU Lab",
@@ -103,26 +73,6 @@ const collection = [
     href: "/examples/marketing/sections.html?s=gpu-lab",
     description:
       "Five standalone benches—raymarching and domain warping, physarum and lenia, vertex-shader worlds, a full camera stack, spectral holography.",
-    visual: (
-      <div className="relative size-full overflow-hidden bg-[#08090b] p-7 font-mono text-[10px] text-[#7d838e]">
-        <div className="flex items-baseline justify-between tracking-[0.14em]">
-          <span>05 BENCHES</span>
-          <span className="text-[#6fd3e0]">23 MODES</span>
-        </div>
-        <div className="mt-6 space-y-1.5">
-          {["raymarched sdf", "physarum", "lenia", "instanced grass", "iridescent foil"].map(
-            (mode, i) => (
-              <div key={mode} className="flex items-center gap-2">
-                <span className="text-[#575c66]">0{i + 1}</span>
-                <span className="h-px flex-1 bg-white/10" />
-                <span>{mode}</span>
-              </div>
-            ),
-          )}
-        </div>
-        <div className="absolute bottom-6 left-7 right-7 h-8 bg-[linear-gradient(90deg,transparent,rgba(111,211,224,.35),transparent)]" />
-      </div>
-    ),
   },
   {
     title: "Marketing sections",
@@ -131,17 +81,6 @@ const collection = [
     href: "/examples/marketing/sections.html",
     description:
       "Heroes, proof, pricing, stories, launches, and conversion moments designed to work as a deliberate whole.",
-    visual: (
-      <div className="size-full bg-[#0d0b09] p-8">
-        <div className="font-serif text-4xl italic tracking-tight text-white">Point of view.</div>
-        <div className="mt-5 h-px bg-gradient-to-r from-brand-400 via-accent-400 to-transparent" />
-        <div className="mt-6 grid grid-cols-3 gap-3">
-          <div className="h-20 rounded-xl border border-white/10 bg-white/5" />
-          <div className="h-20 rounded-xl bg-brand-500/80" />
-          <div className="h-20 rounded-xl border border-white/10 bg-white/5" />
-        </div>
-      </div>
-    ),
   },
   {
     title: "Complete webpages",
@@ -150,20 +89,63 @@ const collection = [
     href: "/examples/templates/",
     description:
       "Opinionated starters for products, culture, portfolios, music, data, launches, luxury, and ideas without a category.",
-    visual: (
-      <div className="relative size-full overflow-hidden bg-[#f3efe6] p-7 text-[#17130f]">
-        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em]">
-          <span>Issue 16</span>
-          <span>Selected pages</span>
-        </div>
-        <div className="mt-8 max-w-[12rem] font-serif text-4xl leading-[0.9] tracking-[-0.06em]">
-          Made to be remembered.
-        </div>
-        <div className="absolute bottom-0 right-0 size-32 rounded-tl-full bg-brand-500" />
-      </div>
-    ),
   },
 ];
+
+function CollectionMedley() {
+  return (
+    <ShaderSection
+      id="collection"
+      shader="oil-slick"
+      brand={brand}
+      scrim="strong"
+      maxDpr={1}
+      className="collection-medley border-y border-white/10 bg-ink-950"
+      contentClassName="py-24 sm:py-32"
+    >
+      <Container className="max-w-[88rem]">
+        <div className="collection-medley-heading">
+          <p>The collection / mixed media</p>
+          <h2>Not six departments.<br /><em>One visual language.</em></h2>
+          <span>Shaders, interactions, type, GPU experiments, sections, and complete pages—mixed together the way they appear in real work.</span>
+        </div>
+
+        <div className="collection-medley-field">
+          <div className="medley-haze" aria-hidden="true"></div>
+          <div className="medley-kinetic-word" aria-hidden="true"><span>MAKE</span><i>it move</i></div>
+          <div className="medley-tactile" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div className="medley-code" aria-hidden="true">
+            <span>01 / raymarch.sdf</span><span>02 / physarum.field</span><span>03 / spectral.foil</span><span>04 / vertex.world</span>
+          </div>
+          <div className="medley-page-stack" aria-hidden="true">
+            <i></i><i></i><i><b>Point<br />of view.</b></i>
+          </div>
+          <div className="medley-pixel-trail" aria-hidden="true">
+            {Array.from({ length: 42 }, (_, index) => <i key={index}></i>)}
+          </div>
+          <div className="medley-ribbon" aria-hidden="true">DISTINCTIVE BY DEFAULT · DISTINCTIVE BY DEFAULT ·</div>
+          <div className="medley-orbit" aria-hidden="true"><i></i><i></i></div>
+
+          {collection.map((item, index) => (
+            <a
+              key={item.title}
+              href={sitePath(item.href)}
+              className="collection-medley-link"
+              data-medley-item={index + 1}
+            >
+              <span>{item.category}</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <strong>{item.result} <i>↗</i></strong>
+            </a>
+          ))}
+        </div>
+
+        <p className="collection-medley-footnote">223 pieces · 1 point of view · endless combinations</p>
+      </Container>
+    </ShaderSection>
+  );
+}
 
 const principles = [
   {
@@ -285,13 +267,7 @@ function CollectionHome() {
           ]}
         />
 
-        <Gallery
-          id="collection"
-          eyebrow="The collection"
-          title="Six doors into better work"
-          description="Start with a moment, break a headline, assemble a story, or borrow an entire visual world. Every path stays editable."
-          items={collection}
-        />
+        <CollectionMedley />
 
         <section id="principles" className="border-y border-ink-700 bg-[#f3efe6] py-24 text-[#17130f] sm:py-32">
           <Container>
