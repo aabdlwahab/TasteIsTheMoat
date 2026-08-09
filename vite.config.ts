@@ -45,6 +45,7 @@ export default defineConfig({
         // Sixteen complete landing-page starters and their catalog.
         templates: resolve(__dirname, "examples/templates/index.html"),
         contactSheet: resolve(__dirname, "examples/contact-sheet.html"),
+        preview: resolve(__dirname, "examples/preview.html"),
         landing: resolve(__dirname, "examples/landing.html"),
         safety: resolve(__dirname, "examples/safety/index.html"),
       },

@@ -351,6 +351,27 @@ function FoundationDemo({
   );
 }
 
+function FocusedPreview({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <main className="grid min-h-screen place-items-center overflow-hidden bg-[#08090d] p-5 sm:p-8">
+      <section className={`relative grid min-h-[72vh] w-full max-w-5xl place-items-center overflow-hidden rounded-[2rem] border border-white/12 bg-[radial-gradient(circle_at_18%_18%,rgba(249,115,22,.18),transparent_30%),radial-gradient(circle_at_82%_72%,rgba(190,242,100,.12),transparent_32%),#101117] p-8 ${className}`}>
+        <span className="absolute left-6 top-6 z-20 font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
+          {label}
+        </span>
+        {children}
+      </section>
+    </main>
+  );
+}
+
 const SECTIONS: Record<string, () => React.ReactNode> = {
   nav: () => (
     <div className="min-h-[300px] bg-gradient-to-b from-brand-900 to-ink-950">
@@ -775,6 +796,72 @@ const SECTIONS: Record<string, () => React.ReactNode> = {
   ...SURFACE_DEMOS,
   "gpu-lab": () => <GpuLabCatalog />,
   ...MOTION_DEMOS,
+  "preview-magnetic-button": () => (
+    <FocusedPreview label="Magnetic button">
+      <MagneticButton className="px-10 py-5 text-lg">Move toward me</MagneticButton>
+    </FocusedPreview>
+  ),
+  "preview-morphing-dialog": () => (
+    <FocusedPreview label="Morphing dialog">
+      <MorphingDialog
+        title="Project Meridian"
+        description="The compact card becomes the reading surface."
+        trigger={
+          <div className="w-[min(32rem,78vw)] p-6">
+            <div className="aspect-[16/9] rounded-xl bg-[radial-gradient(circle_at_70%_25%,#22d3ee,transparent_38%),#111827]" />
+            <h2 className="mt-5 font-semibold text-ink-0">Open the project</h2>
+            <p className="mt-2 text-sm text-ink-400">The card becomes the canvas →</p>
+          </div>
+        }
+      >
+        <div className="aspect-[16/8] rounded-2xl bg-[radial-gradient(circle_at_25%_30%,#4f46e5,transparent_35%),radial-gradient(circle_at_75%_65%,#22d3ee,transparent_38%),#0d111b]" />
+        <p className="mt-6 leading-relaxed text-ink-300">A focused preview for the morphing transition.</p>
+      </MorphingDialog>
+    </FocusedPreview>
+  ),
+  "preview-kinetic-ribbon": () => (
+    <FocusedPreview label="Kinetic type ribbon" className="px-0">
+      <div className="w-full">
+        <p className="mb-10 text-center font-serif text-5xl italic text-white sm:text-7xl">Move with intent.</p>
+        <KineticTypeRibbon text="KINETIC SYSTEM" repeat={5} />
+      </div>
+    </FocusedPreview>
+  ),
+  "preview-infinite-canvas": () => (
+    <FocusedPreview label="Infinite canvas" className="p-0">
+      <InfiniteCanvas
+        className="h-[78vh] w-full"
+        items={[
+          { id: "a", x: 90, y: 90, content: <div className="aspect-[4/3] bg-gradient-to-br from-violet-600 to-indigo-950 p-5 text-white">Research lab</div> },
+          { id: "b", x: 430, y: 210, content: <div className="aspect-[4/3] bg-gradient-to-br from-cyan-500 to-blue-950 p-5 text-white">Spatial portfolio</div> },
+          { id: "c", x: 780, y: 70, content: <div className="aspect-[4/3] bg-gradient-to-br from-orange-500 to-rose-950 p-5 text-white">Product launch</div> },
+        ]}
+      />
+    </FocusedPreview>
+  ),
+  "preview-pixel-dither": () => (
+    <FocusedPreview label="Pixel dither reveal">
+      <div className="w-[min(48rem,82vw)]">
+        <PixelDitherReveal>
+          <div className="aspect-[16/10] bg-[radial-gradient(circle_at_30%_30%,#a855f7,transparent_34%),radial-gradient(circle_at_70%_65%,#22d3ee,transparent_36%),#0b0c13]" />
+        </PixelDitherReveal>
+      </div>
+    </FocusedPreview>
+  ),
+  "preview-image-trail": () => (
+    <FocusedPreview label="Image trail cursor" className="p-0">
+      <ImageTrailCursor
+        className="grid h-[78vh] w-full place-items-center bg-ink-900"
+        items={[
+          <div className="aspect-[4/3] bg-gradient-to-br from-indigo-600 to-violet-500" />,
+          <div className="aspect-[4/3] bg-gradient-to-br from-cyan-500 to-blue-700" />,
+          <div className="aspect-[4/3] bg-gradient-to-br from-orange-400 to-rose-600" />,
+        ]}
+      >
+        <p className="text-xl font-semibold text-ink-0">Move through the field</p>
+      </ImageTrailCursor>
+    </FocusedPreview>
+  ),
   "foundation-button": () => (
     <FoundationDemo
       name="Button"

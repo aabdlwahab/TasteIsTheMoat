@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import {
@@ -72,14 +72,14 @@ const shaderWorks: CollectionWork[] = shaderList
   }));
 
 const elementWorks: CollectionWork[] = [
-  { title: "Magnetic button", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-controls", description: "A CTA that leans toward the pointer, then snaps cleanly home." },
-  { title: "Morphing dialog", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-cards", description: "A compact card that expands into a focused reading surface." },
-  { title: "Kinetic type ribbon", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-type", description: "Oversized type that responds to scroll direction and velocity." },
-  { title: "Infinite canvas", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-spatial", description: "A draggable world for portfolios and visual archives." },
-  { title: "Pixel dither reveal", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-media", description: "A dithered cover that clears to reveal the media beneath." },
+  { title: "Magnetic button", kind: "Element", href: "/examples/marketing/sections.html?s=preview-magnetic-button", description: "A CTA that leans toward the pointer, then snaps cleanly home." },
+  { title: "Morphing dialog", kind: "Element", href: "/examples/marketing/sections.html?s=preview-morphing-dialog", description: "A compact card that expands into a focused reading surface." },
+  { title: "Kinetic type ribbon", kind: "Element", href: "/examples/marketing/sections.html?s=preview-kinetic-ribbon", description: "Oversized type that responds to scroll direction and velocity." },
+  { title: "Infinite canvas", kind: "Element", href: "/examples/marketing/sections.html?s=preview-infinite-canvas", description: "A draggable world for portfolios and visual archives." },
+  { title: "Pixel dither reveal", kind: "Element", href: "/examples/marketing/sections.html?s=preview-pixel-dither", description: "A dithered cover that clears to reveal the media beneath." },
   { title: "Shader card", kind: "Element", href: "/examples/marketing/sections.html?s=shader-cards", description: "A shader-backed card that wakes only when it is touched." },
   { title: "Border beam", kind: "Element", href: "/examples/marketing/sections.html?s=border-beam", description: "A precise light circuit travelling around a quiet frame." },
-  { title: "Image trail cursor", kind: "Element", href: "/examples/marketing/sections.html?s=experimental-spatial", description: "Pointer movement leaves a fading trail of visual cards." },
+  { title: "Image trail cursor", kind: "Element", href: "/examples/marketing/sections.html?s=preview-image-trail", description: "Pointer movement leaves a fading trail of visual cards." },
 ];
 
 const textWorks: CollectionWork[] = [
@@ -136,49 +136,28 @@ const collection = interleaveWorks([
   gpuWorks,
 ]);
 
+function previewClip(item: CollectionWork): string {
+  const slug = `${item.kind}-${item.href}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  return sitePath(`/previews/${slug}.webp`);
+}
+
 function MovingThumbnail({ item }: { item: CollectionWork }) {
-  const thumbnailRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    const thumbnail = thumbnailRef.current;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!thumbnail || reducedMotion || !("IntersectionObserver" in window)) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsPlaying(entry.isIntersecting && entry.intersectionRatio >= 0.35),
-      { threshold: [0, 0.35, 0.7] },
-    );
-    observer.observe(thumbnail);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div ref={thumbnailRef} className="collection-gallery-thumb" aria-hidden="true">
+    <div className="collection-gallery-thumb" aria-hidden="true">
       <i></i><i></i><i></i>
       <b>{item.title.slice(0, 1)}</b>
-      {isPlaying && (
-        item.shader ? (
-          <ShaderSection
-            as="div"
-            shader={item.shader}
-            brand={brand}
-            scrim="none"
-            maxDpr={1}
-            className="collection-gallery-thumb-live"
-            contentClassName="h-full"
-          />
-        ) : (
-          <iframe
-            className="collection-gallery-thumb-live"
-            src={sitePath(item.href)}
-            title={`${item.title} moving thumbnail`}
-            loading="lazy"
-            tabIndex={-1}
-            allow="autoplay"
-          />
-        )
-      )}
+      <picture>
+        <img
+          className="collection-gallery-thumb-live"
+          src={previewClip(item)}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
       <span>{item.kind}</span>
     </div>
   );
