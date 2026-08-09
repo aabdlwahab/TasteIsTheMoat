@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import {
@@ -47,6 +47,7 @@ interface CollectionWork {
   kind: "Shader" | "Element" | "WebGL type" | "GPU study" | "Section" | "Page";
   href: string;
   description: string;
+  shader?: string;
 }
 
 const selectedShaderIds = new Set([
@@ -67,6 +68,7 @@ const shaderWorks: CollectionWork[] = shaderList
     kind: "Shader",
     href: `/studio.html?shader=${shader.id}`,
     description: shader.description,
+    shader: shader.id,
   }));
 
 const elementWorks: CollectionWork[] = [
@@ -134,63 +136,35 @@ const collection = interleaveWorks([
   gpuWorks,
 ]);
 
-function LiveWork({ item, index }: { item: CollectionWork; index: number }) {
-  const previewRef = useRef<HTMLDivElement>(null);
-  const [isNearViewport, setIsNearViewport] = useState(false);
-
-  useEffect(() => {
-    const preview = previewRef.current;
-    if (!preview || !("IntersectionObserver" in window)) {
-      setIsNearViewport(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsNearViewport(entry.isIntersecting),
-      { rootMargin: "1200px 0px" },
-    );
-    observer.observe(preview);
-    return () => observer.disconnect();
-  }, []);
-
-  const href = sitePath(item.href);
-
-  return (
-    <li className="collection-gallery-cell">
-      <article className="collection-gallery-item" data-kind={item.kind}>
-        <div className="collection-gallery-copy">
-          <div>
-            <span>{String(index + 1).padStart(2, "0")} / {item.kind}</span>
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-          </div>
-          <a href={href} target="_blank" rel="noreferrer">
-            Full canvas <i>↗</i>
-          </a>
-        </div>
-        <div ref={previewRef} className="collection-gallery-live">
-          {isNearViewport ? (
-            <iframe
-              src={href}
-              title={`${item.title} — interactive preview`}
-              loading="lazy"
-              allow="autoplay; camera; microphone"
-              allowFullScreen
-            />
-          ) : (
-            <div className="collection-gallery-placeholder" aria-hidden="true">
-              <i></i><i></i><i></i>
-              <b>{item.title.slice(0, 1)}</b>
-              <span>Live work loads here</span>
-            </div>
-          )}
-        </div>
-      </article>
-    </li>
-  );
-}
-
 function CollectionMedley() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [search, setSearch] = useState("");
+  const previewRef = useRef<HTMLDivElement>(null);
+  const selected = collection[selectedIndex];
+  const searchTerm = search.trim().toLowerCase();
+  const visibleWorks = collection
+    .map((item, index) => ({ item, index }))
+    .filter(({ item }) =>
+      !searchTerm
+      || `${item.title} ${item.kind} ${item.description}`.toLowerCase().includes(searchTerm),
+    );
+
+  function selectWork(index: number) {
+    setSelectedIndex(index);
+    window.requestAnimationFrame(() => {
+      const preview = previewRef.current;
+      if (!preview) return;
+      const bounds = preview.getBoundingClientRect();
+      const isVisible = bounds.top >= 72 && bounds.bottom <= window.innerHeight;
+      if (!isVisible) {
+        preview.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start",
+        });
+      }
+    });
+  }
+
   return (
     <ShaderSection
       id="collection"
@@ -204,17 +178,89 @@ function CollectionMedley() {
       <Container className="max-w-[88rem]">
         <div className="collection-medley-heading">
           <p>The collection / one continuous gallery</p>
-          <h2>The work itself.<br /><em>All on this page.</em></h2>
-          <span>Scroll through live shaders, interactions, type, GPU experiments, sections, and complete pages. Every frame below is the real, interactive work—not a link to another gallery.</span>
+          <h2>One preview.<br /><em>One mixed gallery.</em></h2>
+          <span>Everything lives in the same browser: shaders, interactions, type, GPU experiments, sections, and complete pages. Choose any work below to bring it into the live preview.</span>
+        </div>
+
+        <div ref={previewRef} className="collection-preview-stage" data-kind={selected.kind}>
+          <div className="collection-preview-meta">
+            <div>
+              <span>{String(selectedIndex + 1).padStart(2, "0")} / {selected.kind}</span>
+              <h3>{selected.title}</h3>
+              <p>{selected.description}</p>
+            </div>
+            <a href={sitePath(selected.href)} target="_blank" rel="noreferrer">
+              Full canvas <i>↗</i>
+            </a>
+          </div>
+          <div className="collection-preview-window">
+            {selected.shader ? (
+              <ShaderSection
+                key={selected.shader}
+                as="div"
+                shader={selected.shader}
+                brand={brand}
+                scrim="none"
+                maxDpr={1.5}
+                className="h-full"
+                contentClassName="h-full"
+              />
+            ) : (
+              <iframe
+                key={selected.href}
+                src={sitePath(selected.href)}
+                title={`${selected.title} — interactive preview`}
+                allow="autoplay; camera; microphone"
+                allowFullScreen
+              />
+            )}
+            <span className="collection-preview-hint">Interactive preview</span>
+          </div>
+        </div>
+
+        <div className="collection-gallery-head">
+          <p>All work <span>{visibleWorks.length}</span></p>
+          <label>
+            <span className="sr-only">Search the collection</span>
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search all work…"
+            />
+          </label>
+          <span>Six disciplines, deliberately interleaved</span>
         </div>
 
         <ul className="collection-gallery">
-          {collection.map((item, index) => (
-            <LiveWork key={`${item.kind}-${item.title}`} item={item} index={index} />
+          {visibleWorks.map(({ item, index }) => (
+            <li key={`${item.kind}-${item.title}`} className="collection-gallery-cell">
+              <button
+                type="button"
+                className={`collection-gallery-item${selectedIndex === index ? " is-active" : ""}`}
+                data-kind={item.kind}
+                aria-pressed={selectedIndex === index}
+                onClick={() => selectWork(index)}
+              >
+                <div className="collection-gallery-thumb" aria-hidden="true">
+                  <i></i><i></i><i></i>
+                  <b>{item.title.slice(0, 1)}</b>
+                  <span>{item.kind}</span>
+                </div>
+                <div className="collection-gallery-card-copy">
+                  <strong>{item.title}</strong>
+                  <span>{item.description}</span>
+                </div>
+              </button>
+            </li>
           ))}
         </ul>
 
-        <p className="collection-medley-footnote">{collection.length} live works · one page · no separate galleries</p>
+        {visibleWorks.length === 0 && (
+          <p className="collection-gallery-empty">No work matches “{search}”.</p>
+        )}
+
+        <p className="collection-medley-footnote">{collection.length} works · one preview · one gallery</p>
       </Container>
     </ShaderSection>
   );
