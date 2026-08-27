@@ -9,8 +9,8 @@
  *
  * Needs a static server for a production build, plus Chrome:
  *
- *   npm run build:pages
- *   npx serve pages          # any static server; see PREVIEW_BASE
+ *   npm run build
+ *   (cd dist && python3 -m http.server 5310 --bind 127.0.0.1) &
  *   npm run capture:previews
  *
  * One Chrome instance is driven over the DevTools protocol for the whole run.
@@ -36,7 +36,7 @@ const sitesDir = join(projectRoot, "public/previews/sites");
 const chromePath =
   process.env.PREVIEW_CHROME
   ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const base = process.env.PREVIEW_BASE ?? "http://127.0.0.1:5310/TasteIsTheMoat";
+const base = process.env.PREVIEW_BASE ?? "http://127.0.0.1:5310";
 const port = Number(process.env.PREVIEW_PORT ?? 9333);
 const settle = Number(process.env.PREVIEW_SETTLE ?? 1400);
 const scope = process.env.PREVIEW_SCOPE ?? "all";

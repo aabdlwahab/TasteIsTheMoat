@@ -32,6 +32,12 @@ npm run dev
 - Contact sheet (every shader at once): `/examples/contact-sheet.html`
 - Landing page demo (vanilla): `/examples/landing.html`
 
+### Adding to the collection
+
+[AGENTS.md](AGENTS.md) is the contract for adding a piece to the gallery: which
+file, the `Work` shape, the control constructors, how shaders get their panel
+for free, and how to capture the preview still.
+
 ### Gallery previews
 
 Each of the 190 gallery cards shows a still of the real component, captured
@@ -40,8 +46,8 @@ one page is not a gallery, it is a fan. Regenerate them after adding or
 changing a piece:
 
 ```bash
-npm run build:pages
-npx serve pages          # any static server; see PREVIEW_BASE below
+npm run build
+(cd dist && python3 -m http.server 5310 --bind 127.0.0.1) &
 npm run capture:previews
 ```
 
@@ -49,7 +55,7 @@ The script drives headless Chrome (`PREVIEW_CHROME`), reads the work list from
 `element.html?list=1`, writes `public/previews/works/<id>.webp` for the
 elements and `public/previews/sites/<key>.webp` for the sixteen complete pages,
 and rewrites `src/collection/previews.ts` so a card only requests an image that
-exists. `PREVIEW_BASE` defaults to `http://127.0.0.1:5310/TasteIsTheMoat`;
+exists. `PREVIEW_BASE` defaults to `http://127.0.0.1:5310`;
 `PREVIEW_SCOPE=works|sites` limits the run and `PREVIEW_ONLY=id,id` re-captures
 just those.
 
