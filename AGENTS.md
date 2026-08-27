@@ -135,6 +135,18 @@ ten), that is fine — the panel scrolls.
 For `flow` pieces driven by scrolling, add a line telling the visitor the stage
 scrolls — otherwise they will scroll the page instead and never see it.
 
+`fit` and `group` also decide where **Put it on the page** drops the piece into
+the hero (`src/collection/appliedHero.tsx`):
+
+| Condition | Lands as |
+|---|---|
+| `group === "Sections"` | in place of the hero — a section already is the top of a page |
+| `fit === "fill"` | the hero background, behind the copy, under a scrim |
+| anything else | inside the hero, where the product shot would go |
+
+If a piece looks wrong there, the fix is almost always the wrong `fit`, not a
+special case in `appliedHero.tsx`.
+
 ---
 
 ## 5. The `code` snippet

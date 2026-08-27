@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
 import { Footer, Hero, Nav } from "../sections/index";
@@ -13,9 +14,12 @@ import {
 } from "../ui/index";
 import { Magnetic, TextEffect } from "../ui/motion/index";
 import type { BrandPalette } from "../core/theme";
+import { AppliedHero } from "./appliedHero";
+import type { AppliedPiece } from "./appliedHero";
 import { Workbench } from "./workbench";
 import { Websites } from "./websites";
 import { countsByGroup, works } from "./works/index";
+import type { ControlValues, Work } from "./types";
 
 const brand: BrandPalette = {
   primary: "#f97316",
@@ -62,6 +66,19 @@ const principles = [
 ];
 
 function CollectionHome() {
+  const [applied, setApplied] = useState<AppliedPiece | null>(null);
+
+  const apply = useCallback((work: Work, values: ControlValues) => {
+    setApplied((current) => ({ work, values, nonce: (current?.nonce ?? 0) + 1 }));
+    // The whole point is seeing it up there, so go and look.
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+    });
+  }, []);
+
   return (
     <>
       <Nav
@@ -79,6 +96,9 @@ function CollectionHome() {
         cta={{ label: "Open the workbench", href: "#collection" }}
       />
       <main id="top">
+        {applied ? (
+          <AppliedHero applied={applied} onClear={() => setApplied(null)} />
+        ) : (
         <Hero
           shader="holo-foil"
           brand={brand}
@@ -140,6 +160,7 @@ function CollectionHome() {
             </BrowserFrame>
           }
         />
+        )}
 
         <KineticTypeRibbon
           text="Distinctive by default"
@@ -147,7 +168,7 @@ function CollectionHome() {
           className="border-brand-400/20 bg-brand-500 text-black [&_.text-brand-400]:text-accent-400"
         />
 
-        <Workbench />
+        <Workbench onApply={apply} appliedId={applied?.work.id} />
 
         <Websites />
 

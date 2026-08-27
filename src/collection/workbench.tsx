@@ -6,6 +6,11 @@
  * mounts the real component into the stage; the panel writes straight into its
  * props; the snippet under it is generated from the same values, so what you
  * copy is what you are looking at.
+ *
+ * The stage still shows a component in a box, though, and a box is not a page.
+ * "Put it on the page" hands the current piece and the current settings to the
+ * top of the screen, where it has to hold up next to a headline and a nav —
+ * see `appliedHero.tsx`.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CodeBlock } from "../ui/index";
@@ -47,7 +52,15 @@ function tileFor(work: Work): string {
   return `radial-gradient(ellipse 80% 70% at 22% 24%, hsl(${hue} 72% 46% / 0.55) 0%, transparent 62%), radial-gradient(ellipse 70% 60% at 78% 76%, hsl(${second} 74% 52% / 0.4) 0%, transparent 60%), #0c0d13`;
 }
 
-export function Workbench() {
+export function Workbench({
+  onApply,
+  appliedId,
+}: {
+  /** Hands the current piece and its settings to the hero. */
+  onApply: (work: Work, values: ControlValues) => void;
+  /** The piece already on the page, so the button can say "update". */
+  appliedId?: string;
+}) {
   const [work, setWork] = useState<Work>(initialWork);
   const [values, setValues] = useState<ControlValues>(() => defaultsOf(initialWork().controls));
   const [group, setGroup] = useState("All");
@@ -183,6 +196,13 @@ export function Workbench() {
                 className="rounded-lg border border-ink-700 px-3 py-1.5 text-[11px] font-medium text-ink-300 transition-colors hover:border-ink-500 hover:text-ink-0"
               >
                 Reset
+              </button>
+              <button
+                type="button"
+                onClick={() => onApply(work, values)}
+                className="rounded-lg bg-accent-400 px-3 py-1.5 text-[11px] font-semibold text-black transition-colors hover:bg-accent-300"
+              >
+                {appliedId === work.id ? "Update the page ↑" : "Put it on the page ↑"}
               </button>
               <a
                 href={sitePath(work.href ?? `/element.html?w=${work.id}`)}
