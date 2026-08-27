@@ -9,6 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "build:pages": "tsc --noEmit && GITHUB_PAGES=true vite build",
     "preview": "vite preview",
+    "capture:previews": "node scripts/capture-works.mjs",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -27,8 +28,12 @@
     "react-dom": ">=18"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "react-dom": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "dependencies": {
     "clsx": "^2.1.1",

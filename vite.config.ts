@@ -38,6 +38,9 @@ export default defineConfig({
         collection: resolve(__dirname, "index.html"),
         // The shader studio (vanilla TS).
         studio: resolve(__dirname, "studio.html"),
+        // One element on its own page — the collection's "full page" target,
+        // and what the preview-capture script screenshots.
+        element: resolve(__dirname, "element.html"),
         // The React section library demo — a full marketing page.
         marketing: resolve(__dirname, "examples/marketing/index.html"),
         // Each section on its own, for review and screenshots.

@@ -1,30 +1,21 @@
-import { useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "../ui/theme.css";
-import {
-  Features,
-  Footer,
-  Hero,
-  Nav,
-} from "../sections/index";
+import { Footer, Hero, Nav } from "../sections/index";
 import {
   BrandMark,
   BrowserFrame,
   Button,
   Container,
   CopyField,
-  GlyphText,
   GradientText,
   KineticTypeRibbon,
   ParticleText,
-  ShaderSection,
 } from "../ui/index";
-// Magnetic and TextEffect live in the motion subpath, kept out of the main
-// barrel so its Accordion/MorphingDialog/ProgressiveBlur do not collide.
 import { Magnetic, TextEffect } from "../ui/motion/index";
 import type { BrandPalette } from "../core/theme";
-import { sitePath } from "../core/sitePath";
-import { shaderList } from "../shaders/index";
+import { Workbench } from "./workbench";
+import { Websites } from "./websites";
+import { countsByGroup, works } from "./works/index";
 
 const brand: BrandPalette = {
   primary: "#f97316",
@@ -33,263 +24,19 @@ const brand: BrandPalette = {
   background: "#080706",
 };
 
+const counts = countsByGroup();
+const elementCount =
+  (counts.Foundation ?? 0)
+  + (counts["Shader-native"] ?? 0)
+  + (counts.Experimental ?? 0)
+  + (counts.Motion ?? 0);
+
 function BrandLockup() {
   return (
     <>
       <BrandMark className="size-7 text-brand-400" />
       <span>Taste is the Moat</span>
     </>
-  );
-}
-
-interface CollectionWork {
-  title: string;
-  kind: "Shader" | "Element" | "WebGL type" | "GPU study" | "Section" | "Page";
-  href: string;
-  description: string;
-  shader?: string;
-}
-
-const selectedShaderIds = new Set([
-  "mesh-gradient",
-  "holo-foil",
-  "liquid-ripple",
-  "cursor-flow",
-  "metaballs",
-  "starfield",
-  "topographic",
-  "prism",
-]);
-
-const shaderWorks: CollectionWork[] = shaderList
-  .filter((shader) => selectedShaderIds.has(shader.id))
-  .map((shader) => ({
-    title: shader.name,
-    kind: "Shader",
-    href: `/studio.html?shader=${shader.id}`,
-    description: shader.description,
-    shader: shader.id,
-  }));
-
-const elementWorks: CollectionWork[] = [
-  { title: "Magnetic button", kind: "Element", href: "/examples/marketing/sections.html?s=preview-magnetic-button", description: "A CTA that leans toward the pointer, then snaps cleanly home." },
-  { title: "Morphing dialog", kind: "Element", href: "/examples/marketing/sections.html?s=preview-morphing-dialog", description: "A compact card that expands into a focused reading surface." },
-  { title: "Kinetic type ribbon", kind: "Element", href: "/examples/marketing/sections.html?s=preview-kinetic-ribbon", description: "Oversized type that responds to scroll direction and velocity." },
-  { title: "Infinite canvas", kind: "Element", href: "/examples/marketing/sections.html?s=preview-infinite-canvas", description: "A draggable world for portfolios and visual archives." },
-  { title: "Pixel dither reveal", kind: "Element", href: "/examples/marketing/sections.html?s=preview-pixel-dither", description: "A dithered cover that clears to reveal the media beneath." },
-  { title: "Shader card", kind: "Element", href: "/examples/marketing/sections.html?s=shader-cards", description: "A shader-backed card that wakes only when it is touched." },
-  { title: "Border beam", kind: "Element", href: "/examples/marketing/sections.html?s=border-beam", description: "A precise light circuit travelling around a quiet frame." },
-  { title: "Image trail cursor", kind: "Element", href: "/examples/marketing/sections.html?s=preview-image-trail", description: "Pointer movement leaves a fading trail of visual cards." },
-];
-
-const textWorks: CollectionWork[] = [
-  { title: "Particle text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=particle-text", description: "A word becomes a responsive field of thousands of particles." },
-  { title: "Glyph field", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-glyphs", description: "A typographic image rebuilt as a shifting character grid." },
-  { title: "Lens text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-lens", description: "A headline refracted through a pointer-driven optical lens." },
-  { title: "Shatter text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-shatter", description: "Letterforms fractured into dimensional, reactive shards." },
-  { title: "Fluid text", kind: "WebGL type", href: "/examples/marketing/sections.html?s=surface-fluid", description: "Type that dissolves into dye and continuously returns." },
-];
-
-const gpuWorks: CollectionWork[] = [
-  { title: "Fragment", kind: "GPU study", href: "/gpu-lab/01-fragment.html", description: "Raymarching, domain warping, caustics, and feedback in one pass." },
-  { title: "GPGPU", kind: "GPU study", href: "/gpu-lab/02-gpgpu.html", description: "Physarum, reaction–diffusion, boids, sand, and lenia in textures." },
-  { title: "Geometry", kind: "GPU study", href: "/gpu-lab/03-geometry.html", description: "Vertex-shader worlds built from an index and a single draw call." },
-  { title: "Post", kind: "GPU study", href: "/gpu-lab/04-post.html", description: "Bloom, depth, grain, dither, optical flow, and a live camera stack." },
-  { title: "Holography", kind: "GPU study", href: "/gpu-lab/05-holographic.html", description: "Spectral colour, interference, thin films, and diffraction." },
-];
-
-const sectionWorks: CollectionWork[] = [
-  { title: "Split hero", kind: "Section", href: "/examples/marketing/sections.html?s=hero-split", description: "A product opening balanced between argument and live interface." },
-  { title: "Bento features", kind: "Section", href: "/examples/marketing/sections.html?s=features-bento", description: "A varied feature system with hierarchy built into the grid." },
-  { title: "Proof marquee", kind: "Section", href: "/examples/marketing/sections.html?s=testimonials-marquee", description: "Customer proof that moves as a continuous editorial rail." },
-  { title: "Timeline", kind: "Section", href: "/examples/marketing/sections.html?s=steps-timeline", description: "A process told as a deliberate sequence instead of three boxes." },
-  { title: "Customer story", kind: "Section", href: "/examples/marketing/sections.html?s=customer-story", description: "A single outcome given the room and pacing of a case study." },
-  { title: "Use cases", kind: "Section", href: "/examples/marketing/sections.html?s=use-cases", description: "Distinct audience stories composed inside one shared system." },
-  { title: "Waitlist", kind: "Section", href: "/examples/marketing/sections.html?s=waitlist", description: "A focused conversion moment with atmosphere and restraint." },
-  { title: "Gallery", kind: "Section", href: "/examples/marketing/sections.html?s=gallery", description: "A visual sequence that lets the work lead the narrative." },
-];
-
-const pageWorks: CollectionWork[] = [
-  { title: "SaaS product", kind: "Page", href: "/examples/templates/?template=saas", description: "A complete conversion story with proof, pricing, FAQ, and demo." },
-  { title: "Creative agency", kind: "Page", href: "/examples/templates/?template=agency", description: "An editorial portfolio shaped around selected work and outcomes." },
-  { title: "Infinite portfolio", kind: "Page", href: "/examples/templates/?template=infinite-portfolio", description: "Projects placed on a draggable canvas instead of a vertical feed." },
-  { title: "Kinetic editorial", kind: "Page", href: "/examples/templates/?template=kinetic-editorial", description: "A manifesto performed with live headlines and scroll velocity." },
-  { title: "Generative studio", kind: "Page", href: "/examples/templates/?template=generative-studio", description: "A full-screen art system with living previews and editable seeds." },
-  { title: "Luxury drop", kind: "Page", href: "/examples/templates/?template=luxury-drop", description: "One object examined slowly, precisely, and without visual clutter." },
-  { title: "Festival", kind: "Page", href: "/examples/templates/?template=festival", description: "A cultural page built from posters, ribbons, stages, and motion." },
-  { title: "Music release", kind: "Page", href: "/examples/templates/?template=music-release", description: "Audio-reactive colour and credits composed as a living liner note." },
-];
-
-function interleaveWorks(groups: CollectionWork[][]): CollectionWork[] {
-  const longest = Math.max(...groups.map((group) => group.length));
-  return Array.from({ length: longest }, (_, index) => groups.map((group) => group[index]))
-    .flat()
-    .filter((work): work is CollectionWork => Boolean(work));
-}
-
-const collection = interleaveWorks([
-  shaderWorks,
-  elementWorks,
-  pageWorks,
-  textWorks,
-  sectionWorks,
-  gpuWorks,
-]);
-
-function previewClip(item: CollectionWork): string {
-  const slug = `${item.kind}-${item.href}`
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-  return sitePath(`/previews/${slug}.webp`);
-}
-
-function MovingThumbnail({ item }: { item: CollectionWork }) {
-  return (
-    <div className="collection-gallery-thumb" aria-hidden="true">
-      <i></i><i></i><i></i>
-      <b>{item.title.slice(0, 1)}</b>
-      <picture>
-        <img
-          className="collection-gallery-thumb-live"
-          src={previewClip(item)}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
-      </picture>
-      <span>{item.kind}</span>
-    </div>
-  );
-}
-
-function CollectionMedley() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [search, setSearch] = useState("");
-  const previewRef = useRef<HTMLDivElement>(null);
-  const selected = collection[selectedIndex];
-  const searchTerm = search.trim().toLowerCase();
-  const visibleWorks = collection
-    .map((item, index) => ({ item, index }))
-    .filter(({ item }) =>
-      !searchTerm
-      || `${item.title} ${item.kind} ${item.description}`.toLowerCase().includes(searchTerm),
-    );
-
-  function selectWork(index: number) {
-    setSelectedIndex(index);
-    window.requestAnimationFrame(() => {
-      const preview = previewRef.current;
-      if (!preview) return;
-      const bounds = preview.getBoundingClientRect();
-      const isVisible = bounds.top >= 72 && bounds.bottom <= window.innerHeight;
-      if (!isVisible) {
-        preview.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-          block: "start",
-        });
-      }
-    });
-  }
-
-  return (
-    <ShaderSection
-      id="collection"
-      shader="oil-slick"
-      brand={brand}
-      scrim="strong"
-      maxDpr={1}
-      className="collection-medley border-y border-white/10 bg-ink-950"
-      contentClassName="py-24 sm:py-32"
-    >
-      <Container className="max-w-[88rem]">
-        <div className="collection-medley-heading">
-          <p>The collection / one continuous gallery</p>
-          <h2>One preview.<br /><em>One mixed gallery.</em></h2>
-          <span>Everything lives in the same browser: shaders, interactions, type, GPU experiments, sections, and complete pages. Choose any work below to bring it into the live preview.</span>
-        </div>
-
-        <div ref={previewRef} className="collection-preview-stage" data-kind={selected.kind}>
-          <div className="collection-preview-meta">
-            <div>
-              <span>{String(selectedIndex + 1).padStart(2, "0")} / {selected.kind}</span>
-              <h3>{selected.title}</h3>
-              <p>{selected.description}</p>
-            </div>
-            <a href={sitePath(selected.href)} target="_blank" rel="noreferrer">
-              Full canvas <i>↗</i>
-            </a>
-          </div>
-          <div className="collection-preview-window">
-            {selected.shader ? (
-              <ShaderSection
-                key={selected.shader}
-                as="div"
-                shader={selected.shader}
-                brand={brand}
-                scrim="none"
-                maxDpr={1.5}
-                className="h-full"
-                contentClassName="h-full"
-              />
-            ) : (
-              <iframe
-                key={selected.href}
-                src={sitePath(selected.href)}
-                title={`${selected.title} — interactive preview`}
-                allow="autoplay; camera; microphone"
-                allowFullScreen
-              />
-            )}
-            <span className="collection-preview-hint">Interactive preview</span>
-          </div>
-        </div>
-
-        <div className="collection-gallery-head">
-          <p>All work <span>{visibleWorks.length}</span></p>
-          <label>
-            <span className="sr-only">Search the collection</span>
-            <input
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search all work…"
-            />
-          </label>
-          <span>Six disciplines, deliberately interleaved</span>
-        </div>
-
-        <ul className="collection-gallery">
-          {visibleWorks.map(({ item, index }) => (
-            <li key={`${item.kind}-${item.title}`} className="collection-gallery-cell">
-              <article
-                className={`collection-gallery-item${selectedIndex === index ? " is-active" : ""}`}
-                data-kind={item.kind}
-              >
-                <MovingThumbnail item={item} />
-                <div className="collection-gallery-card-copy">
-                  <strong>{item.title}</strong>
-                  <span>{item.description}</span>
-                </div>
-                <button
-                  type="button"
-                  className="collection-gallery-select"
-                  aria-label={`Preview ${item.title}`}
-                  aria-pressed={selectedIndex === index}
-                  onClick={() => selectWork(index)}
-                />
-              </article>
-            </li>
-          ))}
-        </ul>
-
-        {visibleWorks.length === 0 && (
-          <p className="collection-gallery-empty">No work matches “{search}”.</p>
-        )}
-
-        <p className="collection-medley-footnote">{collection.length} works · one preview · one gallery</p>
-      </Container>
-    </ShaderSection>
   );
 }
 
@@ -319,13 +66,17 @@ function CollectionHome() {
     <>
       <Nav
         logo={<BrandLockup />}
+        // The hero shader is deliberately loud, and a transparent bar over it
+        // leaves the links unreadable until you scroll. The solid bar costs
+        // the page nothing and keeps navigation legible from the first frame.
+        transparentUntilScroll={false}
         links={[
-          { label: "The collection", href: "#collection" },
+          { label: "The workbench", href: "#collection" },
+          { label: "Complete websites", href: "#websites" },
           { label: "Principles", href: "#principles" },
-          { label: "Keep the source", href: "#source" },
         ]}
-        secondaryCta={{ label: "Why taste matters", href: "#principles" }}
-        cta={{ label: "Browse everything", href: "#collection" }}
+        secondaryCta={{ label: "Shader studio", href: "/studio.html" }}
+        cta={{ label: "Open the workbench", href: "#collection" }}
       />
       <main id="top">
         <Hero
@@ -341,10 +92,10 @@ function CollectionHome() {
               <GradientText>They can’t copy your eye.</GradientText>
             </>
           }
-          subhead="Taste is the Moat is a curated collection of animated backgrounds, tactile components, complete sections, and authored landing pages for teams that refuse to look interchangeable."
-          primaryAction={{ label: "Explore the collection", href: "#collection" }}
-          secondaryAction={{ label: "Read the thesis", href: "#principles" }}
-          note="69 backgrounds · 84 elements · 5 text surfaces · 23 GPU techniques · 26 sections · 16 complete pages"
+          subhead="Every shader, element, section, and text surface in one live workbench — mounted for real, with every control it accepts sitting right beside it."
+          primaryAction={{ label: "Open the workbench", href: "#collection" }}
+          secondaryAction={{ label: "See complete websites", href: "#websites" }}
+          note={`${works.length} live pieces · ${counts.Shaders ?? 0} shaders · ${elementCount} elements · ${counts.Sections ?? 0} sections · 16 complete pages`}
           layout="split"
           visual={
             <BrowserFrame url="tasteisthemoat.dev/collection">
@@ -361,12 +112,6 @@ function CollectionHome() {
                 <ParticleText
                   text="TASTE"
                   align="left"
-                  // Sized against the frame, not the viewport. The hero column
-                  // stops growing at max-w-6xl, so a vw height keeps climbing
-                  // after the frame has stopped — past ~1150px that pushed
-                  // "> trends" out through the frame's overflow-hidden. The
-                  // aspect-[16/10] parent has a definite height, so a
-                  // percentage tracks it at every width.
                   className="mt-2 h-[44%]"
                   textClassName="font-serif text-[clamp(2.6rem,5.5vw,4.6rem)] font-normal leading-[0.8] tracking-[-0.08em] text-white"
                   fontFamily='"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif'
@@ -376,8 +121,6 @@ function CollectionHome() {
                   radius={200}
                   force={5600}
                   spring={110}
-                  // Matches the hero shader behind it; the default of 2 would
-                  // put a third megapixel-scale canvas on the first viewport.
                   maxDpr={1.5}
                   colors={{ rest: "#ffffff", mid: "#f97316", hot: "#bef264" }}
                 />
@@ -404,7 +147,9 @@ function CollectionHome() {
           className="border-brand-400/20 bg-brand-500 text-black [&_.text-brand-400]:text-accent-400"
         />
 
-        <CollectionMedley />
+        <Workbench />
+
+        <Websites />
 
         <section id="principles" className="border-y border-ink-700 bg-[#f3efe6] py-24 text-[#17130f] sm:py-32">
           <Container>
@@ -444,21 +189,7 @@ function CollectionHome() {
           </Container>
         </section>
 
-        <Features
-          eyebrow="The selection"
-          title="The pieces that make a page feel authored"
-          description="Experimental interactions, disciplined systems, and complete page directions—selected for memorability and rebuilt for real use."
-          features={[
-            { title: "Spatial canvases", description: "Infinite galleries, image trails, draggable piles, and perspective marquees." },
-            { title: "Kinetic typography", description: "Velocity ribbons, encrypted copy, split-flap words, and elastic headlines." },
-            { title: "Physical cards", description: "Morphing dialogs, directional reveals, lenses, and sticky scroll stacks." },
-            { title: "Reactive media", description: "Dither reveals, scroll-scrubbed video, audio energy, and opt-in camera mosaics." },
-            { title: "Living controls", description: "Morphing notches, gooey menus, magnetic CTAs, and vanishing prompt inputs." },
-            { title: "Opinionated pages", description: "Complete directions for culture, product, data, art, music, launches, and luxury." },
-          ]}
-        />
-
-        <section id="source" className="border-y border-ink-700 bg-ink-900/50 py-20">
+        <section id="source" className="border-b border-ink-700 bg-ink-900/50 py-20">
           <Container>
             <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
               <div>
@@ -469,55 +200,18 @@ function CollectionHome() {
                   Take the code, not the sameness.
                 </h2>
                 <p className="mt-4 max-w-xl leading-relaxed text-ink-300">
-                  Everything is plain TypeScript and Tailwind with accessible states, reduced-motion behavior, and graceful shader fallbacks already considered.
+                  Everything is plain TypeScript and Tailwind with accessible states, reduced-motion behavior, and graceful shader fallbacks already considered. The snippet under the workbench is generated from the controls you just moved.
                 </p>
-                <Magnetic actionArea="parent" range={110} className="mt-7">
-                  <Button href="#collection" variant="secondary">
-                    Return to the live collection
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Magnetic actionArea="parent" range={110}>
+                    <Button href="#collection">Back to the workbench</Button>
+                  </Magnetic>
+                  <Button href="/studio.html" variant="secondary">
+                    Open the shader studio
                   </Button>
-                </Magnetic>
+                </div>
               </div>
               <CopyField value="npm install taste-is-the-moat" label="Install the collection" />
-            </div>
-          </Container>
-        </section>
-
-        {/* The closing moment. This was a liquid-ripple shader; it is now the
-            glyph surface, which says the same thing in the collection's own
-            vocabulary — the last word before the footer, dissolving as you
-            move through it. The scrim is doing real work here: a matrix rain
-            behind body copy is illegible without one. */}
-        <section className="relative isolate overflow-hidden border-t border-ink-700 bg-[#06070d]">
-          <GlyphText
-            text="REMEMBER"
-            className="absolute inset-0 h-full"
-            charset={0}
-            palette={2}
-            treatment={2}
-            cell={13}
-            radius={190}
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(6,7,13,0.82)_0%,rgba(6,7,13,0.94)_100%)]"
-          />
-          <Container>
-            <div className="relative z-10 mx-auto max-w-2xl py-28 text-center sm:py-36">
-              <h2 className="text-balance font-serif text-4xl leading-[1.05] tracking-[-0.04em] text-ink-0 sm:text-5xl">
-                Make the first scroll impossible to forget.
-              </h2>
-              <p className="mt-5 text-pretty text-lg leading-relaxed text-ink-300">
-                Choose a strong starting point. Break what needs breaking. Ship
-                something with a point of view.
-              </p>
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-                <Magnetic actionArea="parent" range={120}>
-                  <Button href="#collection">Browse the live work</Button>
-                </Magnetic>
-                <Button href="#source" variant="secondary">
-                  Keep the source
-                </Button>
-              </div>
             </div>
           </Container>
         </section>
@@ -527,27 +221,27 @@ function CollectionHome() {
         tagline="A curated collection for the part of the web that still wants to be remembered."
         columns={[
           {
-            heading: "On this page",
+            heading: "The collection",
             links: [
-              { label: "Live collection", href: "#collection" },
-              { label: "The thesis", href: "#principles" },
-              { label: "Source", href: "#source" },
+              { label: "The workbench", href: "#collection" },
+              { label: "Complete websites", href: "#websites" },
+              { label: "Shader studio", href: "/studio.html" },
             ],
           },
           {
-            heading: "The collection",
+            heading: "Elsewhere",
             links: [
-              { label: "Shaders + elements", href: "#collection" },
-              { label: "Sections + pages", href: "#collection" },
-              { label: "GPU + WebGL type", href: "#collection" },
+              { label: "Section catalog", href: "/examples/marketing/sections.html" },
+              { label: "Page templates", href: "/examples/templates/" },
+              { label: "Contact sheet", href: "/examples/contact-sheet.html" },
             ],
           },
           {
             heading: "Navigate",
             links: [
               { label: "Back to top", href: "#top" },
-              { label: "Browse everything", href: "#collection" },
-              { label: "Why taste matters", href: "#principles" },
+              { label: "The thesis", href: "#principles" },
+              { label: "Keep the source", href: "#source" },
             ],
           },
         ]}

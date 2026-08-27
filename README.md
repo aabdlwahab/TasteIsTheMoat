@@ -4,8 +4,14 @@ Taste is the Moat is a curated collection for making the web feel authored:
 animated backgrounds, tactile components, React sections, and complete landing
 pages—plus a studio to browse, tune, and edit every shader live.
 
-**69 shaders**, **51 reusable elements**, **26 page sections**, and **16 complete
-landing-page templates** spanning conventional marketing and experimental work.
+The home page is a **workbench**: all **190 pieces** — 69 shaders, 85 elements,
+5 WebGL text surfaces, 26 sections, and 5 GPU benches — mount live in one
+preview stage, with every control that piece accepts beside it and a usage
+snippet generated from whatever you just set. The **16 complete landing-page
+templates** live in their own section below it, previewed whole at the viewport
+width you pick, because a finished page is a different kind of thing from a
+part you compose.
+
 The premise is simple: capable design is abundant, so discernment is the real
 advantage. Every piece is opinionated, editable, reduced-motion ready, and
 selected to help a page escape the generic middle. The shader runtime remains
@@ -16,13 +22,36 @@ npm install
 npm run dev
 ```
 
-- Collection home: the printed URL
+- **The workbench** (every element, live and tunable): the printed URL
+- Deep-link any piece with `?w=<id>`, e.g. `/?w=shader-holo-foil`
+- Any piece on its own page: `/element.html?w=<id>`
 - **Shader studio:** `/studio.html`
 - **Marketing page demo:** `/examples/marketing/`
 - **Section catalog:** `/examples/marketing/sections.html`
 - **Page templates:** `/examples/templates/`
 - Contact sheet (every shader at once): `/examples/contact-sheet.html`
 - Landing page demo (vanilla): `/examples/landing.html`
+
+### Gallery previews
+
+Each of the 190 gallery cards shows a still of the real component, captured
+once from `element.html` rather than mounted live — 190 running components on
+one page is not a gallery, it is a fan. Regenerate them after adding or
+changing a piece:
+
+```bash
+npm run build:pages
+npx serve pages          # any static server; see PREVIEW_BASE below
+npm run capture:previews
+```
+
+The script drives headless Chrome (`PREVIEW_CHROME`), reads the work list from
+`element.html?list=1`, writes `public/previews/works/<id>.webp` for the
+elements and `public/previews/sites/<key>.webp` for the sixteen complete pages,
+and rewrites `src/collection/previews.ts` so a card only requests an image that
+exists. `PREVIEW_BASE` defaults to `http://127.0.0.1:5310/TasteIsTheMoat`;
+`PREVIEW_SCOPE=works|sites` limits the run and `PREVIEW_ONLY=id,id` re-captures
+just those.
 
 ### GitHub Pages
 
@@ -541,7 +570,11 @@ src/
     compile.ts    Shared source assembly + program linking
     glsl.ts       Helper library + built-in uniforms injected into every shader
     types.ts      ShaderDef / uniform / category types
-  shaders/        21 shaders, one file each
+  shaders/        Shader definitions, one file (or family) each
+  ui/             Elements: foundation, shader-native, experimental, motion
+  sections/       The React section library
+  collection/     The home page: workbench, control kit, works registry
+    works/        One entry per piece — controls + a live render + a snippet
   app/            Studio: gallery, editor, controls, thumbnails, export
 examples/
   landing.html        A complete landing page using a shader background
