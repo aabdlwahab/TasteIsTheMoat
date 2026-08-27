@@ -86,6 +86,9 @@ input[type=range]::-moz-range-thumb{width:2px;height:12px;background:var(--sig);
   border:1px solid var(--rule);color:var(--dim);font:inherit;font-size:10.5px;letter-spacing:.1em;
   cursor:pointer;display:none;backdrop-filter:blur(16px)}
 #panel.off + #tab{display:block}
+/* Bare mode: the bench embedded as a page background, where its own panel,
+   menu tab and back link would float over someone else's headline. */
+html.bare #panel,html.bare #tab,html.bare #lab-back,html.bare #hud{display:none}
 #hud{position:fixed;right:14px;bottom:12px;z-index:10;color:var(--dimmer);font-size:10.5px;
   letter-spacing:.05em;text-align:right;pointer-events:none}
 #fail{position:fixed;inset:0;display:none;place-items:center;padding:32px;text-align:center;color:var(--dim);z-index:20}
@@ -100,6 +103,13 @@ input[type=range]::-moz-range-thumb{width:2px;height:12px;background:var(--sig);
   text-decoration:none;backdrop-filter:blur(8px)}
 #lab-back:hover,#lab-back:focus-visible{color:var(--fg);border-color:var(--sig);outline:none}
 </style>
+<script>
+  /* Set on <html> during head parsing rather than on <body> later, so the
+     panel never paints before it is hidden. */
+  if (new URLSearchParams(location.search).get('bare') === '1') {
+    document.documentElement.classList.add('bare');
+  }
+</script>
 </head>
 <body>
 <a id="lab-back" href="../examples/marketing/sections.html?s=gpu-lab">&larr; GPU Lab</a>

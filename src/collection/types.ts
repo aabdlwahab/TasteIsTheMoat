@@ -57,6 +57,13 @@ export interface Work {
   description: string;
   controls: ControlDef[];
   render: (values: ControlValues) => ReactNode;
+  /**
+   * How the piece renders once it is put on the page, when that differs from
+   * the stage. The GPU benches are the case this exists for: each is a whole
+   * application with its own control panel, which belongs in a preview and
+   * does not belong floating over someone's headline.
+   */
+  renderApplied?: (values: ControlValues) => ReactNode;
   /** Usage snippet reflecting the current settings. */
   code?: (values: ControlValues) => string;
   fit?: PreviewFit;

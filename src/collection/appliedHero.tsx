@@ -118,7 +118,8 @@ export function AppliedHero({
 }) {
   const { work, values, nonce } = applied;
   const placement = placementFor(work);
-  const piece = <div key={`${work.id}-${nonce}`}>{work.render(values)}</div>;
+  const render = work.renderApplied ?? work.render;
+  const piece = <div key={`${work.id}-${nonce}`}>{render(values)}</div>;
 
   if (placement === "section") {
     return (

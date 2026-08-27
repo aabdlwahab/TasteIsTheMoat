@@ -10,6 +10,17 @@
 import { sitePath } from "../../core/sitePath";
 import type { Work } from "../types";
 
+function Bench({ file, name, bare }: { file: string; name: string; bare?: boolean }) {
+  return (
+    <iframe
+      src={sitePath(`/gpu-lab/${file}${bare ? "?bare=1" : ""}`)}
+      title={`${name} — GPU bench`}
+      className="h-full w-full border-0"
+      loading="lazy"
+    />
+  );
+}
+
 interface Bench {
   id: string;
   name: string;
@@ -72,12 +83,9 @@ export const gpuWorks: Work[] = BENCHES.map((bench) => ({
   href: `/gpu-lab/${bench.file}`,
   panelNote: `${bench.technique}. This bench is a standalone WebGL2 page and carries its own control panel, FPS meter, and mode cycling inside the frame — ${bench.modes.length} modes: ${bench.modes.join(", ")}.`,
   controls: [],
-  render: () => (
-    <iframe
-      src={sitePath(`/gpu-lab/${bench.file}`)}
-      title={`${bench.name} — GPU bench`}
-      className="h-full w-full border-0"
-      loading="lazy"
-    />
-  ),
+  render: () => <Bench file={bench.file} name={bench.name} />,
+  // On the page the bench is a background, so `bare` drops its panel, its menu
+  // tab and its back link — the parts that make sense in a preview and read as
+  // someone else's debug UI over a headline.
+  renderApplied: () => <Bench file={bench.file} name={bench.name} bare />,
 }));

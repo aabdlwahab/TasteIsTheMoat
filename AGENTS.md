@@ -46,6 +46,7 @@ export interface Work {
   description: string;   // one sentence: what it does and why you would reach for it
   controls: ControlDef[];
   render: (values: ControlValues) => ReactNode;
+  renderApplied?: (values: ControlValues) => ReactNode;  // page context; see §4
   code?: (values: ControlValues) => string;  // usage snippet, regenerated per change
   fit?: "fill" | "center" | "flow";          // default "center"
   href?: string;         // overrides the "Full page ↗" target
@@ -147,6 +148,14 @@ the hero (`src/collection/appliedHero.tsx`):
 If a piece looks wrong there, the fix is almost always the wrong `fit`, not a
 special case in `appliedHero.tsx`.
 
+A piece that must present *differently* on a page than in the stage supplies
+`renderApplied`. Only the GPU benches use it today: each is a whole application
+with its own control panel, FPS meter, and back link, which you want while
+previewing the bench and do not want floating over a headline — so the applied
+version loads it with `?bare=1`, a flag the bench pages honour by hiding their
+own chrome. Reach for this only when the difference is genuinely about context,
+never to paper over a demo that looks wrong in the stage.
+
 ---
 
 ## 5. The `code` snippet
@@ -216,6 +225,11 @@ control panel, and they are framed rather than re-implemented. To add one, drop
 the HTML file in `public/gpu-lab/` and add an entry to the `BENCHES` array in
 `gpu.tsx`. Leave `controls: []` and put the modes in `panelNote` — the bench's
 own panel inside the frame is the set of tweaks.
+
+A new bench must honour `?bare=1`, or it will put its panel over the hero when
+someone applies it. The existing ones do it in two lines: a `<head>` script that
+adds `bare` to `<html>`, and one CSS rule hiding `#panel`, `#tab`, `#lab-back`
+and `#hud` under `html.bare`. Copy that from any of the five.
 
 ---
 
