@@ -153,8 +153,10 @@ A piece that must present *differently* on a page than in the stage supplies
 with its own control panel, FPS meter, and back link, which you want while
 previewing the bench and do not want floating over a headline — so the applied
 version loads it with `?bare=1`, a flag the bench pages honour by hiding their
-own chrome. Reach for this only when the difference is genuinely about context,
-never to paper over a demo that looks wrong in the stage.
+own chrome. `element.html?capture=1` uses it too, since a thumbnail that is half
+control panel is not a thumbnail. Reach for this only when the difference is
+genuinely about context, never to paper over a demo that looks wrong in the
+stage.
 
 ---
 
@@ -221,15 +223,32 @@ declare no colours fall back to a hashed tile keyed on their id.
 ## 8. GPU benches
 
 The five benches in `public/gpu-lab/` are standalone WebGL2 pages with their own
-control panel, and they are framed rather than re-implemented. To add one, drop
-the HTML file in `public/gpu-lab/` and add an entry to the `BENCHES` array in
-`gpu.tsx`. Leave `controls: []` and put the modes in `panelNote` — the bench's
-own panel inside the frame is the set of tweaks.
+control panel, and they are framed rather than re-implemented.
 
-A new bench must honour `?bare=1`, or it will put its panel over the hero when
-someone applies it. The existing ones do it in two lines: a `<head>` script that
-adds `bare` to `<html>`, and one CSS rule hiding `#panel`, `#tab`, `#lab-back`
-and `#hud` under `html.bare`. Copy that from any of the five.
+**One card per technique, not per bench.** A bench is five or six unrelated
+techniques behind one door — physarum and reaction–diffusion share a file
+because they share a ping-pong texture setup, which is an implementation detail.
+Nobody hunting for a boids simulation should have to guess it lives inside
+"GPGPU". So `BENCHES` in `gpu.tsx` lists each bench's `modes`, and the registry
+flat-maps them into one `Work` each, deep-linked with `?mode=<id>`.
+
+To add a technique to an existing bench: add it to that bench's `modes` array
+with the mode id the bench's own `MODES` uses. To add a bench: drop the HTML in
+`public/gpu-lab/`, add the entry, and list its modes. Leave `controls: []` — the
+bench's own panel inside the frame is the set of tweaks, and `panelNote` says so.
+
+A new bench page must honour three query parameters, all of which the existing
+five implement in a few lines each — copy them:
+
+| Param | Effect |
+|---|---|
+| `?mode=<id>` | Start on that technique, overriding the remembered one, and don't persist it |
+| `?bare=1` | Hide `#panel`, `#tab`, `#lab-back` and `#hud` — set on `<html>` from a `<head>` script so nothing flashes |
+| `?style=<id>` | Post bench only: its subject is the styliser, not the scene behind it |
+
+Without `?mode=` the cards all show whichever technique the visitor last opened.
+Without `?bare=1` the bench puts its panel over the hero, and its thumbnail is
+half control panel.
 
 ---
 

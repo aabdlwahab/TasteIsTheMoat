@@ -41,6 +41,11 @@ function Element() {
 
   const fit = work.fit ?? "center";
   const capture = params.get("capture") === "1";
+  // A capture wants the piece and nothing else, which is the same thing the
+  // hero wants — so a piece with a page-context render uses it here too. The
+  // GPU benches are the case: their own panel filling half the frame makes a
+  // useless thumbnail.
+  const render = capture ? (work.renderApplied ?? work.render) : work.render;
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-[#0a0b10]">
@@ -53,7 +58,7 @@ function Element() {
               : "grid h-full w-full place-items-center overflow-auto p-6 sm:p-10"
         }
       >
-        {work.render(defaultsOf(work.controls))}
+        {render(defaultsOf(work.controls))}
       </div>
       {capture ? null : (
         <p className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-1.5 text-xs text-white/70 backdrop-blur">

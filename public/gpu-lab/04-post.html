@@ -900,6 +900,10 @@ function runPost(){
 }
 
 POST.style='kuwahara'; POST.strength=0.7;
+/* This bench's subject is the styliser rather than the scene behind it, so the
+   gallery deep-links `?style=` as well as `?mode=`. */
+{ const s=new URLSearchParams(location.search).get('style');
+  if(['none','kuwahara','dither','sort','flow'].includes(s)) POST.style=s; }
 /* gpu-lab — shell: panel, input, main loop */
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -1022,6 +1026,9 @@ function buildPostUI(){
   styleParams();
 }
 
+/* The gallery links to one technique per card, so `?mode=` picks it directly. */
+const LINK = new URLSearchParams(location.search);
+
 function activate(m){
   cur=m;
   const sig=W+'x'+H+'@'+SCALE.toFixed(2);
@@ -1029,7 +1036,8 @@ function activate(m){
   else if(m._sized!==sig && m.resize){ m.resize(); m._sized=sig; }
   [...elModes.querySelectorAll('.row')].forEach(b=>b.classList.toggle('on', b.dataset.id===m.id));
   buildParams();
-  try{ localStorage.setItem('gpulab.mode', m.id); }catch(e){}
+  /* A deep-linked visit must not overwrite the mode the visitor last chose. */
+  if(!LINK.has('mode')) try{ localStorage.setItem('gpulab.mode', m.id); }catch(e){}
 }
 function syncParams(){
   PARAMS.fill(0);
@@ -1146,9 +1154,11 @@ buildPost();
 buildPostProgs();
 buildModeList();
 buildPostUI();
-let start=MODES[0];
-try{ const saved=localStorage.getItem('gpulab.mode');
-  const m=MODES.find(x=>x.id===saved); if(m) start=m; }catch(e){}
+let start=MODES.find(x=>x.id===LINK.get('mode'))||MODES[0];
+if(!LINK.has('mode')){
+  try{ const saved=localStorage.getItem('gpulab.mode');
+    const m=MODES.find(x=>x.id===saved); if(m) start=m; }catch(e){}
+}
 activate(start);
 requestAnimationFrame(frame);
 </script>

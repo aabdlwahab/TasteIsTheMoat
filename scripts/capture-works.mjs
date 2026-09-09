@@ -19,7 +19,8 @@
  * on pages that animate forever — which is most of this collection.
  *
  * Env: PREVIEW_BASE, PREVIEW_CHROME, PREVIEW_PORT, PREVIEW_SETTLE,
- * PREVIEW_SCOPE=works|sites|all, PREVIEW_ONLY=id,id, PREVIEW_SKIP_EXISTING=1.
+ * PREVIEW_SCOPE=works|sites|all, PREVIEW_ONLY=id,id, PREVIEW_SKIP_EXISTING=1,
+ * PREVIEW_DRAG=1.
  */
 import { spawn } from "node:child_process";
 import { execFileSync } from "node:child_process";
@@ -42,6 +43,7 @@ const settle = Number(process.env.PREVIEW_SETTLE ?? 1400);
 const scope = process.env.PREVIEW_SCOPE ?? "all";
 const only = process.env.PREVIEW_ONLY?.split(",").filter(Boolean);
 const skipExisting = process.env.PREVIEW_SKIP_EXISTING === "1";
+const drag = process.env.PREVIEW_DRAG === "1";
 
 const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
@@ -146,7 +148,15 @@ function connect(url) {
 }
 
 
-/** Move a synthetic pointer across the page so reactive pieces wake up. */
+/**
+ * Move a synthetic pointer across the page so reactive pieces wake up.
+ *
+ * `PREVIEW_DRAG=1` holds the button down through the sweep. The simulation
+ * benches seed from a drag rather than a hover — lenia and falling sand
+ * photograph as an empty grid without it — but a click lands on whatever is
+ * under the cursor, which would open dialogs and flip cards elsewhere. So it
+ * stays opt-in, for re-capturing the pieces that need it.
+ */
 async function sweepPointer(chrome, sessionId, [width, height]) {
   const path = [
     [0.22, 0.72],
@@ -155,12 +165,21 @@ async function sweepPointer(chrome, sessionId, [width, height]) {
     [0.62, 0.52],
     [0.54, 0.5],
   ];
-  const move = (fx, fy) =>
+  const at = (fx, fy) => ({ x: Math.round(width * fx), y: Math.round(height * fy) });
+  const send = (type, fx, fy) =>
     chrome.send(
       "Input.dispatchMouseEvent",
-      { type: "mouseMoved", x: Math.round(width * fx), y: Math.round(height * fy), buttons: 0 },
+      {
+        type,
+        ...at(fx, fy),
+        buttons: drag ? 1 : 0,
+        ...(drag ? { button: "left", clickCount: 1 } : {}),
+      },
       sessionId,
     );
+  const move = (fx, fy) => send("mouseMoved", fx, fy);
+
+  if (drag) await send("mousePressed", path[0][0], path[0][1]);
 
   for (const [fx, fy] of path) {
     await move(fx, fy);
@@ -174,6 +193,12 @@ async function sweepPointer(chrome, sessionId, [width, height]) {
   for (let step = 0; step < 8; step += 1) {
     await move(0.5 + Math.cos(step) * 0.06, 0.5 + Math.sin(step) * 0.06);
     await sleep(110);
+  }
+
+  if (drag) {
+    await send("mouseReleased", 0.54, 0.5);
+    // A seeded simulation needs a moment to become something worth a picture.
+    await sleep(settle);
   }
   await sleep(420);
 }

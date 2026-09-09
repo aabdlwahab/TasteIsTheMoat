@@ -21,15 +21,6 @@ def main() -> None:
     )
     image = Image.open(source).convert("RGB")
 
-    # A few pieces photograph as an empty frame no matter how long the shutter
-    # is held — a dither cover that only clears under a real pointer, a shader
-    # that needs input this script cannot fake. Writing those out gives the
-    # gallery a black rectangle, which is worse than the generated tile it
-    # falls back to, so refuse the shot and let the manifest omit it.
-    if ImageStat.Stat(image.convert("L")).stddev[0] < 2.5:
-        print(f"  blank, skipped: {output.name}")
-        return
-
     # Cover, not contain: the card is a fixed 4:3 tile, and letterboxing a
     # preview inside it would read as a rendering bug rather than a crop.
     scale = max(target[0] / image.width, target[1] / image.height)
@@ -39,9 +30,22 @@ def main() -> None:
     )
     left = (resized.width - target[0]) // 2
     top = (resized.height - target[1]) // 2
-    resized.crop((left, top, left + target[0], top + target[1])).save(
-        output, "WEBP", quality=60, method=6
-    )
+    card = resized.crop((left, top, left + target[0], top + target[1]))
+
+    # A few pieces photograph as an empty frame no matter how long the shutter
+    # is held — a dither cover that only clears under a real pointer, a shader
+    # that needs input this script cannot fake. Writing those out gives the
+    # gallery a black rectangle, which is worse than the generated tile it
+    # falls back to, so refuse the shot and let the manifest omit it.
+    #
+    # Measured on the finished card, not the source: downscaling a mostly black
+    # frame with a few faint specks averages them away, and a source that
+    # passes can still resize to nothing. Lenia did exactly that.
+    if ImageStat.Stat(card.convert("L")).stddev[0] < 2.5:
+        print(f"  blank, skipped: {output.name}")
+        return
+
+    card.save(output, "WEBP", quality=60, method=6)
 
 
 if __name__ == "__main__":
