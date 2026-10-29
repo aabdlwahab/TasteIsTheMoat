@@ -16,6 +16,7 @@ import { oilSlick } from "./oil-slick";
 import { plasma } from "./plasma";
 import { prism } from "./prism";
 import { scoutedMovingGradientShaders } from "./scouted-moving-gradients";
+import { seismograph } from "./seismograph";
 import { silk } from "./silk";
 import { spotlight } from "./spotlight";
 import { starfield } from "./starfield";
@@ -50,6 +51,7 @@ export const shaderList: ShaderDef[] = [
   magneticDots,
   spotlight,
   cursorFlow,
+  seismograph,
   ...scoutedInteractiveShaders,
   // organic
   metaballs,
@@ -120,6 +122,7 @@ export {
   oilSlick,
   plasma,
   prism,
+  seismograph,
   silk,
   spotlight,
   starfield,

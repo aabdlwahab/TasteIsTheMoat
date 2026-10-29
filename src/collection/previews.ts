@@ -182,6 +182,7 @@ export const capturedPreviews = new Set<string>([
   "shader-section",
   "shader-seeded-color-islands",
   "shader-seeded-gradient-generator",
+  "shader-seismograph",
   "shader-shifting-sands",
   "shader-silk",
   "shader-smoke-gradient",
